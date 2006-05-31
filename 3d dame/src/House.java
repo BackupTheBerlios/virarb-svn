@@ -26,7 +26,7 @@ public class House extends Applet
 	 
 	public BranchGroup createSceneGraph()
 	{
-		
+		//blabla
 		BranchGroup objRoot = new BranchGroup();
 		
 		//Skalierung des Spielbereiches
