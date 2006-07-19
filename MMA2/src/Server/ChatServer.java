@@ -45,8 +45,8 @@ public void addFile(File f,String name,String ip) throws RemoteException;
  * @throws RemoteException
  */
 //public  FileInputStream getFile(int index) throws RemoteException;
-  /**
-   * gibt die Liste der Dateinamen zurück, um diese am Client darzustellen
+ /**
+ * gibt die Liste der Dateinamen zurück, um diese am Client darzustellen
  * @return Die Listeneinträge
  * @throws RemoteException
  */
@@ -76,14 +76,14 @@ public void setStatus(String status)  throws RemoteException;
  * @throws RemoteException
  */
 public Vector getLines() throws RemoteException;
-  /**
-   * Gibt das ChatDocument des ersten Clients zurück, in dem alle bisherigen Nachrichten enthalten sind.
+ /**
+ * Gibt das ChatDocument des ersten Clients zurück, in dem alle bisherigen Nachrichten enthalten sind.
  * @return das Document
  * @throws RemoteException
  */
 public Document getChat() throws RemoteException;
-  /**
-   * Löscht eine Session aus der Liste des Servers.
+ /**
+ * Löscht eine Session aus der Liste des Servers.
  * @param session die zu löschende Session
  * @throws RemoteException
  */

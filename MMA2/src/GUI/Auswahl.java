@@ -125,8 +125,8 @@ public class Auswahl extends JFrame {
 				try {
 					new ChatServerImpl();
 					System.out.println("Server gestartet");
-//					Main main=new Main(username);
-//					main.setVisible(true);
+					Main main=new Main(username);
+					main.setVisible(true);
 					owner.dispose();
 				} catch (Exception e1) {
 					e1.printStackTrace();

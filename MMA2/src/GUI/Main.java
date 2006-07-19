@@ -59,7 +59,7 @@ public class Main extends javax.swing.JFrame{
 		String ip=new String();
 		this.username=username;
 	   	try {
-	   		server = (ChatServer)Naming.lookup("chat-server");
+	   		server = (ChatServer)Naming.lookup("rmi://localhost:1099/chat-server");
 	   		ClientHandleImpl handle = new ClientHandleImpl(this);
 	   		session = server.createSession(username, handle);
 	   	
