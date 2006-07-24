@@ -1,5 +1,8 @@
 package GUI;
 
+import gnu.cajo.invoke.Remote;
+import gnu.cajo.invoke.RemoteInvoke;
+import gnu.cajo.utils.extra.ItemProxy;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,6 +15,7 @@ import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.Date;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -30,41 +34,27 @@ public class Main extends javax.swing.JFrame{
 	private Color myColor=Color.BLACK;
 	private SimpleAttributeSet set;
 	private ChatSession session;
-	private ChatServer server;
+	private Object server;
+	private ItemProxy proxy;
 
-//	private static String myIP=new String("81.173.229.84");
-	
-	
-	
-//	/**
-//	 * Konstruktor
-//	 */
-//	public Main(){
-//		super();
-////		try {
-////			ip=InetAddress.getLocalHost().getHostAddress();
-////		} catch (UnknownHostException e) {
-////			e.printStackTrace();
-////		}
-//		initGUI();
-//	}
 	
 	/**
 	 * Konsruktor
 	 * @param username Der Name des Users
-	 * 	 */
+	 **/
 	public Main(String username){	
 		super();
-//		System.setProperty("java.rmi.server.hostname","localhost");	
 		String ip=new String();
 		this.username=username;
-	   	try {
-	   		server = (ChatServer)Naming.lookup("rmi://localhost:1099/chat-server");
-	   		ClientHandleImpl handle = new ClientHandleImpl(this);
-	   		session = server.createSession(username, handle);
-	   	
-	   		myColor=server.getMyColor();
+
+		try {
+
 	   		ip=InetAddress.getLocalHost().getHostAddress();
+	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
+	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
+	   		proxy = new ItemProxy(cp, this);
+	   		
+	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	
 	   	} catch (Exception e) {
 			e.printStackTrace();
@@ -74,11 +64,9 @@ public class Main extends javax.swing.JFrame{
 			session.setStatus("Server gestartet.");
 			sendMessage(new Chatmessage(Color.BLACK,"Server gestartet von '"+username+"' unter der IP: "+ip,new Date(),"System"));	
 			sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' ist der Sitzung beigetreten.",new Date(),"System"));
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	/**
@@ -88,26 +76,25 @@ public class Main extends javax.swing.JFrame{
 	 */
 	public Main(String ip,String username){
 		super();
-//		System.setProperty("java.rmi.server.hostname",myIP);	
-		
 		this.username=username;
-
 	   	try {
-	   		server = (ChatServer)Naming.lookup("rmi://"+ip+":1099/chat-server");
-	   		ClientHandleImpl handle = new ClientHandleImpl(this);
-	   		session = server.createSession(username, handle);
-	   		myColor=server.getMyColor();
+	   		ip=InetAddress.getLocalHost().getHostAddress();
+	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
+	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
+	   		proxy = new ItemProxy(cp, this);
+	   		
+	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 
 	   	} catch (Exception e) {
 			e.printStackTrace();
 		}
 		initGUI();
 		try {
-			ta_chat.setDocument(server.getChat());
-			session.setStatus("User '"+username+"' ist der Sitzung beigetreten.");
+			ta_chat.setDocument((Document)Remote.invoke(server, "getChat", null));
+			Remote.invoke(server, "setStatus", "User '"+username+"' ist der Sitzung beigetreten.");
 			sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' ist der Sitzung beigetreten.",new Date(),"System"));
 
-		} catch (RemoteException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -169,13 +156,9 @@ public class Main extends javax.swing.JFrame{
 				scroll_chat.getViewport().add(ta_chat);			
 //				scroll_chat.setPreferredSize(new Dimension(300,150));
 				pa_left.add(scroll_chat);
-				
-
-				
-			
 			
 			}
-				
+			
 			{
 				pa_right = new JPanel();
 				pa_right.setPreferredSize(new java.awt.Dimension(320, 300));
@@ -195,7 +178,7 @@ public class Main extends javax.swing.JFrame{
 				
 					JPanel pa_malfenster =new JPanel();
 					
-					malfenster = new DrawPanel(session,myColor);
+					malfenster = new DrawPanel(server, myColor);
 					malfenster.setPreferredSize(new Dimension(300, 300));
 					malfenster.setBackground(new Color(255, 255, 255));
 					
@@ -216,7 +199,7 @@ public class Main extends javax.swing.JFrame{
 					pa_file = new JPanel();
 					pa_file.setLayout(new BorderLayout());
 					
-					filetable = new DnDText(session);
+					filetable = new DnDText(server);
 					filetable.setBackground(new Color(200, 200, 200));
 					filetable.setPreferredSize(new Dimension(290, 250));
 					filetable.setAutoscrolls(true);
@@ -250,12 +233,12 @@ public class Main extends javax.swing.JFrame{
 			this.setLocationRelativeTo(null);
 			this.setTitle("Virtueller Arbeitsraum 0.8   [" + username + "]");
 			this.addWindowListener(al);
-			malfenster.draw(server.getLines());
+			malfenster.draw((Vector)Remote.invoke(server, "getLines", null));
 			
 			
 //			Dummys senden damit verbindung nicht gekappt wird
-			Thread t =new Thread(new DummyPakete(server));
-			t.start();
+//			Thread t =new Thread(new DummyPakete(server));
+//			t.start();
 			
 
 			
@@ -286,8 +269,8 @@ public class Main extends javax.swing.JFrame{
 	 * @param raus Die Chatmessage, die gesendet werden soll.
 	 * @throws RemoteException
 	 */
-	public void sendMessage(Chatmessage raus) throws RemoteException {
-			session.sendMessage(raus);
+	public void sendMessage(Chatmessage raus) throws Exception {
+			Remote.invoke(server, "postMessage", raus);
 	}
 	
 	//string in chatfeld ausgeben
@@ -312,6 +295,10 @@ public class Main extends javax.swing.JFrame{
 	 */
 	public DrawPanel getMalfenster() {
 		return malfenster;
+	}
+	
+	public void draw(Vector lines){
+		malfenster.draw(lines);
 	}
 	
 	
@@ -365,7 +352,7 @@ public class Main extends javax.swing.JFrame{
 					Chatmessage raus=new Chatmessage(myColor,inp,new Date(),username);				
 					try {
 						sendMessage(raus);
-					} catch (RemoteException e1) {
+					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
@@ -374,8 +361,8 @@ public class Main extends javax.swing.JFrame{
 			else if(e.getActionCommand().equals("Zeichnung loeschen")){
 						
 				try {
-					server.skizze_loeschen();
-				} catch (RemoteException e1) {
+					Remote.invoke(server, "skizze_loeschen", null);
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -395,8 +382,8 @@ public class Main extends javax.swing.JFrame{
 			try {
 				session.setStatus("User "+session.getNickname()+ " hat die Sitzung verlassen");
 				sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' hat die Sitzung verlassen",new Date(),"System"));
-				session.removeMe();
-			} catch (RemoteException e) {
+//				Remote.invoke(server, "remove, ");
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			System.exit(0);

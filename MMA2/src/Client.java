@@ -9,7 +9,7 @@ public class Client {
    int count;
    Object server;
    Client() throws Exception {
-      server = Remote.getItem("//localhost:1198/main");
+      server = Remote.getItem("//192.168.0.12:1234/VirArbServer");
       RemoteInvoke cp =
          (RemoteInvoke)Remote.invoke(server, "getCp", null);
       ip = new ItemProxy(cp, this);

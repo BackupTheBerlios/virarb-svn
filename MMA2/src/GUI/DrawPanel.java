@@ -1,5 +1,6 @@
 package GUI;
 
+import gnu.cajo.invoke.Remote;
 import java.rmi.RemoteException;
 import java.util.Vector;
 import java.awt.*;
@@ -13,7 +14,7 @@ import Server.ChatSession;
  * @author Klassen,Kokoschka,Langer,Meurer
  */
 public class DrawPanel extends Panel implements MouseListener, MouseMotionListener {
-	private ChatSession session;
+	private Object server;
 	private Color myColor;
 	private Vector lines;
 	private int x1, y1;
@@ -24,15 +25,15 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 * @param session Die ChatSession, über die die Daten transferiert werden.
 	 * @param myColor Die Farbe der Zeichnung
 	 */
-	public DrawPanel(ChatSession session,Color myColor) {
-		this.session=session;
+	public DrawPanel(Object server,Color myColor) {
+		this.server=server;
 		this.myColor=myColor;
 		setBackground(Color.white);
 		addMouseMotionListener(this);
 		addMouseListener(this);	
 		try {			
-			lines=session.getLines();
-		} catch (RemoteException e) {
+			lines=(Vector)Remote.invoke(server, "getLines", null);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -44,7 +45,7 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	public void mouseDragged(MouseEvent e) {
 		e.consume();
 		try {
-			session.addElement(new ColorLine(x1,y1,e.getX(), e.getY(),myColor));
+			Remote.invoke(server, "addElement", new ColorLine(x1,y1,e.getX(), e.getY(),myColor));
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -61,7 +62,8 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 		x1 = e.getX();
 		y1 = e.getY();
 		try {
-			session.addElement(new ColorLine(e.getX(), e.getY(), -1, -1,myColor));
+			Remote.invoke(server, "addElement", new ColorLine(e.getX(), e.getY(), -1, -1,myColor));
+
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

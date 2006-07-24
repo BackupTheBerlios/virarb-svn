@@ -1,5 +1,6 @@
 package GUI;
 
+import gnu.cajo.invoke.Remote;
 import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -31,7 +32,7 @@ import java.awt.event.MouseListener;
  * @author Klassen,Kokoschka,Langer,Meurer
  **/
 public class DnDText extends JScrollPane implements DropTargetListener,DragGestureListener,MouseListener,DragSourceListener{
-	private ChatSession session;
+	private Object server;
 	private JList target = null;
 	private DefaultListModel values;
 	private DragSource dragSource;
@@ -43,14 +44,15 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	 * Konstruktor
 	 * @param session Die ChatSession, über die die Files transferiert werden.
 	 */
-	public DnDText(ChatSession session) {
-		this.session=session;
+	public DnDText(Object server) {
+		this.server=server;
+			 
 		try {
-			this.values=session.getValues();
+			this.values=(DefaultListModel)Remote.invoke(server, "getValues", null);
 			target=new JList(values);
 //			FileServer starten
 			fserver=new FileServerImpl();
-		} catch (RemoteException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		dragSource = DragSource.getDefaultDragSource();
@@ -110,12 +112,17 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 					while (dateien.hasNext()) {
 						File file =(File) dateien.next();				
 						String name=file.getName();
-						session.setStatus("Neuer File "+name+" wird von User "+session.getNickname()+" bereitgestellt.");
+						Remote.invoke(server, "setStatus", "Neuer File "+name+" wird bereitgestellt.");
+//						session.setStatus("Neuer File "+name+" wird von User "+session.getNickname()+" bereitgestellt.");
 						try {
-							session.setStatus("Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");						
-							session.addFile(file,name,InetAddress.getLocalHost().getHostAddress());
+							Remote.invoke(server, "setStatus", "Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");						
+//							session.setStatus("Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");			
+							Object[] args = {file,name,InetAddress.getLocalHost().getHostAddress()};
+							Remote.invoke(server, "addFile",args); 
+//							session.addFile(file,name,InetAddress.getLocalHost().getHostAddress());
 						} catch (Exception e1) {		
-							session.setStatus("File "+name+" konnte leider nicht geladen werden.");
+//							session.setStatus("File "+name+" konnte leider nicht geladen werden.");
+							Remote.invoke(server, "setStatus", "File "+name+" konnte leider nicht geladen werden.");
 							e1.printStackTrace();
 						}
 					}				
@@ -150,8 +157,8 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 				dge.startDrag(null,null,null,temp,this);
 				
 				
-				Object[] fileinfo=(Object[])session.getFile(index);	
-				t=new Thread(new FileDownload(session,fileinfo,tempfile));
+//				Object[] fileinfo=(Object[])session.getFile(index);	
+//				t=new Thread(new FileDownload(session,fileinfo,tempfile));
 			
 
 				

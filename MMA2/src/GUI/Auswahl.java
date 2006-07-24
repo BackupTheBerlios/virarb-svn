@@ -2,6 +2,7 @@ package GUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Server.ChatServerImpl;
+import Server.Server;
 import com.cloudgarden.layout.AnchorConstraint;
 import com.cloudgarden.layout.AnchorLayout;
 import javax.swing.*;
@@ -123,7 +124,7 @@ public class Auswahl extends JFrame {
 			System.out.println(e.getActionCommand());
 			if(e.getActionCommand().equals("Hoste Session")){ //HOSTEN
 				try {
-					new ChatServerImpl();
+					new Server();
 					System.out.println("Server gestartet");
 					Main main=new Main(username);
 					main.setVisible(true);
