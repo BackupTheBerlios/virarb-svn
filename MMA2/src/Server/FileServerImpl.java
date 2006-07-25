@@ -1,29 +1,37 @@
 package Server;
 
+import gnu.cajo.invoke.Remote;
+import gnu.cajo.utils.ItemServer;
 import java.io.*;
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import javax.swing.DefaultListModel;
+import GUI.Ip;
 
 
-public class FileServerImpl extends UnicastRemoteObject implements FileServer {
+public class FileServer {
 	private final int CHUNKSIZE=1024*1024;
 	
 	
-	public FileServerImpl() throws RemoteException {
-		try {
-			LocateRegistry.createRegistry(1100);
-			Naming.rebind("file-server", this);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		System.out.println("FileServer gestartet unter Ip "+ System.getProperty("java.rmi.server.hostname") );
-
+	String wanIp = new String();
+	String lanIp = new String();
+	try {
+		wanIp = Ip.getWanIp(); 
+		lanIp = InetAddress.getLocalHost().getHostAddress();
+		Remote.config(lanIp, 1234, wanIp, 1234);
+	    ItemServer.bind(this, "VirArbServer");
+	} catch (Exception ex) {
+		ex.printStackTrace();
 	}
+	lines.addElement(new String("malen"));
+	values=new DefaultListModel();	
 
-
-	
+	System.out.println("Server gestartet unter lokaler Ip " + lanIp );
+	System.out.println("Server gestartet unter öffentlicher Ip " + wanIp );
+	}
 	public long getNumChunks(File f){
 		return f.length()/CHUNKSIZE;
 	}
@@ -41,8 +49,7 @@ public class FileServerImpl extends UnicastRemoteObject implements FileServer {
 		else
 		{
 			data = new byte[(int)f.length()%CHUNKSIZE];
-		}
-		
+		}	
 		
 		try {
 			BufferedInputStream bin=new BufferedInputStream(new FileInputStream(f));
