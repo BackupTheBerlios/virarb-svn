@@ -61,7 +61,7 @@ public class Main extends javax.swing.JFrame{
 		}
 		initGUI();
 		try {
-			session.setStatus("Server gestartet.");
+			Remote.invoke(server, "setStatus", "Server gestartet.");
 			sendMessage(new Chatmessage(Color.BLACK,"Server gestartet von '"+username+"' unter der IP: "+ip,new Date(),"System"));	
 			sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' ist der Sitzung beigetreten.",new Date(),"System"));
 		} catch (Exception e) {
@@ -78,7 +78,7 @@ public class Main extends javax.swing.JFrame{
 		super();
 		this.username=username;
 	   	try {
-	   		ip=InetAddress.getLocalHost().getHostAddress();
+	   		//ip=InetAddress.getLocalHost().getHostAddress();
 	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
 	   		proxy = new ItemProxy(cp, this);
@@ -380,7 +380,7 @@ public class Main extends javax.swing.JFrame{
 		 */
 		public void windowClosing(WindowEvent arg0) {
 			try {
-				session.setStatus("User "+session.getNickname()+ " hat die Sitzung verlassen");
+//				session.setStatus("User "+session.getNickname()+ " hat die Sitzung verlassen");
 				sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' hat die Sitzung verlassen",new Date(),"System"));
 //				Remote.invoke(server, "remove, ");
 			} catch (Exception e) {

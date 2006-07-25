@@ -2,22 +2,12 @@ package GUI;
 
 import gnu.cajo.invoke.Remote;
 import java.net.InetAddress;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
 import java.util.*;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.*;
-import Server.ChatServer;
-import Server.ChatSession;
-import Server.ClientHandleImpl;
 import Server.FileServer;
-import Server.FileServerImpl;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.MouseEvent;
@@ -45,13 +35,12 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	 * @param session Die ChatSession, über die die Files transferiert werden.
 	 */
 	public DnDText(Object server) {
-		this.server=server;
-			 
+		this.server=server;			 
 		try {
 			this.values=(DefaultListModel)Remote.invoke(server, "getValues", null);
 			target=new JList(values);
 //			FileServer starten
-			fserver=new FileServerImpl();
+			fserver=new FileServer();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -117,7 +106,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 						try {
 							Remote.invoke(server, "setStatus", "Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");						
 //							session.setStatus("Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");			
-							Object[] args = {file,name,InetAddress.getLocalHost().getHostAddress()};
+							Object[] args = {file,name,fserver.getWanIp()};
 							Remote.invoke(server, "addFile",args); 
 //							session.addFile(file,name,InetAddress.getLocalHost().getHostAddress());
 						} catch (Exception e1) {		
@@ -144,22 +133,15 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 				tempfile=new File(values.get(index).toString());
 				tempfile.createNewFile();
 				tempfile.deleteOnExit();
-
 				
+				
+				int[] i = {index};
+				Object[] fileinfo=(Object[])Remote.invoke(server, "getFile", i);	
+				t=new Thread(new FileDownload(fileinfo,tempfile));
+	
 				Trans temp=new Trans(tempfile);
-				
-//				java.util.List fileList = (java.util.List) temp.getTransferData(DataFlavor.javaFileListFlavor);
-//				File f = (File) fileList.get(0);			
-//				System.out.println(f.toURI());
-//				System.out.println(f.toURL());
-//				System.out.println(f.getAbsolutePath());
-				
+	
 				dge.startDrag(null,null,null,temp,this);
-				
-				
-//				Object[] fileinfo=(Object[])session.getFile(index);	
-//				t=new Thread(new FileDownload(session,fileinfo,tempfile));
-			
 
 				
 			} catch (Exception e) {
@@ -282,7 +264,6 @@ class Trans implements Transferable {
 		ArrayList list = new ArrayList( );
 		list.add(temp);
 		return list;
-
 	}	
 
 	/* (non-Javadoc)
@@ -292,7 +273,6 @@ class Trans implements Transferable {
 		DataFlavor[] df = new DataFlavor[1];
 		df[0] = DataFlavor.javaFileListFlavor;
 		return df;
-
 	}
 
 	public boolean isDataFlavorSupported(DataFlavor flavor) {

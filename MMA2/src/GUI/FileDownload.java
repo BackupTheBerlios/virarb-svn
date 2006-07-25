@@ -1,61 +1,54 @@
 package GUI;
-import java.awt.dnd.DragGestureEvent;
+import gnu.cajo.invoke.Remote;
+import gnu.cajo.invoke.RemoteInvoke;
+import gnu.cajo.utils.extra.ItemProxy;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import Server.*;
 
 
 public class FileDownload implements Runnable {
-	ChatSession session;
+	//ChatSession session;
 	Object[] fileinfo;
 	File tempfile;
+	ItemProxy proxy;
 
-	public FileDownload(ChatSession session,Object[] fileinfo,File tempfile){
-		this.session=session;
+	public FileDownload(Object[] fileinfo,File tempfile){
+		//this.session=session;
 		this.fileinfo=fileinfo;
 		this.tempfile=tempfile;
-
 	}
 	
 	public void run() {
-			FileServer tempfserver=null;
+			Object tempfserver=null;
 			String ip=(String)fileinfo[0];
 			File  f=(File)fileinfo[1];
 			
 			try {
-		   		tempfserver = (FileServer)Naming.lookup("file-server");
-		   		
-		   	} catch (Exception e) {
+		   		tempfserver = (Object)Remote.getItem("//"+ip+":1234/VirArbFileServer");
+		   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(tempfserver, "getCp", null);
+		   		proxy = new ItemProxy(cp, this);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 		   	try {
-				long numChunks=tempfserver.getNumChunks(f);
+				long numChunks=((long[])Remote.invoke(tempfserver, "getNumChunksRemote",f))[0];
 				BufferedOutputStream bout=new BufferedOutputStream(new FileOutputStream(tempfile));
 				
 				for(int i=0;i<=numChunks;i++){
-					byte[]  buffer=tempfserver.readChunk(f,i);
+					int[] ii = {i};
+					Object[] args = {f, ii};
+					byte[]  buffer=(byte[])Remote.invoke(tempfserver, "readChunk", args);
 					bout.write(buffer,0,buffer.length);
 					buffer=null;
 					bout.flush();
 				}
 				bout.close();
 
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {	
 				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 			
 		}
 

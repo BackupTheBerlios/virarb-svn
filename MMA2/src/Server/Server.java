@@ -120,8 +120,8 @@ public class Server {
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#getFile(int)
 	 */
-	public Object[] getFile(int index){
-		return (Object[])files.get(index);
+	public Object[] getFile(int[] index){
+		return (Object[])files.get(index[0]);
 	}
 	
 

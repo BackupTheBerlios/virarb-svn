@@ -17,7 +17,7 @@ public  class Ip {
 	            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 	            String line = reader.readLine();
 	            ip = line.substring(76,line.length()-14);	          	
-	            System.out.println(ip);
+//	            System.out.println(ip);
 	            reader.close(); 
 	       	} 
      		catch (Exception ioe)
