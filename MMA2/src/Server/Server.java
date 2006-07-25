@@ -99,8 +99,8 @@ public class Server {
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#addFile(byte[], java.lang.String)
 	 */
-	public void addFile(File f,String name,String ip){
-		Object[] temp={ip,f};
+	public void addFile(File f,String name,String lanIp, String wanIp){
+		Object[] temp={lanIp, wanIp,f};
 		files.add(temp);	
 		values.addElement(name);
 		Participant p;

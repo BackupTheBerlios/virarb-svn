@@ -19,13 +19,15 @@ public class FileDownload implements Runnable {
 		this.tempfile=tempfile;
 	}
 	
+	// noch an die möglichkeit von zugriffen übers internet konfigurieren
 	public void run() {
 			Object tempfserver=null;
-			String ip=(String)fileinfo[0];
-			File  f=(File)fileinfo[1];
+			String lanIp=(String)fileinfo[0];
+			String wanIp=(String)fileinfo[1];
+			File  f=(File)fileinfo[2];
 			
 			try {
-		   		tempfserver = (Object)Remote.getItem("//"+ip+":1234/VirArbFileServer");
+		   		tempfserver = (Object)Remote.getItem("//"+lanIp+":1234/VirArbFileServer");
 		   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(tempfserver, "getCp", null);
 		   		proxy = new ItemProxy(cp, this);
 			} catch (Exception e) {
