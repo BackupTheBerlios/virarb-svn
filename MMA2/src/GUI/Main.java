@@ -12,14 +12,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.InetAddress;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
 import Server.*;
@@ -33,9 +38,9 @@ public class Main extends javax.swing.JFrame{
 	private String username="User";
 	private Color myColor=Color.BLACK;
 	private SimpleAttributeSet set;
-	private ChatSession session;
 	private Object server;
 	private ItemProxy proxy;
+	private boolean serverAvailable = true;
 
 	
 	/**
@@ -53,7 +58,6 @@ public class Main extends javax.swing.JFrame{
 	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
 	   		proxy = new ItemProxy(cp, this);
-	   		
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	
 	   	} catch (Exception e) {
@@ -74,19 +78,45 @@ public class Main extends javax.swing.JFrame{
 	 * @param ip Die IP-Adresse des Servers.
 	 * @param username Der Name des Users.
 	 */
-	public Main(String ip,String username){
+	public Main(String ip,String username) throws Exception{
 		super();
 		this.username=username;
-	   	try {
-	   		//ip=InetAddress.getLocalHost().getHostAddress();
-	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
+   		String lanIp = ip;
+		String wanIp = ip;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");		
+			Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");		
+			Statement statement = connection.createStatement();	
+			
+			String abfrage="SELECT LanIp,WanIp FROM UserOnline WHERE Nickname='"+ip+"';";
+			ResultSet x = statement.executeQuery(abfrage);
+			if(!x.next()){
+				throw new Exception("Kein Server gefunden!");
+			}
+			else{
+				lanIp = x.getString(1);
+				wanIp = x.getString(2);
+			}
+		} catch (Exception e2) {
+			//throw new Exception("Keine Verbindung zur Datenbank");
+//			e2.printStackTrace();
+		}
+		try {
+			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
-	   		proxy = new ItemProxy(cp, this);
-	   		
+	   		proxy = new ItemProxy(cp, this); 		
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
-
 	   	} catch (Exception e) {
-			e.printStackTrace();
+	   	   System.out.println("Server im lokalen Netz nicht gefunden. Versuch über WanIp");
+	   	   try {
+		   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
+		   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
+		   		proxy = new ItemProxy(cp, this);	   		
+		   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
+	   	   }
+	   	   catch(Exception e1){
+	   		   throw new Exception("Kein Server gefunden!");
+	   	   }
 		}
 		initGUI();
 		try {
@@ -95,7 +125,6 @@ public class Main extends javax.swing.JFrame{
 			sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' ist der Sitzung beigetreten.",new Date(),"System"));
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -113,7 +142,30 @@ public class Main extends javax.swing.JFrame{
 		Border lineborder = BorderFactory.createLineBorder(Color.black);
 		Border lowerededge = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		
-		Main_action al=new Main_action();
+		Main_action al=new Main_action(this);
+		
+		JMenuBar mbar = new JMenuBar();
+		
+		JMenu aktionen = new JMenu("Menu");
+		JMenuItem aktionen1 = new JMenuItem("Arbeitsraum verlassen");
+		aktionen1.addActionListener(al);
+		aktionen.add(aktionen1);
+		JMenuItem aktionen2 = new JMenuItem("Programm schließen");
+		aktionen2.addActionListener(al);
+		aktionen.add(aktionen2);	
+		
+		JMenu hilfe = new JMenu("Help");
+		JMenuItem hilfe1 = new JMenuItem("Hilfe");
+		hilfe1.addActionListener(al);
+		hilfe.add(hilfe1);	
+		JMenuItem hilfe2 = new JMenuItem("Info");
+		hilfe2.addActionListener(al);
+		hilfe.add(hilfe2);
+		
+		mbar.add(aktionen);
+		mbar.add(hilfe);
+		
+		this.setJMenuBar(mbar);
 		
 		try {
 			this.getContentPane().setLayout(new BorderLayout());
@@ -237,9 +289,11 @@ public class Main extends javax.swing.JFrame{
 			
 			
 //			Dummys senden damit verbindung nicht gekappt wird
-//			Thread t =new Thread(new DummyPakete(server));
-//			t.start();
+			Thread t1 =new Thread(new DummyPakete(server));
+			t1.start();
 			
+			Thread t2 = new Thread(new ServerChecker());
+			t2.start();
 
 			
 		} catch (Exception e) {
@@ -312,11 +366,7 @@ public class Main extends javax.swing.JFrame{
 	public void receiveNewFile(String filename) {
 		filetable.addElement(filename);
 	}
-	
-	
-	
-
-	
+		
 	//Statusleiste
 	/**
 	 * Über diese Methode wird ein neuer Text in der Statusleiste angezeigt
@@ -335,8 +385,18 @@ public class Main extends javax.swing.JFrame{
 		return ta_chat.getDocument();
 	}
 	
-	
 
+	public void setServerUnavailable() {
+		this.serverAvailable = false;
+	}
+
+	public void leave(){
+		Error err = new Error("Info","Der Arbeitsraum wurde geschlossen.",this);
+		err.setVisible(true);
+		Auswahl a=new Auswahl(username);
+		a.setVisible(true);
+		this.dispose();		
+	}
 	
 	/**
 	 * DIe Klasse stellt den ActionListener für die Klasse Main zur Verfügung.
@@ -344,6 +404,17 @@ public class Main extends javax.swing.JFrame{
 	 *
 	 */
 	public class Main_action implements ActionListener,WindowListener{
+		
+		private Main owner;
+		
+		/**
+		 * Konstruktor
+		 * @param owner Der zu dem Listener gehörende JFrame
+		 */
+		public Main_action(Main owner){
+			this.owner=owner;
+		}
+		
 		public void actionPerformed(ActionEvent e){
 			
 			if(e.getActionCommand().equals("Senden")){
@@ -366,6 +437,44 @@ public class Main extends javax.swing.JFrame{
 					e1.printStackTrace();
 				}
 			}
+			else if(e.getActionCommand().equals("Arbeitsraum verlassen")){
+				try {
+					if(((String)Remote.invoke(server, "getStarter", null)).equals(username)){
+						Remote.invoke(owner.server, "shutDown", null);
+					}			
+					else{
+						leave();
+					}
+				} catch (Exception e1) {					
+					e1.printStackTrace();
+					leave();
+				}
+			}
+			else if(e.getActionCommand().equals("Programm schließen")){
+				try {
+					Class.forName("com.mysql.jdbc.Driver");			
+					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
+					Statement statement = connection.createStatement();	
+					statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");
+//					session.setStatus("User "+session.getNickname()+ " hat die Sitzung verlassen");
+					sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' hat die Sitzung verlassen",new Date(),"System"));
+					if(((String)Remote.invoke(server, "getStarter", null)).equals(username)){
+						Remote.invoke(owner.server, "shutDown", null);
+					}			
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				System.exit(0);	
+			}
+			else if(e.getActionCommand().equals("Hilfe")){
+				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
+				help.setVisible(true);
+			}
+			else if(e.getActionCommand().equals("Info")){
+				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nKlassen,Kokoschka,Meurer",owner);
+				info.setVisible(true);
+			}
+
 		}
 		
 
@@ -380,14 +489,19 @@ public class Main extends javax.swing.JFrame{
 		 */
 		public void windowClosing(WindowEvent arg0) {
 			try {
+				Class.forName("com.mysql.jdbc.Driver");			
+				Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
+				Statement statement = connection.createStatement();	
+				statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");
 //				session.setStatus("User "+session.getNickname()+ " hat die Sitzung verlassen");
 				sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' hat die Sitzung verlassen",new Date(),"System"));
-//				Remote.invoke(server, "remove, ");
-			} catch (Exception e) {
-				e.printStackTrace();
+				if(((String)Remote.invoke(server, "getStarter", null)).equals(username)){
+					Remote.invoke(owner.server, "shutDown", null);
+				}			
+			} catch (Exception e1) {
+				e1.printStackTrace();
 			}
-			System.exit(0);
-			
+			System.exit(0);	
 		}
 		public void windowDeactivated(WindowEvent arg0) {
 		}
@@ -402,7 +516,20 @@ public class Main extends javax.swing.JFrame{
 		}
 		
 	}
-
+	
+	public class ServerChecker implements Runnable{
+		public void run() {		
+			while(serverAvailable == true){
+//				System.out.println("Check server");
+				try {
+					Thread.sleep(1000 * 2);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}	
+			leave();
+		}
+	}
 
 
 

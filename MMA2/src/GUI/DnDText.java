@@ -1,10 +1,8 @@
 package GUI;
 
 import gnu.cajo.invoke.Remote;
-import java.net.InetAddress;
 import java.util.*;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.*;
 import Server.FileServer;
@@ -99,7 +97,9 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 				try {
 					Iterator dateien = ((java.util.List) trans.getTransferData(selectedFlavor)).iterator();
 					while (dateien.hasNext()) {
-						File file =(File) dateien.next();				
+						File file =(File) dateien.next();		
+//						URI uri = file.toURI();
+//						URL url = file.toURL();
 						String name=file.getName();
 						Remote.invoke(server, "setStatus", "Neuer File "+name+" wird bereitgestellt.");
 //						session.setStatus("Neuer File "+name+" wird von User "+session.getNickname()+" bereitgestellt.");
@@ -134,16 +134,13 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 				tempfile.createNewFile();
 				tempfile.deleteOnExit();
 				
-				
 				int[] i = {index};
 				Object[] fileinfo=(Object[])Remote.invoke(server, "getFile", i);	
-				t=new Thread(new FileDownload(fileinfo,tempfile));
-	
+				t=new Thread(new FileDownload(fileinfo,tempfile,dge,this));
+				t.start();
 				Trans temp=new Trans(tempfile);
-	
 				dge.startDrag(null,null,null,temp,this);
-
-				
+						
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -164,7 +161,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 //					byte[] data=session.getFile(index);	
 					tempfile=new File(values.get(index).toString());
 					tempfile.createNewFile();
-					FileOutputStream out = new FileOutputStream(tempfile);
+//					FileOutputStream out = new FileOutputStream(tempfile);
 //					out.write(data);
 //					out.close( );
 //					Runtime.getRuntime().exec("start "+tempfile.getAbsolutePath());
@@ -211,7 +208,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	
 	
 	public void dragDropEnd(DragSourceDropEvent arg0) {
-		t.start(); // starte download
+		//t.start(); // starte download
 	}
 
 	public void dragEnter(DragSourceDragEvent arg0) {

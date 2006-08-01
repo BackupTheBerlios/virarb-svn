@@ -29,7 +29,7 @@ public class Splash {
 	private Splash(){
 		showSplash(true);
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(1000 * 4);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

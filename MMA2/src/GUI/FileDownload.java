@@ -2,24 +2,26 @@ package GUI;
 import gnu.cajo.invoke.Remote;
 import gnu.cajo.invoke.RemoteInvoke;
 import gnu.cajo.utils.extra.ItemProxy;
+import java.awt.dnd.DragGestureEvent;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
 
 public class FileDownload implements Runnable {
-	//ChatSession session;
-	Object[] fileinfo;
-	File tempfile;
-	ItemProxy proxy;
+	private Object[] fileinfo;
+	private File tempfile;
+	private DragGestureEvent dge;
+	private ItemProxy proxy;
+	private DnDText x;
 
-	public FileDownload(Object[] fileinfo,File tempfile){
-		//this.session=session;
-		this.fileinfo=fileinfo;
-		this.tempfile=tempfile;
+	public FileDownload(Object[] fileinfo,File tempfile,DragGestureEvent dge, DnDText x){
+		this.fileinfo = fileinfo;
+		this.tempfile = tempfile;
+		this.dge = dge;
+		this.x = x;
 	}
 	
-	// noch an die möglichkeit von zugriffen übers internet konfigurieren
 	public void run() {
 			Object tempfserver=null;
 			String lanIp=(String)fileinfo[0];
@@ -31,7 +33,17 @@ public class FileDownload implements Runnable {
 		   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(tempfserver, "getCp", null);
 		   		proxy = new ItemProxy(cp, this);
 			} catch (Exception e) {
+				System.out.println("No Fileserver under lanIp");
 				e.printStackTrace();
+				try {
+					tempfserver = (Object)Remote.getItem("//"+wanIp+":1234/VirArbFileServer");
+			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(tempfserver, "getCp", null);
+			   		proxy = new ItemProxy(cp, this);
+				}
+				catch(Exception e1) {
+					System.out.println("Can't reach any Fileserver");
+					e.printStackTrace();
+				}
 			}
 			
 		   	try {
@@ -47,11 +59,10 @@ public class FileDownload implements Runnable {
 					bout.flush();
 				}
 				bout.close();
-
+				//Trans temp=new Trans(tempfile);
+				//dge.startDrag(null,null,null,temp,x);
 			} catch (Exception e) {	
 				e.printStackTrace();
-			} 
-			
+			} 		
 		}
-
 }

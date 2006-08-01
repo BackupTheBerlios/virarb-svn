@@ -191,7 +191,7 @@ public class Reg extends JFrame{
 						Statement statement = connection.createStatement();
 						
 						InetAddress inet=InetAddress.getLocalHost();
-						statement.executeUpdate("INSERT INTO UserData(Nickname,Vorname,Nachname,Email,Passwort,IP) VALUES ('"+Nickname+"', '"+Vorn+"','"+Lastname+"', '"+Mail+"', '"+pw+"','"+inet.getHostAddress()+"')");
+						statement.executeUpdate("INSERT INTO UserData(Nickname,Vorname,Nachname,Email,Passwort) VALUES ('"+Nickname+"', '"+Vorn+"','"+Lastname+"', '"+Mail+"', '"+pw+"')");
 						Error err2=new Error("Glückwunsch","Du hast dich erfolgreich angemeldet.\nDu kannst dich jetzt einloggen.",owner);
 						err2.setModal(true);
 						err2.setVisible(true);

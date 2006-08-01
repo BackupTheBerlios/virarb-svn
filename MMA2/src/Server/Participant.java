@@ -25,4 +25,24 @@ public class Participant{
 		this.name = name;
 	}
 	
+	public boolean equals(Object o){
+		if(o instanceof String){
+			if(o.equals(this.name)){
+				return true;
+			}
+			else{
+				return false;
+			}	
+		}
+		else if(o instanceof Participant)
+			if(((Participant)o).name.equals(this.name)){
+				return true;
+			}
+			else{
+				return false;
+			}	
+		else
+			return o == this;
+	}
+	
 }

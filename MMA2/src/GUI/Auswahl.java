@@ -1,7 +1,9 @@
 package GUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import Server.ChatServerImpl;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.*;
 import Server.Server;
 import com.cloudgarden.layout.AnchorConstraint;
 import com.cloudgarden.layout.AnchorLayout;
@@ -19,7 +21,7 @@ import javax.swing.*;
  */
 public class Auswahl extends JFrame {
 
-	private static String myWanIP=Ip.getWanIp(); 
+	//private static String myWanIP=Ip.getWanIp(); 
 	private JTextField tf_ip;
 	private String username="user";
 
@@ -38,7 +40,7 @@ public class Auswahl extends JFrame {
 	 */
 	public Auswahl() {
 		super();
-		System.setProperty("java.rmi.server.hostname",myWanIP);
+		//System.setProperty("java.rmi.server.hostname",myWanIP);
 		initGUI();
 	}
 	
@@ -49,7 +51,7 @@ public class Auswahl extends JFrame {
 	public Auswahl(String name) {
 		super();
 		this.username=name;
-		System.setProperty("java.rmi.server.hostname",myWanIP);
+		//System.setProperty("java.rmi.server.hostname",myWanIP);
 		initGUI();
 	}
 	
@@ -61,7 +63,7 @@ public class Auswahl extends JFrame {
 		JButton button_join;
 		JButton button_warten;
 		Auswahl_action al=new Auswahl_action(this);
-
+		this.addWindowListener(al);
 		try {
 			AnchorLayout thisLayout = new AnchorLayout();
 			this.getContentPane().setLayout(thisLayout);
@@ -95,7 +97,7 @@ public class Auswahl extends JFrame {
 				button_startserver.addActionListener(al);
 			}
 			this.getRootPane().setDefaultButton(button_join);
-			this.setTitle("Virtueller Arbeitsraum 0.1   [" + username + "]");
+			this.setTitle("Virtueller Arbeitsraum 0.8   [" + username + "]");
 			pack();
 			setSize(400, 300);
 			this.setResizable(false);
@@ -110,7 +112,7 @@ public class Auswahl extends JFrame {
 	 * Die Klasse stellt den ActionListener für die Kalsse Auswahl zur Verfügung
 	 * @author Daniel Meuer
 	 */
-	public class Auswahl_action implements ActionListener{
+	public class Auswahl_action implements ActionListener, WindowListener{
 		
 		private JFrame owner;
 		/**
@@ -124,7 +126,7 @@ public class Auswahl extends JFrame {
 			System.out.println(e.getActionCommand());
 			if(e.getActionCommand().equals("Hoste Session")){ //HOSTEN
 				try {
-					new Server();
+					new Server(username);
 					System.out.println("Server gestartet");
 					Main main=new Main(username);
 					main.setVisible(true);
@@ -151,6 +153,41 @@ public class Auswahl extends JFrame {
 					}
 	
 			}
+		}
+		public void windowClosed(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowActivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowClosing(WindowEvent arg0) {
+			try {
+				Class.forName("com.mysql.jdbc.Driver");			
+				Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
+				Statement statement = connection.createStatement();	
+				statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.exit(0);
+		}
+		public void windowDeactivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowDeiconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowIconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowOpened(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	

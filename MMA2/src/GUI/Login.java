@@ -176,7 +176,7 @@ public class Login extends JFrame {
 					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");
 					
 					Statement statement = connection.createStatement();	
-					String abfrage="SELECT Passwort FROM UserData WHERE Nickname='"+name+"';";
+					String abfrage="SELECT Passwort, Nickname FROM UserData WHERE Nickname='"+name+"';";
 					ResultSet x = statement.executeQuery(abfrage);
 					if(!x.next()){
 						Error err=new Error("Fehler","Bitte Username und Passwort eingeben \noder registrieren wenn noch kein gültiger \nAccount vorliegt!",owner);					
@@ -185,6 +185,19 @@ public class Login extends JFrame {
 					else{				
 				
 						if(pw.equals(x.getString(1))){
+							String nickname = x.getString(2);
+							String lanIp = Ip.getLanIp();
+							String wanIp = Ip.getWanIp();
+							
+							try {
+								statement = connection.createStatement();	
+								statement.executeUpdate("INSERT INTO UserOnline(Nickname,LanIp,WanIp) VALUES ('"+nickname+"','"+lanIp+"','"+wanIp+"');");
+							} catch (Exception e1) {
+//									e1.printStackTrace();
+									Error err=new Error("Warnung","Sorry, User "+nickname+" ist schon eingeloggt",owner);									
+									err.setVisible(true);
+									return;
+							}
 							Error err=new Error("Glückwunsch","Sie haben sich erfolgreich eingeloggt.",owner);					
 							err.setVisible(true);
 							Auswahl aw=new Auswahl(name);

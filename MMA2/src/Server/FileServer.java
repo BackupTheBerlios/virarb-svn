@@ -18,7 +18,7 @@ public class FileServer {
 		lanIp = new String();
 		try {
 			wanIp = Ip.getWanIp(); 
-			lanIp = InetAddress.getLocalHost().getHostAddress();
+			lanIp = Ip.getLanIp();
 			//Remote.config(lanIp, 1235, wanIp, 1235);
 		    ItemServer.bind(this, "VirArbFileServer");
 		} catch (Exception ex) {

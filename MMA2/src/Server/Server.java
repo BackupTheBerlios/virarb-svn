@@ -6,6 +6,9 @@ import gnu.cajo.utils.extra.ClientProxy;
 import java.awt.Color;
 import java.io.File;
 import java.net.InetAddress;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,25 +21,27 @@ import GUI.Ip;
 
 public class Server {
 
-	private List sessions = new ArrayList();
+	private List participantList = new ArrayList();
 	private List files=new ArrayList();
 	private DefaultListModel values;
 	private Vector lines = new Vector();
 	private int count=0;
 	private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
+	private String starter;
 	
-	public static void main(String[] args){
-		try {
-			new Server();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args){
+//		try {
+//			new Server();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	/**
 	 * Konstruktor
 	 * @throws Exception
 	 */
-	public Server() throws Exception {
+	public Server(String starter) throws Exception {
+		this.starter = starter;
 		String wanIp = new String();
 		String lanIp = new String();
 		try {
@@ -57,7 +62,7 @@ public class Server {
 	   public Remote getCp(String name) throws Exception {
 	      ClientProxy cp = new ClientProxy();
 	      Participant p = new Participant(name, cp);
-	      sessions.add(p);
+	      participantList.add(p);
 	      System.out.println("User "+name+" joined!");
 	      return cp.remoteThis;
 	   }
@@ -74,12 +79,12 @@ public class Server {
 		Participant p;
 		message.setTime(new Date());
 //		chat=chat+("\n"+message.getUser()+" ["+message.getTime()+"]: "+message.getMessage());
-		for (int i = 0; i < sessions.size(); i++) {
-			p = (Participant) sessions.get(i);
+		for (int i = 0; i < participantList.size(); i++) {
+			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
 			} catch (Exception ex) {
-				removeSession(p);
+				removeParticipant(p);
 				i--; 
 				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
@@ -92,8 +97,18 @@ public class Server {
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#removeSession(Server.ChatSession)
 	 */
-	public void removeSession(Participant p) {
-		sessions.remove(p);
+	public void removeParticipant(Participant p) {
+		try {
+//			Class.forName("com.mysql.jdbc.Driver");			
+//			Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
+//			Statement statement = connection.createStatement();	
+//			statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+p.name+"';");
+			participantList.remove(p);
+			setStatus("User "+p.name+ " hat die Sitzung verlassen");
+			postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -104,19 +119,20 @@ public class Server {
 		files.add(temp);	
 		values.addElement(name);
 		Participant p;
-		for (int i = 0; i < sessions.size(); i++) {
-			p = (Participant) sessions.get(i);
+		for (int i = 0; i < participantList.size(); i++) {
+			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "receiveNewFile", name);	
 			} catch (Exception e) {
 				e.printStackTrace();
-				removeSession(p);
+				removeParticipant(p);
 				i--;
 				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			}
 		}
 	}
+	
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#getFile(int)
 	 */
@@ -139,13 +155,13 @@ public class Server {
 	public void addElement(ColorLine x) throws Exception{
 		lines.add(x);
 		Participant p;
-		for (int i = 0; i < sessions.size(); i++) {
-			p = (Participant) sessions.get(i);
+		for (int i = 0; i < participantList.size(); i++) {
+			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);	
 			} catch (Exception e) {
 				e.printStackTrace();
-				removeSession(p);
+				removeParticipant(p);
 				i--;
 				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
@@ -161,13 +177,13 @@ public class Server {
 		Participant p;
 		lines.removeAllElements();
 		lines.addElement(new String("loeschen"));
-		for (int i = 0; i < sessions.size(); i++) {
-			p = (Participant) sessions.get(i);
+		for (int i = 0; i < participantList.size(); i++) {
+			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);
 			} catch (Exception e) {
 				e.printStackTrace();
-				removeSession(p);
+				removeParticipant(p);
 				i--;
 				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
@@ -181,12 +197,12 @@ public class Server {
 	 */
 	public void setStatus(String status){
 		 Participant p;
-			for (int i = 0; i < sessions.size(); i++) {
-				p = (Participant) sessions.get(i);
+			for (int i = 0; i < participantList.size(); i++) {
+				p = (Participant) participantList.get(i);
 				try {
 					Remote.invoke(p.getCp(), "setStatus", status);
 				} catch (Exception ex) {					
-					removeSession(p);
+					removeParticipant(p);
 					i--; 
 					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
@@ -206,9 +222,9 @@ public class Server {
 	 * @see Server.ChatServer#getChat()
 	 */
 	public Document getChat() {		
-		Participant p=(Participant)sessions.get(0);
+		Participant p=(Participant)participantList.get(0);
 		try {
-			return (Document) Remote.invoke(p.getCp(),"getChat",null);			
+			return (Document) Remote.invoke(p.getCp(),"getChat", null);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -217,6 +233,25 @@ public class Server {
 	
 	public void sendDummy() throws Exception {
 		// wir machen gar nix
-		System.out.println("Dummy");
+		//System.out.println("Dummy");
 	}
+
+	public void shutDown(){
+		Participant p;
+		while (participantList.size() > 0) {
+			p = (Participant) participantList.get(0);
+			try {
+				Remote.invoke(p.getCp(), "setServerUnavailable", null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			participantList.remove(p);
+		}	
+		//System.exit(0);
+	}
+
+	public String getStarter() {
+		return starter;
+	}
+
 }

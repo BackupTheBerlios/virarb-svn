@@ -1,11 +1,10 @@
 package GUI;
-import Server.ChatServer;
-
+import gnu.cajo.invoke.Remote;
 public class DummyPakete implements Runnable {
-	ChatServer server;
+	Object server;
 	
 	
-	public DummyPakete(ChatServer server){
+	public DummyPakete(Object server){
 		this.server=server;
 	}
 	
@@ -13,8 +12,7 @@ public class DummyPakete implements Runnable {
 		while(true){
 			try {
 				Thread.sleep(1000*90);
-				server.sendDummy();
-				
+				Remote.invoke(server, "sendDummy", null);				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

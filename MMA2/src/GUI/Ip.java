@@ -1,8 +1,10 @@
 package GUI;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 
 
 public  class Ip {
@@ -27,4 +29,13 @@ public  class Ip {
 		  return ip;
 	 }
 	
+	public static  String getLanIp() {
+		String ip = new String();
+		try {
+			ip = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return ip;
+	}
 }

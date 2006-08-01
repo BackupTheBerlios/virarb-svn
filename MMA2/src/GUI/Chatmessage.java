@@ -40,7 +40,6 @@ public class Chatmessage implements Serializable
 		this.user = user;
 	}
 	
-	
 	/**
 	 *   Ein ChatmessageObject in den Stream schreiben
 	 *   @param out Gibt den Stream an, in der geschrieben werden soll.	
