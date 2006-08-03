@@ -23,8 +23,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
 import Server.*;
@@ -98,27 +96,34 @@ public class Main extends javax.swing.JFrame{
 				wanIp = x.getString(2);
 			}
 		} catch (Exception e2) {
-			//throw new Exception("Keine Verbindung zur Datenbank");
+			throw new Exception("Keine Verbindung zur Datenbank");
 //			e2.printStackTrace();
 		}
+		
 		try {
 			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
 	   		proxy = new ItemProxy(cp, this); 		
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
-	   	   System.out.println("Server im lokalen Netz nicht gefunden. Versuch über WanIp");
-	   	   try {
-		   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
-		   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
-		   		proxy = new ItemProxy(cp, this);	   		
-		   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
+//	   	   System.out.println("Server im lokalen Netz nicht gefunden. Versuch über WanIp");
+	   	   if(!lanIp.equals(wanIp)){
+		   	   try {
+			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
+			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
+			   		proxy = new ItemProxy(cp, this);	   		
+			   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
+		   	   }
+		   	   catch(Exception e1){
+		   		   throw new Exception("Kein Server gefunden!");
+		   	   }
 	   	   }
-	   	   catch(Exception e1){
+	   	   else{
 	   		   throw new Exception("Kein Server gefunden!");
+ 
 	   	   }
 		}
-		initGUI();
+	   	initGUI();
 		try {
 			ta_chat.setDocument((Document)Remote.invoke(server, "getChat", null));
 			Remote.invoke(server, "setStatus", "User '"+username+"' ist der Sitzung beigetreten.");
@@ -389,8 +394,22 @@ public class Main extends javax.swing.JFrame{
 	public void setServerUnavailable() {
 		this.serverAvailable = false;
 	}
-
-	public void leave(){
+	
+	
+	public void leaveOnYourOwn(){
+		try {
+			Remote.invoke(server, "removeParticipant", username);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Error err = new Error("Info","Sie haben den Arbeitsraum verlassen.",this);
+		err.setVisible(true);
+		Auswahl a=new Auswahl(username);
+		a.setVisible(true);
+		this.dispose();		
+	}
+	
+	public void leaveByServer(){
 		Error err = new Error("Info","Der Arbeitsraum wurde geschlossen.",this);
 		err.setVisible(true);
 		Auswahl a=new Auswahl(username);
@@ -443,11 +462,11 @@ public class Main extends javax.swing.JFrame{
 						Remote.invoke(owner.server, "shutDown", null);
 					}			
 					else{
-						leave();
+						leaveOnYourOwn();
 					}
 				} catch (Exception e1) {					
 					e1.printStackTrace();
-					leave();
+					leaveOnYourOwn();
 				}
 			}
 			else if(e.getActionCommand().equals("Programm schließen")){
@@ -455,12 +474,13 @@ public class Main extends javax.swing.JFrame{
 					Class.forName("com.mysql.jdbc.Driver");			
 					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
 					Statement statement = connection.createStatement();	
-					statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");
-//					session.setStatus("User "+session.getNickname()+ " hat die Sitzung verlassen");
-					sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' hat die Sitzung verlassen",new Date(),"System"));
+					statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");				
 					if(((String)Remote.invoke(server, "getStarter", null)).equals(username)){
 						Remote.invoke(owner.server, "shutDown", null);
-					}			
+					}	
+					else{
+						Remote.invoke(server, "removeParticipant", username);
+					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -527,7 +547,7 @@ public class Main extends javax.swing.JFrame{
 					e.printStackTrace();
 				}
 			}	
-			leave();
+			leaveByServer();
 		}
 	}
 

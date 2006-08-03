@@ -4,7 +4,6 @@ import gnu.cajo.invoke.Remote;
 import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ClientProxy;
 import java.io.*;
-import java.net.InetAddress;
 import GUI.Ip;
 
 
@@ -19,7 +18,7 @@ public class FileServer {
 		try {
 			wanIp = Ip.getWanIp(); 
 			lanIp = Ip.getLanIp();
-			//Remote.config(lanIp, 1235, wanIp, 1235);
+			Remote.config(lanIp, 1235, wanIp, 1235);
 		    ItemServer.bind(this, "VirArbFileServer");
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -80,9 +79,5 @@ public class FileServer {
 	public void setWanIp(String wanIp) {
 		this.wanIp = wanIp;
 	}
-
-	
-//	public 
-
 
 }

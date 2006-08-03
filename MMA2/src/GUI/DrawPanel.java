@@ -1,12 +1,9 @@
 package GUI;
 
 import gnu.cajo.invoke.Remote;
-import java.rmi.RemoteException;
 import java.util.Vector;
 import java.awt.*;
 import java.awt.event.*;
-import Server.ChatSession;
-
 
 /**
  * Die Klasse DrawPanel erstellt ein Panel, in dem mit Hilfe der Maus

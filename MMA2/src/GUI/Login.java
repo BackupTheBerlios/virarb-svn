@@ -126,7 +126,7 @@ public class Login extends JFrame {
 
 			this.getRootPane().setDefaultButton(button_login);
 			this.setResizable(false);
-			this.setSize(500, 312);
+			this.setSize(500, 300);
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.setLocationRelativeTo(null);
 			this.setTitle("Virtueller Arbeitsplatz");

@@ -9,12 +9,14 @@ public class DummyPakete implements Runnable {
 	}
 	
 	public void run() {
-		while(true){
+		boolean x = true;
+		while(x){
 			try {
 				Thread.sleep(1000*90);
 				Remote.invoke(server, "sendDummy", null);				
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
+				x = false;
 			}
 			
 		}

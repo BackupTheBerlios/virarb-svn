@@ -5,7 +5,14 @@ import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ClientProxy;
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
+import java.lang.management.GarbageCollectorMXBean;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -28,6 +35,7 @@ public class Server {
 	private int count=0;
 	private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
 	private String starter;
+	private  Remote remoteRef;
 	
 //	public static void main(String[] args){
 //		try {
@@ -48,7 +56,7 @@ public class Server {
 			wanIp = Ip.getWanIp(); 
 			lanIp = InetAddress.getLocalHost().getHostAddress();
 			Remote.config(lanIp, 1234, wanIp, 1234);
-		    ItemServer.bind(this, "VirArbServer");
+			remoteRef =  ItemServer.bind(this, "VirArbServer");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -93,6 +101,9 @@ public class Server {
 		}
 	}
 
+	public void removeParticipant(String name) {
+		removeParticipant(new Participant(name, null));
+	}
 
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#removeSession(Server.ChatSession)
@@ -110,6 +121,8 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#addFile(byte[], java.lang.String)
@@ -127,8 +140,8 @@ public class Server {
 				e.printStackTrace();
 				removeParticipant(p);
 				i--;
-				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			}
 		}
 	}
@@ -163,8 +176,8 @@ public class Server {
 				e.printStackTrace();
 				removeParticipant(p);
 				i--;
-				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 
 			}
 		}
@@ -185,8 +198,8 @@ public class Server {
 				e.printStackTrace();
 				removeParticipant(p);
 				i--;
-				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			}
 		}
 		lines.setElementAt(new String("malen"),0);
@@ -233,7 +246,7 @@ public class Server {
 	
 	public void sendDummy() throws Exception {
 		// wir machen gar nix
-		//System.out.println("Dummy");
+//		System.out.println("Dummy");
 	}
 
 	public void shutDown(){
@@ -247,7 +260,11 @@ public class Server {
 			}		
 			participantList.remove(p);
 		}	
-		//System.exit(0);
+		try {
+			Remote.unexportObject(remoteRef, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 	}
 
 	public String getStarter() {
