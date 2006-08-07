@@ -253,7 +253,7 @@ class Trans implements Transferable {
 	/**
 	 * Die Datei
 	 */
-	private File temp;
+	private File f;
 	private Object x;
 	private boolean gotData = false;
 	private ArrayList list = new ArrayList( );
@@ -267,8 +267,8 @@ class Trans implements Transferable {
 	 * @param temp Die Datei, die verschickt werden soll
 	 * @throws IOException
 	 */
-	public Trans(File temp, Object x) throws IOException {
-		this.temp = temp;
+	public Trans(File f, Object x) throws IOException {
+		this.f = f;
 		this.x = x;
 	}
 
@@ -278,14 +278,18 @@ class Trans implements Transferable {
 	public Object getTransferData(DataFlavor flavor) {
 //		list.add(temp);
 		if(!gotData){
+
 			list.clear();
-//			try {
-//				Xfile.fetch(x, "file:"+temp.getPath(), temp.getName());			
-				list.add(temp);
+			try {
+				File tempfile=new File(f.getName());
+				tempfile.createNewFile();
+				tempfile.deleteOnExit();
+				Xfile.fetch(x, "file:"+f.getPath(), f.getName());			
+				list.add(tempfile);
 				gotData = true;
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return list;	
 	}	
@@ -302,6 +306,15 @@ class Trans implements Transferable {
 	} 
 }
 	
+
+
+
+
+
+
+
+
+
 	class FileTransferHandler extends TransferHandler
 	{
 		public boolean canImport(JComponent arg0, DataFlavor[] arg1) {
