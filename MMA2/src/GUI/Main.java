@@ -110,7 +110,7 @@ public class Main extends javax.swing.JFrame{
 			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
 	   		new ItemProxy(cp, this); 	
-	   		new ItemProxy(cp, xfile);
+	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
 //	   	   System.out.println("Server im lokalen Netz nicht gefunden. Versuch über WanIp");
@@ -119,7 +119,7 @@ public class Main extends javax.swing.JFrame{
 			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
 			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
 			   		new ItemProxy(cp, this);
-			   		new ItemProxy(cp, xfile);
+			   		ItemServer.bind(xfile, "xfile");
 			   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 		   	   }
 		   	   catch(Exception e1){
