@@ -4,13 +4,24 @@ import java.io.Serializable;
 import gnu.cajo.utils.extra.ClientProxy;
 
 public class Participant {
-	ClientProxy cp;
-	String name;
+	private ClientProxy cp;
+	private String name;
+	private String lanIp;
+	private String wanIp;
 	
-	public Participant( String name, ClientProxy cp) {
+	public Participant( String name) {
+		this.name = name;
+		this.cp = null;
+		this.lanIp = null;
+		this.wanIp = null;
+	}
+	
+	public Participant(String username, String lanIp, String wanIp, ClientProxy cp) {
 		super();
 		this.cp = cp;
-		this.name = name;
+		this.name =username;
+		this.lanIp = lanIp;
+		this.wanIp =wanIp;
 	}
 	
 	public ClientProxy getCp() {
@@ -44,6 +55,14 @@ public class Participant {
 			}	
 		else
 			return o == this;
+	}
+
+	public String getLanIp() {
+		return lanIp;
+	}
+
+	public String getWanIp() {
+		return wanIp;
 	}
 	
 }

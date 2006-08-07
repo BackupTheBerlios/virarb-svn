@@ -47,8 +47,8 @@ public class Server {
 		String wanIp = new String();
 		String lanIp = new String();
 		try {
+			lanIp = Ip.getLanIp();
 			wanIp = Ip.getWanIp(); 
-			lanIp = InetAddress.getLocalHost().getHostAddress();
 			Remote.config(lanIp, 1234, wanIp, 1234);
 			remoteRef =  ItemServer.bind(this, "VirArbServer");
 		} catch (Exception ex) {
@@ -61,11 +61,11 @@ public class Server {
 		System.out.println("Server gestartet unter öffentlicher Ip " + wanIp );
 		}
 	  
-	   public Remote getCp(String name) throws Exception {
+	   public Remote getCp(String username, String lanIp, String wanIp) throws Exception {
 	      ClientProxy cp = new ClientProxy();
-	      Participant p = new Participant(name, cp);
+	      Participant p = new Participant(username, lanIp, wanIp, cp);
 	      participantList.add(p);
-	      System.out.println("User "+name+" joined!");
+	      System.out.println("User "+username+" joined!");
 	      return cp.remoteThis;
 	   }
 
@@ -95,7 +95,7 @@ public class Server {
 	}
 
 	public void removeParticipant(String name) {
-		removeParticipant(new Participant(name, null));
+		removeParticipant(new Participant(name));
 	}
 
 	/* (non-Javadoc)
@@ -108,7 +108,7 @@ public class Server {
 //			Statement statement = connection.createStatement();	
 //			statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+p.name+"';");
 			participantList.remove(p);
-			setStatus("User "+p.name+ " hat die Sitzung verlassen");
+			setStatus("User "+p.getName()+ " hat die Sitzung verlassen");
 			postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,17 +136,19 @@ public class Server {
 	
 	public Object[] getFile(int[] index){	
 		Object[] o = (Object[])files.get(index[0]);
-//		String name = (String)o[0];
-//		String lanIp = (String)o[0];
-//		String wanIp = (String)o[1];
-//		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(name, null)));
+		String name = (String)o[0];
+		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(name)));
 		Object[] xf = new Object[2];
 		xf[1] = o[1];
 		try {
-			xf[0] = Remote.getItem("//192.168.0.12:1234/xfile");	
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			xf[0] = Remote.getItem("//"+p1.getLanIp()+":1234/xfile");	
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			try {
+				xf[0] = Remote.getItem("//"+p1.getWanIp()+":1234/xfile");	
+			} catch (Exception e2) {
+				e2.printStackTrace();				
+			}	
 		}	
 		return xf;
 	}

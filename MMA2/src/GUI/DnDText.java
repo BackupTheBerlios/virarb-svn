@@ -113,7 +113,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 							Remote.invoke(server, "setStatus", "Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");						
 //							session.setStatus("Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");			
 							Object[] args = {username, file};
-							Remote.invoke(server, "addFile",args); 
+							Remote.invoke(server, "addFile", args); 
 //							session.addFile(file,name,InetAddress.getLocalHost().getHostAddress());
 						} catch (Exception e1) {		
 //							session.setStatus("File "+name+" konnte leider nicht geladen werden.");

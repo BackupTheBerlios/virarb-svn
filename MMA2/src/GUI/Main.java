@@ -52,17 +52,14 @@ public class Main extends javax.swing.JFrame{
 	 **/
 	public Main(String username){	
 		super();
-		String ip=new String();
 		this.username=username;
+		String[] args = {username, Ip.getLanIp(), Ip.getWanIp()};
 		try {
-	   		ip=InetAddress.getLocalHost().getHostAddress();
-	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
-	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
-//	   		ItemServer.bind(xfile, "xfile");
+	   		server = Remote.getItem("//"+Ip.getLanIp()+":1234/VirArbServer");
+	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this);
 	   		xfile.remoteInvoke = true;
 	   		ItemServer.bind(xfile, "xfile");
-//	   		new ItemProxy(cp, xfile);
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
 			e.printStackTrace();
@@ -70,7 +67,7 @@ public class Main extends javax.swing.JFrame{
 		initGUI();
 		try {
 			Remote.invoke(server, "setStatus", "Server gestartet.");
-			sendMessage(new Chatmessage(Color.BLACK,"Server gestartet von '"+username+"' unter der IP: "+ip,new Date(),"System"));	
+			sendMessage(new Chatmessage(Color.BLACK,"Server gestartet von '"+username+"' unter der IP: "+Ip.getLanIp(),new Date(),"System"));	
 			sendMessage(new Chatmessage(Color.BLACK,"User '"+username+"' ist der Sitzung beigetreten.",new Date(),"System"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +82,8 @@ public class Main extends javax.swing.JFrame{
 	public Main(String ip,String username) throws Exception{
 		super();
 		this.username=username;
-   		String lanIp = ip;
+		String[] args = {username, Ip.getLanIp(), Ip.getWanIp()};
+		String lanIp = ip;
 		String wanIp = ip;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");		
@@ -108,7 +106,7 @@ public class Main extends javax.swing.JFrame{
 		
 		try {
 			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
-	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
+	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this); 	
 	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
@@ -117,7 +115,7 @@ public class Main extends javax.swing.JFrame{
 	   	   if(!lanIp.equals(wanIp)){
 		   	   try {
 			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
-			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
+			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 			   		new ItemProxy(cp, this);
 			   		ItemServer.bind(xfile, "xfile");
 			   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
