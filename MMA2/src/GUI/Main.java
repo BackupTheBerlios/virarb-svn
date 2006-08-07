@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,7 +26,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
-import Server.*;
 
 public class Main extends javax.swing.JFrame{
 
@@ -58,6 +56,7 @@ public class Main extends javax.swing.JFrame{
 	   		server = Remote.getItem("//"+Ip.getLanIp()+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this);
+	   		Remote.config(args[1], 1234, args[2], 1234);
 	   		xfile.remoteInvoke = true;
 	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
@@ -108,6 +107,7 @@ public class Main extends javax.swing.JFrame{
 			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this); 	
+	   		Remote.config(args[1], 1234, args[2], 1234);
 	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
@@ -117,6 +117,7 @@ public class Main extends javax.swing.JFrame{
 			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
 			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 			   		new ItemProxy(cp, this);
+			   		Remote.config(args[1], 1234, args[2], 1234);
 			   		ItemServer.bind(xfile, "xfile");
 			   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 		   	   }
