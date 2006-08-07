@@ -1,6 +1,8 @@
 package GUI;
 
 import gnu.cajo.invoke.Remote;
+import gnu.cajo.utils.extra.ClientProxy;
+import gnu.cajo.utils.extra.Xfile;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import javax.swing.*;
 import Server.FileServer;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -24,7 +27,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	private JList target = null;
 	private DefaultListModel values;
 	private DragSource dragSource;
-	private FileServer fserver;
+	private String username;
 	Thread t;
 	
 	
@@ -32,13 +35,14 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	 * Konstruktor
 	 * @param session Die ChatSession, über die die Files transferiert werden.
 	 */
-	public DnDText(Object server) {
-		this.server=server;			 
+	public DnDText(Object server, String username) {
+		this.server = server;			 
+		this.username = username;
 		try {
-			this.values=(DefaultListModel)Remote.invoke(server, "getValues", null);
-			target=new JList(values);
+			this.values = (DefaultListModel)Remote.invoke(server, "getValues", null);
+			target = new JList(values);
 //			FileServer starten
-			fserver=new FileServer();
+//			fserver=new FileServer();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -54,6 +58,8 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 			System.out.println("Es kann nur EIN Listener bei " + "der Komponente registriert werden");
 		}
 		target.addMouseListener(this);
+//		this.setTransferHandler(new FileTransferHandler());
+//		target.setTransferHandler(new FileTransferHandler());
 	}
 	
 	/**
@@ -97,7 +103,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 				try {
 					Iterator dateien = ((java.util.List) trans.getTransferData(selectedFlavor)).iterator();
 					while (dateien.hasNext()) {
-						File file =(File) dateien.next();		
+						File file =(File) dateien.next();	
 //						URI uri = file.toURI();
 //						URL url = file.toURL();
 						String name=file.getName();
@@ -106,7 +112,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 						try {
 							Remote.invoke(server, "setStatus", "Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");						
 //							session.setStatus("Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");			
-							Object[] args = {file,name,fserver.getLanIp(), fserver.getWanIp()};
+							Object[] args = {username, file};
 							Remote.invoke(server, "addFile",args); 
 //							session.addFile(file,name,InetAddress.getLocalHost().getHostAddress());
 						} catch (Exception e1) {		
@@ -121,25 +127,29 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 			}
 		}
 	}
-
 	
 	public void dragGestureRecognized(DragGestureEvent dge) {
 		if(target.getSelectedIndex()>=0){
 			int index=target.getSelectedIndex();
 			System.out.println("DropEvent ausgelöst");
-			File tempfile;
+//			File tempfile;
 
 			try {
-				tempfile=new File(values.get(index).toString());
-				tempfile.createNewFile();
-				tempfile.deleteOnExit();
+//				tempfile=new File(values.get(index).toString());
+//				tempfile.createNewFile();
+//				tempfile.deleteOnExit();
 				
 				int[] i = {index};
-				Object[] fileinfo=(Object[])Remote.invoke(server, "getFile", i);	
-				t=new Thread(new FileDownload(fileinfo,tempfile,dge,this));
-				t.start();
-				Trans temp=new Trans(tempfile);
+				Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
+				Object x = xf[0];
+				File f = (File)xf[1];
+				
+
+				Trans temp= new Trans(f, x);
 				dge.startDrag(null,null,null,temp,this);
+//				
+//				t=new Thread(new FileDownload(fileinfo,tempfile,dge,this));
+//				t.start();
 						
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -244,42 +254,99 @@ class Trans implements Transferable {
 	 * Die Datei
 	 */
 	private File temp;
-
+	private Object x;
+	private boolean gotData = false;
+	private ArrayList list = new ArrayList( );
+	private static final DataFlavor javaFileListFlavor = DataFlavor.javaFileListFlavor;
+	private static final DataFlavor[] flavors = {javaFileListFlavor};
+	private static final List flavorList = Arrays.asList( flavors );
+	
+	
 	/**
 	 * Konstruktor
 	 * @param temp Die Datei, die verschickt werden soll
 	 * @throws IOException
 	 */
-	public Trans(File temp) throws IOException {
+	public Trans(File temp, Object x) throws IOException {
 		this.temp = temp;
+		this.x = x;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.datatransfer.Transferable#getTransferData(java.awt.datatransfer.DataFlavor)
 	 */
 	public Object getTransferData(DataFlavor flavor) {
-		ArrayList list = new ArrayList( );
-		list.add(temp);
-		return list;
+//		list.add(temp);
+		if(!gotData){
+			list.clear();
+//			try {
+//				Xfile.fetch(x, "file:"+temp.getPath(), temp.getName());			
+				list.add(temp);
+				gotData = true;
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+		}
+		return list;	
 	}	
 
 	/* (non-Javadoc)
 	 * @see java.awt.datatransfer.Transferable#getTransferDataFlavors()
 	 */
 	public DataFlavor[] getTransferDataFlavors( ) {
-		DataFlavor[] df = new DataFlavor[1];
-		df[0] = DataFlavor.javaFileListFlavor;
-		return df;
+		return flavors;
 	}
 
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
-		if(flavor == DataFlavor.javaFileListFlavor) {
-			return true;
-		}
-		return false;
-
+		  return (flavorList.contains(flavor));
 	} 
 }
+	
+	class FileTransferHandler extends TransferHandler
+	{
+		public boolean canImport(JComponent arg0, DataFlavor[] arg1) {
+			// TODO Auto-generated method stub
+			return super.canImport(arg0, arg1);
+		}
+
+		protected Transferable createTransferable(JComponent arg0) {
+			// TODO Auto-generated method stub
+			return super.createTransferable(arg0);
+		}
+
+		public void exportAsDrag(JComponent arg0, InputEvent arg1, int arg2) {
+			// TODO Auto-generated method stub
+			super.exportAsDrag(arg0, arg1, arg2);
+		}
+
+		protected void exportDone(JComponent arg0, Transferable arg1, int arg2) {
+			System.out.println("fetig");
+			// TODO Auto-generated method stub
+			super.exportDone(arg0, arg1, arg2);
+		}
+
+		public void exportToClipboard(JComponent arg0, Clipboard arg1, int arg2) throws IllegalStateException {
+			// TODO Auto-generated method stub
+			super.exportToClipboard(arg0, arg1, arg2);
+		}
+
+		public int getSourceActions(JComponent arg0) {
+			// TODO Auto-generated method stub
+			return super.getSourceActions(arg0);
+		}
+
+		public Icon getVisualRepresentation(Transferable arg0) {
+			// TODO Auto-generated method stub
+			return super.getVisualRepresentation(arg0);
+		}
+
+		public boolean importData(JComponent arg0, Transferable arg1) {
+			// TODO Auto-generated method stub
+			return super.importData(arg0, arg1);
+		}
+		
+	}
+
 
 
 

@@ -3,6 +3,7 @@ package Server;
 import gnu.cajo.invoke.Remote;
 import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ClientProxy;
+import gnu.cajo.utils.extra.Xfile;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -35,15 +36,8 @@ public class Server {
 	private int count=0;
 	private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
 	private String starter;
-	private  Remote remoteRef;
-	
-//	public static void main(String[] args){
-//		try {
-//			new Server();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	private Remote remoteRef;
+
 	/**
 	 * Konstruktor
 	 * @throws Exception
@@ -75,7 +69,6 @@ public class Server {
 	      return cp.remoteThis;
 	   }
 
-	
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#getMyColor()
 	 */
@@ -122,36 +115,70 @@ public class Server {
 		}
 	}
 	
-	
-
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#addFile(byte[], java.lang.String)
-	 */
-	public void addFile(File f,String name,String lanIp, String wanIp){
-		Object[] temp={lanIp, wanIp,f};
-		files.add(temp);	
-		values.addElement(name);
+	public void addFile(String username, File f ){
+		Object[] data = {username, f};
+		files.add(data);
+		String value = f.getName()+" ["+username+"]";
+		values.addElement(value);
 		Participant p;
-		for (int i = 0; i < participantList.size(); i++) {
+		for (int i = 0; i < participantList.size(); i++) 
+		{
 			p = (Participant) participantList.get(i);
 			try {
-				Remote.invoke(p.getCp(), "receiveNewFile", name);	
+				Remote.invoke(p.getCp(), "receiveNewFile", value);	
 			} catch (Exception e) {
 				e.printStackTrace();
 				removeParticipant(p);
 				i--;
-//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			}
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#getFile(int)
-	 */
-	public Object[] getFile(int[] index){
-		return (Object[])files.get(index[0]);
+	public Object[] getFile(int[] index){	
+		Object[] o = (Object[])files.get(index[0]);
+//		String name = (String)o[0];
+//		String lanIp = (String)o[0];
+//		String wanIp = (String)o[1];
+//		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(name, null)));
+		Object[] xf = new Object[2];
+		xf[1] = o[1];
+		try {
+			xf[0] = Remote.getItem("//192.168.0.12:1234/xfile");	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return xf;
 	}
+
+//	/* (non-Javadoc)
+//	 * @see Server.ChatServer#addFile(byte[], java.lang.String)
+//	 */
+//	public void addFile(File f,String name,String lanIp, String wanIp){
+//		Object[] temp={lanIp, wanIp,f};
+//		files.add(temp);	
+//		values.addElement(name);
+//		Participant p;
+//		for (int i = 0; i < participantList.size(); i++) {
+//			p = (Participant) participantList.get(i);
+//			try {
+//				Remote.invoke(p.getCp(), "receiveNewFile", name);	
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				removeParticipant(p);
+//				i--;
+////				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+////				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//			}
+//		}
+//	}
+	
+//	/* (non-Javadoc)
+//	 * @see Server.ChatServer#getFile(int)
+//	 */
+//	public Object[] getFile(int[] index){
+//		return (Object[])files.get(index[0]);
+//	}
 	
 
 	/* (non-Javadoc)

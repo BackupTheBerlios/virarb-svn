@@ -1,8 +1,9 @@
 package Server;
 
+import java.io.Serializable;
 import gnu.cajo.utils.extra.ClientProxy;
 
-public class Participant{
+public class Participant {
 	ClientProxy cp;
 	String name;
 	

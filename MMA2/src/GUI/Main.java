@@ -2,7 +2,9 @@ package GUI;
 
 import gnu.cajo.invoke.Remote;
 import gnu.cajo.invoke.RemoteInvoke;
+import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ItemProxy;
+import gnu.cajo.utils.extra.Xfile;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -37,7 +39,10 @@ public class Main extends javax.swing.JFrame{
 	private Color myColor=Color.BLACK;
 	private SimpleAttributeSet set;
 	private Object server;
-	private ItemProxy proxy;
+//	private ClientProxy cp;
+//	private ItemProxy proxy;
+//	private ItemProxy fproxy;
+	private Xfile xfile = new Xfile(64 * 1024);
 	private boolean serverAvailable = true;
 
 	
@@ -49,15 +54,16 @@ public class Main extends javax.swing.JFrame{
 		super();
 		String ip=new String();
 		this.username=username;
-
 		try {
-
 	   		ip=InetAddress.getLocalHost().getHostAddress();
 	   		server = Remote.getItem("//"+ip+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
-	   		proxy = new ItemProxy(cp, this);
+//	   		ItemServer.bind(xfile, "xfile");
+	   		new ItemProxy(cp, this);
+	   		xfile.remoteInvoke = true;
+	   		ItemServer.bind(xfile, "xfile");
+//	   		new ItemProxy(cp, xfile);
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
-	
 	   	} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,7 +109,8 @@ public class Main extends javax.swing.JFrame{
 		try {
 			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
-	   		proxy = new ItemProxy(cp, this); 		
+	   		new ItemProxy(cp, this); 	
+	   		new ItemProxy(cp, xfile);
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
 //	   	   System.out.println("Server im lokalen Netz nicht gefunden. Versuch über WanIp");
@@ -111,7 +118,8 @@ public class Main extends javax.swing.JFrame{
 		   	   try {
 			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
 			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", username);
-			   		proxy = new ItemProxy(cp, this);	   		
+			   		new ItemProxy(cp, this);
+			   		new ItemProxy(cp, xfile);
 			   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 		   	   }
 		   	   catch(Exception e1){
@@ -256,7 +264,7 @@ public class Main extends javax.swing.JFrame{
 					pa_file = new JPanel();
 					pa_file.setLayout(new BorderLayout());
 					
-					filetable = new DnDText(server);
+					filetable = new DnDText(server, username);
 					filetable.setBackground(new Color(200, 200, 200));
 					filetable.setPreferredSize(new Dimension(290, 250));
 					filetable.setAutoscrolls(true);
