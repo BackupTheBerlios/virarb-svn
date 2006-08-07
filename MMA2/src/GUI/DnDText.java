@@ -276,7 +276,7 @@ class Trans implements Transferable {
 	 * @see java.awt.datatransfer.Transferable#getTransferData(java.awt.datatransfer.DataFlavor)
 	 */
 	public Object getTransferData(DataFlavor flavor) {
-//		list.add(temp);
+//		list.add(temp);//
 		if(!gotData){
 
 			list.clear();
