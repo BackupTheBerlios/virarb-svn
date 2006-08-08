@@ -147,11 +147,11 @@ public class Server {
 		Object[] xf = new Object[2];
 		xf[1] = e.getFile();
 		try {
-			xf[0] = Remote.getItem("//"+p1.getLanIp()+":1234/xfile");	
+			xf[0] = Remote.getItem("//"+p1.getLanIp()+":"+p1.getPort()+"/xfile");	
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			try {
-				xf[0] = Remote.getItem("//"+p1.getWanIp()+":1234/xfile");	
+				xf[0] = Remote.getItem("//"+p1.getWanIp()+":"+p1.getPort()+"/xfile");	
 			} catch (Exception e2) {
 				e2.printStackTrace();				
 			}	
