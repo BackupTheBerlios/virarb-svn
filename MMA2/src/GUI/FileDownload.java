@@ -30,13 +30,13 @@ public class FileDownload implements Runnable {
 		pbar.setIndeterminate(true);
 		try {
 			Xfile.fetch(x, "file:"+sourceFile.getPath(), destFile.getName());
+			entry.IsLocal = true;
+			entry.setFile(destFile);
+			dnd.getTarget().nextFocus();			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		entry.IsLocal = true;
-		entry.setFile(destFile);
-		dnd.getTarget().nextFocus();
 		pbar.setIndeterminate(false);
 	}
 }

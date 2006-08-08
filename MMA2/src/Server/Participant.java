@@ -8,6 +8,7 @@ public class Participant {
 	private String name;
 	private String lanIp;
 	private String wanIp;
+	private int port = 1234;
 	
 	public Participant( String name) {
 		this.name = name;
@@ -16,7 +17,7 @@ public class Participant {
 		this.wanIp = null;
 	}
 	
-	public Participant(String username, String lanIp, String wanIp, ClientProxy cp) {
+	public Participant(String username, String lanIp, String wanIp, int port, ClientProxy cp) {
 		super();
 		this.cp = cp;
 		this.name =username;
@@ -63,6 +64,10 @@ public class Participant {
 
 	public String getWanIp() {
 		return wanIp;
+	}
+
+	public int getPort() {
+		return port;
 	}
 	
 }

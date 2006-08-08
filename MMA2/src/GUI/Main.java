@@ -37,6 +37,8 @@ public class Main extends javax.swing.JFrame{
 	private Color myColor=Color.BLACK;
 	private SimpleAttributeSet set;
 	private Object server;
+	private final int port = 1234;
+	private final int destport = 1234;
 //	private ClientProxy cp;
 //	private ItemProxy proxy;
 //	private ItemProxy fproxy;
@@ -51,12 +53,12 @@ public class Main extends javax.swing.JFrame{
 	public Main(String username){	
 		super();
 		this.username=username;
-		String[] args = {username, Ip.getLanIp(), Ip.getWanIp()};
+		String[] args = {username, Ip.getLanIp(), Ip.getWanIp(), Integer.toString(port)};
 		try {
-	   		server = Remote.getItem("//"+Ip.getLanIp()+":1234/VirArbServer");
+	   		server = Remote.getItem("//"+Ip.getLanIp()+":"+1234+"/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this);
-	   		Remote.config(args[1], 1234, args[2], 1234);
+	   		Remote.config(args[1], port, args[2], port);
 	   		xfile.remoteInvoke = true;
 	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
@@ -81,7 +83,7 @@ public class Main extends javax.swing.JFrame{
 	public Main(String ip,String username) throws Exception{
 		super();
 		this.username=username;
-		String[] args = {username, Ip.getLanIp(), Ip.getWanIp()};
+		String[] args = {username, Ip.getLanIp(), Ip.getWanIp(), Integer.toString(port)};
 		String lanIp = ip;
 		String wanIp = ip;
 		try {
@@ -107,7 +109,7 @@ public class Main extends javax.swing.JFrame{
 			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this); 	
-	   		Remote.config(args[1], 1234, args[2], 1234);
+	   		Remote.config(args[1], port, args[2], port);
 	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
@@ -117,7 +119,7 @@ public class Main extends javax.swing.JFrame{
 			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
 			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 			   		new ItemProxy(cp, this);
-			   		Remote.config(args[1], 1234, args[2], 1234);
+			   		Remote.config(args[1], port, args[2], port);
 			   		ItemServer.bind(xfile, "xfile");
 			   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 		   	   }

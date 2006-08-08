@@ -38,6 +38,7 @@ public class Server {
 	private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
 	private String starter;
 	private Remote remoteRef;
+	private final int port = 1234;
 
 	/**
 	 * Konstruktor
@@ -50,7 +51,7 @@ public class Server {
 		try {
 			lanIp = Ip.getLanIp();
 			wanIp = Ip.getWanIp(); 
-			Remote.config(lanIp, 1234, wanIp, 1234);
+			Remote.config(lanIp, port, wanIp, port);
 			remoteRef =  ItemServer.bind(this, "VirArbServer");
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -62,9 +63,9 @@ public class Server {
 		System.out.println("Server gestartet unter öffentlicher Ip " + wanIp );
 		}
 	  
-	   public Remote getCp(String username, String lanIp, String wanIp) throws Exception {
+	   public Remote getCp(String username, String lanIp, String wanIp, String port) throws Exception {
 	      ClientProxy cp = new ClientProxy();
-	      Participant p = new Participant(username, lanIp, wanIp, cp);
+	      Participant p = new Participant(username, lanIp, wanIp, Integer.parseInt(port), cp);
 	      participantList.add(p);
 	      System.out.println("User "+username+" joined!");
 	      return cp.remoteThis;
