@@ -263,11 +263,16 @@ public class Main extends javax.swing.JFrame{
 					pa_file = new JPanel();
 					pa_file.setLayout(new BorderLayout());
 					
-					filetable = new DnDText(server, username);
+					JProgressBar pbar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 20);
+					
+					filetable = new DnDText(server, username, pbar);
 					filetable.setBackground(new Color(200, 200, 200));
 					filetable.setPreferredSize(new Dimension(290, 250));
-					filetable.setAutoscrolls(true);
+					filetable.setAutoscrolls(true);									
 					pa_file.add(filetable);
+					
+						pa_file.add(pbar,BorderLayout.SOUTH);
+					
 					TitledBorder title = BorderFactory.createTitledBorder(lowerededge, null);
 					title.setTitlePosition(TitledBorder.ABOVE_TOP);
 					title.setTitlePosition(TitledBorder.BELOW_TOP);
@@ -375,8 +380,8 @@ public class Main extends javax.swing.JFrame{
 	 * Über diese Methode wird ein neuer File(name) im Filetable eingetragen.
 	 * @param filename Der Name der Datei.
 	 */
-	public void receiveNewFile(String filename) {
-		filetable.addElement(filename);
+	public void receiveNewFile(ListEntry entry) {
+		filetable.addElement(entry);
 	}
 		
 	//Statusleiste

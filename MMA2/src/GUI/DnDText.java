@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.swing.*;
 import Server.FileServer;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
@@ -28,6 +30,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	private DefaultListModel values;
 	private DragSource dragSource;
 	private String username;
+	private JProgressBar pbar;
 	Thread t;
 	
 	
@@ -35,9 +38,10 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	 * Konstruktor
 	 * @param session Die ChatSession, über die die Files transferiert werden.
 	 */
-	public DnDText(Object server, String username) {
+	public DnDText(Object server, String username, JProgressBar pbar) {
 		this.server = server;			 
 		this.username = username;
+		this.pbar = pbar;
 		try {
 			this.values = (DefaultListModel)Remote.invoke(server, "getValues", null);
 			target = new JList(values);
@@ -66,8 +70,8 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	 * Ein Element (nur den Namen!!!)  in die Liste einfügen
 	 * @param filename der Name des Files
 	 */
-	public void addElement(String filename){
-		this.values.addElement(filename);
+	public void addElement(ListEntry entry){
+		this.values.addElement(entry);
 	}
 
 	public void dragEnter(DropTargetDragEvent dEvent) {
@@ -131,28 +135,26 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	public void dragGestureRecognized(DragGestureEvent dge) {
 		if(target.getSelectedIndex()>=0){
 			int index=target.getSelectedIndex();
+			ListEntry entry = (ListEntry)this.values.getElementAt(index);
 			System.out.println("DropEvent ausgelöst");
-//			File tempfile;
+			if(entry.IsLocal){
+				try {
+	//				int[] i = {index};
+	//				Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
+	//				Object x = xf[0];
+	//				File f = (File)xf[1];
+					
+	
+					File f = entry.getFile();
+					Trans temp= new Trans(f);
+					dge.startDrag(null,null,null,temp,this);
 
-			try {
-//				tempfile=new File(values.get(index).toString());
-//				tempfile.createNewFile();
-//				tempfile.deleteOnExit();
-				
-				int[] i = {index};
-				Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
-				Object x = xf[0];
-				File f = (File)xf[1];
-				
-
-				Trans temp= new Trans(f, x);
-				dge.startDrag(null,null,null,temp,this);
-//				
-//				t=new Thread(new FileDownload(fileinfo,tempfile,dge,this));
-//				t.start();
-						
-			} catch (Exception e) {
-				e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}				
+			}
+			else{
+				System.out.println("File noch nicht local!");
 			}
 		}
 		
@@ -162,29 +164,46 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	public void mouseClicked(MouseEvent me) {
-		if(target.getSelectedIndex()>=0){
-			if(me.getClickCount()>=2){
-				int index=target.getSelectedIndex();
-				System.out.println("DoubleClick ausgelöst");
-				File tempfile;
+		int index=target.getSelectedIndex();
+		if(index>=0){
+			ListEntry entry = (ListEntry)values.getElementAt(index);
+			if(!entry.IsLocal && me.getClickCount() == 2){				
+				int[] i = {index};
 				try {
-//					byte[] data=session.getFile(index);	
-					tempfile=new File(values.get(index).toString());
+					Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
+					Object x = xf[0];			
+					File f = (File)xf[1];
+					File tempfile=new File(f.getName());
 					tempfile.createNewFile();
-//					FileOutputStream out = new FileOutputStream(tempfile);
-//					out.write(data);
-//					out.close( );
-//					Runtime.getRuntime().exec("start "+tempfile.getAbsolutePath());
 					tempfile.deleteOnExit();
 					
-					String osName = System.getProperty("os.name" );
-//			        String[] cmd = new String[3];
-		            if( osName.equals( "Windows XP" ) )
-		            {
-		                Runtime.getRuntime().exec("cmd.exe /C start "+tempfile.getAbsolutePath());
-		            }
-//  		           if(OS=MAC/LINUX)?????
-		            
+					
+					t=new Thread(new FileDownload(this, entry, f, tempfile, x));
+					t.start();
+							
+					
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}							
+			}		
+			else if(entry.IsLocal && me.getClickCount()>=2){
+				System.out.println("DoubleClick ausgelöst");
+				File tempfile = entry.getFile();
+				try {
+					
+//					String osName = System.getProperty("os.name" );
+////			        String[] cmd = new String[3];
+//		            if( osName.equals( "Windows XP" ) )
+//		            {
+//		                Runtime.getRuntime().exec("cmd.exe /C start "+tempfile.getAbsolutePath());
+//		            }
+////  		           if(OS=MAC/LINUX)?????
+//		            
 				
 				
 				} catch (Exception e) {
@@ -240,7 +259,18 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+	public JList getTarget() {
+		return target;
+	}
+
+	public DefaultListModel getValues() {
+		return values;
+	}
+
+	public JProgressBar getPbar() {
+		return pbar;
+	}
 }
 
 
@@ -254,7 +284,6 @@ class Trans implements Transferable {
 	 * Die Datei
 	 */
 	private File f;
-	private Object x;
 	private boolean gotData = false;
 	private ArrayList list = new ArrayList( );
 	private static final DataFlavor javaFileListFlavor = DataFlavor.javaFileListFlavor;
@@ -267,29 +296,18 @@ class Trans implements Transferable {
 	 * @param temp Die Datei, die verschickt werden soll
 	 * @throws IOException
 	 */
-	public Trans(File f, Object x) throws IOException {
+	public Trans(File f) throws IOException {
 		this.f = f;
-		this.x = x;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.datatransfer.Transferable#getTransferData(java.awt.datatransfer.DataFlavor)
 	 */
 	public Object getTransferData(DataFlavor flavor) {
-//		list.add(temp);//
 		if(!gotData){
-
 			list.clear();
-			try {
-				File tempfile=new File(f.getName());
-				tempfile.createNewFile();
-				tempfile.deleteOnExit();
-				Xfile.fetch(x, "file:"+f.getPath(), f.getName());			
-				list.add(tempfile);
-				gotData = true;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			list.add(f);
+			gotData = true;
 		}
 		return list;	
 	}	
@@ -305,73 +323,3 @@ class Trans implements Transferable {
 		  return (flavorList.contains(flavor));
 	} 
 }
-	
-
-
-
-
-
-
-
-
-
-	class FileTransferHandler extends TransferHandler
-	{
-		public boolean canImport(JComponent arg0, DataFlavor[] arg1) {
-			// TODO Auto-generated method stub
-			return super.canImport(arg0, arg1);
-		}
-
-		protected Transferable createTransferable(JComponent arg0) {
-			// TODO Auto-generated method stub
-			return super.createTransferable(arg0);
-		}
-
-		public void exportAsDrag(JComponent arg0, InputEvent arg1, int arg2) {
-			// TODO Auto-generated method stub
-			super.exportAsDrag(arg0, arg1, arg2);
-		}
-
-		protected void exportDone(JComponent arg0, Transferable arg1, int arg2) {
-			System.out.println("fetig");
-			// TODO Auto-generated method stub
-			super.exportDone(arg0, arg1, arg2);
-		}
-
-		public void exportToClipboard(JComponent arg0, Clipboard arg1, int arg2) throws IllegalStateException {
-			// TODO Auto-generated method stub
-			super.exportToClipboard(arg0, arg1, arg2);
-		}
-
-		public int getSourceActions(JComponent arg0) {
-			// TODO Auto-generated method stub
-			return super.getSourceActions(arg0);
-		}
-
-		public Icon getVisualRepresentation(Transferable arg0) {
-			// TODO Auto-generated method stub
-			return super.getVisualRepresentation(arg0);
-		}
-
-		public boolean importData(JComponent arg0, Transferable arg1) {
-			// TODO Auto-generated method stub
-			return super.importData(arg0, arg1);
-		}
-		
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -26,6 +26,7 @@ import javax.swing.text.Document;
 import GUI.Chatmessage;
 import GUI.ColorLine;
 import GUI.Ip;
+import GUI.ListEntry;
 
 public class Server {
 
@@ -115,17 +116,22 @@ public class Server {
 		}
 	}
 	
-	public void addFile(String username, File f ){
-		Object[] data = {username, f};
-		files.add(data);
-		String value = f.getName()+" ["+username+"]";
-		values.addElement(value);
+	public void addFile(String name, File f ){
+//		Object[] data = {username, f};
+//		files.add(data);
+//		String value = f.getName()+" ["+username+"]";
+//		values.addElement(value);
+//		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(name)));	
+		
+		ListEntry entry = new ListEntry(f, name);
+		values.addElement(entry);
+	
 		Participant p;
 		for (int i = 0; i < participantList.size(); i++) 
 		{
 			p = (Participant) participantList.get(i);
 			try {
-				Remote.invoke(p.getCp(), "receiveNewFile", value);	
+				Remote.invoke(p.getCp(), "receiveNewFile", entry);	
 			} catch (Exception e) {
 				e.printStackTrace();
 				removeParticipant(p);
@@ -135,11 +141,10 @@ public class Server {
 	}
 	
 	public Object[] getFile(int[] index){	
-		Object[] o = (Object[])files.get(index[0]);
-		String name = (String)o[0];
-		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(name)));
+		ListEntry e = (ListEntry)values.get(index[0]);
+		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(e.getOwner())));
 		Object[] xf = new Object[2];
-		xf[1] = o[1];
+		xf[1] = e.getFile();
 		try {
 			xf[0] = Remote.getItem("//"+p1.getLanIp()+":1234/xfile");	
 		} catch (Exception e1) {
