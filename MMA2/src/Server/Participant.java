@@ -8,7 +8,7 @@ public class Participant {
 	private String name;
 	private String lanIp;
 	private String wanIp;
-	private int port = 1234;
+	private int port;
 	
 	public Participant( String name) {
 		this.name = name;
@@ -23,6 +23,7 @@ public class Participant {
 		this.name =username;
 		this.lanIp = lanIp;
 		this.wanIp =wanIp;
+		this.port = port;
 	}
 	
 	public ClientProxy getCp() {
