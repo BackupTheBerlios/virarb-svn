@@ -175,14 +175,10 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 					File f = (File)xf[1];
 					File tempfile=new File(f.getName());
 					tempfile.createNewFile();
-					tempfile.deleteOnExit();
-					
+					tempfile.deleteOnExit();				
 					
 					t=new Thread(new FileDownload(this, entry, f, tempfile, x));
-					t.start();
-							
-					
-					
+					t.start();				
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -192,17 +188,17 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 				}							
 			}		
 			else if(entry.IsLocal && me.getClickCount()>=2){
-				System.out.println("DoubleClick ausgelöst");
+//				System.out.println("DoubleClick ausgelöst");
 				File tempfile = entry.getFile();
 				try {
 					
-//					String osName = System.getProperty("os.name" );
-////			        String[] cmd = new String[3];
-//		            if( osName.equals( "Windows XP" ) )
-//		            {
-//		                Runtime.getRuntime().exec("cmd.exe /C start "+tempfile.getAbsolutePath());
-//		            }
-////  		           if(OS=MAC/LINUX)?????
+					String osName = System.getProperty("os.name" );
+////			    String[] cmd = new String[3];
+		            if( osName.equals( "Windows XP" ) )
+		            {
+		                Runtime.getRuntime().exec("cmd.exe /C start "+tempfile.getPath());
+		            }
+////  		        if(OS=MAC/LINUX)?????
 //		            
 				
 				

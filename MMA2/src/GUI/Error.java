@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import layout.AnchorConstraint;
 import layout.AnchorLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;

@@ -1,5 +1,9 @@
 package GUI;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
@@ -9,7 +13,7 @@ import java.net.UnknownHostException;
 
 public  class Ip {
 
-	public static  String getWanIp() {
+	public static String getWanIp() {
 	       	BufferedReader reader = null;
 	       	String ip = new String();
 	       	try {
@@ -19,7 +23,6 @@ public  class Ip {
 	            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 	            String line = reader.readLine();
 	            ip = line.substring(76,line.length()-14);	          	
-//	            System.out.println(ip);
 	            reader.close(); 
 	       	} 
      		catch (Exception ioe)
@@ -29,7 +32,7 @@ public  class Ip {
 		  return ip;
 	 }
 	
-	public static  String getLanIp() {
+	public static String getLanIp() {
 		String ip = new String();
 		try {
 			ip = InetAddress.getLocalHost().getHostAddress();
@@ -37,5 +40,36 @@ public  class Ip {
 			e.printStackTrace();
 		}
 		return ip;
+	}
+	
+	public static int getMyPort(){
+		int port = 1234;
+		File f = new File("VirArb.cfg");
+		try {
+			FileReader fr = new FileReader(f);
+			BufferedReader reader = new BufferedReader(fr);
+			port = Integer.parseInt(reader.readLine());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}       
+        return port;
+	}
+
+	public static int getServerPort(){
+		int port = 1234;
+		File f = new File("VirArb.cfg");
+		try {
+			FileReader fr = new FileReader(f);
+			BufferedReader reader = new BufferedReader(fr);
+			reader.readLine();
+			port = Integer.parseInt(reader.readLine());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}       
+        return port;
 	}
 }

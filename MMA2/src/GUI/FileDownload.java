@@ -3,6 +3,7 @@ package GUI;
 import gnu.cajo.invoke.Remote;
 import gnu.cajo.utils.extra.Xfile;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JProgressBar;
 
 
@@ -19,7 +20,7 @@ public class FileDownload implements Runnable {
 		this.dnd = dnd;
 		this.entry = entry;
 		this.sourceFile = sourceFile;
-		this.destFile = destFile;
+		this.destFile = new File(destFile.getAbsolutePath());
 		this.x = x;
 		pbar = dnd.getPbar();
 	}

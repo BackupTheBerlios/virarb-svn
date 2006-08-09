@@ -37,11 +37,8 @@ public class Main extends javax.swing.JFrame{
 	private Color myColor=Color.BLACK;
 	private SimpleAttributeSet set;
 	private Object server;
-	private final int port = 1234;
-	private final int destport = 1234;
-//	private ClientProxy cp;
-//	private ItemProxy proxy;
-//	private ItemProxy fproxy;
+	private final int port = Ip.getMyPort();
+	private final int serverport = Ip.getServerPort();
 	private Xfile xfile = new Xfile(64 * 1024);
 	private boolean serverAvailable = true;
 
@@ -50,20 +47,20 @@ public class Main extends javax.swing.JFrame{
 	 * Konsruktor
 	 * @param username Der Name des Users
 	 **/
-	public Main(String username){	
+	public Main(String username) throws Exception{	
 		super();
 		this.username=username;
 		String[] args = {username, Ip.getLanIp(), Ip.getWanIp(), Integer.toString(port)};
 		try {
-	   		server = Remote.getItem("//"+Ip.getLanIp()+":"+1234+"/VirArbServer");
+	   		server = Remote.getItem("//"+Ip.getLanIp()+":"+serverport+"/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this);
 	   		Remote.config(args[1], port, args[2], port);
-	   		xfile.remoteInvoke = true;
+	   		Xfile.remoteInvoke = true;
 	   		ItemServer.bind(xfile, "xfile");
 	   		myColor = (Color) Remote.invoke(server, "getMyColor", null);
 	   	} catch (Exception e) {
-			e.printStackTrace();
+			throw new Exception("Server nicht gefunden");
 		}
 		initGUI();
 		try {
@@ -106,7 +103,7 @@ public class Main extends javax.swing.JFrame{
 		}
 		
 		try {
-			server = Remote.getItem("//"+lanIp+":1234/VirArbServer");
+			server = Remote.getItem("//"+lanIp+":"+serverport+"/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this); 	
 	   		Remote.config(args[1], port, args[2], port);
@@ -116,7 +113,7 @@ public class Main extends javax.swing.JFrame{
 //	   	   System.out.println("Server im lokalen Netz nicht gefunden. Versuch über WanIp");
 	   	   if(!lanIp.equals(wanIp)){
 		   	   try {
-			   		server = Remote.getItem("//"+wanIp+":1234/VirArbServer");
+			   		server = Remote.getItem("//"+wanIp+":"+serverport+"/VirArbServer");
 			   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 			   		new ItemProxy(cp, this);
 			   		Remote.config(args[1], port, args[2], port);
@@ -163,17 +160,21 @@ public class Main extends javax.swing.JFrame{
 		JMenu aktionen = new JMenu("Menu");
 		JMenuItem aktionen1 = new JMenuItem("Arbeitsraum verlassen");
 		aktionen1.addActionListener(al);
+		aktionen1.setActionCommand("leave");
 		aktionen.add(aktionen1);
 		JMenuItem aktionen2 = new JMenuItem("Programm schließen");
 		aktionen2.addActionListener(al);
+		aktionen2.setActionCommand("close");
 		aktionen.add(aktionen2);	
 		
 		JMenu hilfe = new JMenu("Help");
 		JMenuItem hilfe1 = new JMenuItem("Hilfe");
 		hilfe1.addActionListener(al);
+		hilfe1.setActionCommand("help");
 		hilfe.add(hilfe1);	
 		JMenuItem hilfe2 = new JMenuItem("Info");
 		hilfe2.addActionListener(al);
+		hilfe2.setActionCommand("info");
 		hilfe.add(hilfe2);
 		
 		mbar.add(aktionen);
@@ -470,7 +471,7 @@ public class Main extends javax.swing.JFrame{
 					e1.printStackTrace();
 				}
 			}
-			else if(e.getActionCommand().equals("Arbeitsraum verlassen")){
+			else if(e.getActionCommand().equals("leave")){
 				try {
 					if(((String)Remote.invoke(server, "getStarter", null)).equals(username)){
 						Remote.invoke(owner.server, "shutDown", null);
@@ -483,7 +484,7 @@ public class Main extends javax.swing.JFrame{
 					leaveOnYourOwn();
 				}
 			}
-			else if(e.getActionCommand().equals("Programm schließen")){
+			else if(e.getActionCommand().equals("close")){
 				try {
 					Class.forName("com.mysql.jdbc.Driver");			
 					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
@@ -500,11 +501,11 @@ public class Main extends javax.swing.JFrame{
 				}
 				System.exit(0);	
 			}
-			else if(e.getActionCommand().equals("Hilfe")){
+			else if(e.getActionCommand().equals("help")){
 				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
 				help.setVisible(true);
 			}
-			else if(e.getActionCommand().equals("Info")){
+			else if(e.getActionCommand().equals("info")){
 				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nKlassen,Kokoschka,Meurer",owner);
 				info.setVisible(true);
 			}

@@ -38,7 +38,7 @@ public class Server {
 	private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
 	private String starter;
 	private Remote remoteRef;
-	private final int port = 1234;
+	private final int port = Ip.getMyPort();
 
 	/**
 	 * Konstruktor

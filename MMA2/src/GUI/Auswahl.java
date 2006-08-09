@@ -58,7 +58,10 @@ public class Auswahl extends JFrame {
 			JMenuBar mbar = new JMenuBar();
 			
 			JMenu aktionen = new JMenu("Menu");
-			JMenuItem aktionen1 = new JMenuItem("Ausloggen");
+			JMenuItem aktionen0 = new JMenuItem("Virtuellen Arbeitsraum konfigurieren");
+			aktionen0.setActionCommand("config");
+			aktionen0.addActionListener(al);
+			aktionen.add(aktionen0);JMenuItem aktionen1 = new JMenuItem("Ausloggen");
 			aktionen1.addActionListener(al);
 			aktionen1.setActionCommand("logout");
 			aktionen.add(aktionen1);
@@ -228,6 +231,15 @@ public class Auswahl extends JFrame {
 			else if(e.getActionCommand().equals("info")){
 				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);
 				info.setVisible(true);
+			}
+			else if(e.getActionCommand().equals("config")){
+				try {
+					Config c = new Config();
+					c.setVisible(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		public void windowClosed(WindowEvent arg0) {
