@@ -52,7 +52,7 @@ public class Main extends javax.swing.JFrame{
 		this.username=username;
 		String[] args = {username, Ip.getLanIp(), Ip.getWanIp(), Integer.toString(port)};
 		try {
-	   		server = Remote.getItem("//"+Ip.getLanIp()+":"+serverport+"/VirArbServer");
+	   		server = Remote.getItem("//"+Ip.getLanIp()+":"+port+"/VirArbServer");
 	   		RemoteInvoke cp = (RemoteInvoke)Remote.invoke(server, "getCp", args);
 	   		new ItemProxy(cp, this);
 	   		Remote.config(args[1], port, args[2], port);

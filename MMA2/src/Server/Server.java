@@ -3,20 +3,8 @@ package Server;
 import gnu.cajo.invoke.Remote;
 import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ClientProxy;
-import gnu.cajo.utils.extra.Xfile;
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
-import java.lang.management.GarbageCollectorMXBean;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +19,7 @@ import GUI.ListEntry;
 public class Server {
 
 	private List participantList = new ArrayList();
-	private List files=new ArrayList();
+//	private List files=new ArrayList();
 	private DefaultListModel values;
 	private Vector lines = new Vector();
 	private int count=0;
@@ -59,8 +47,8 @@ public class Server {
 		lines.addElement(new String("malen"));
 		values=new DefaultListModel();	
 
-		System.out.println("Server gestartet unter lokaler Ip " + lanIp );
-		System.out.println("Server gestartet unter öffentlicher Ip " + wanIp );
+		System.out.println("Server gestartet unter lokaler Ip " + lanIp +":"+port);
+		System.out.println("Server gestartet unter öffentlicher Ip " + wanIp+":"+port );
 		}
 	  
 	   public Remote getCp(String username, String lanIp, String wanIp, String port) throws Exception {
