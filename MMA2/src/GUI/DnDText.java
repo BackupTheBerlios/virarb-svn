@@ -204,8 +204,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	}
 
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	public void mouseReleased(MouseEvent e) {	

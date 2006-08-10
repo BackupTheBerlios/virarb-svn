@@ -19,7 +19,6 @@ import GUI.ListEntry;
 public class Server {
 
 	private List participantList = new ArrayList();
-//	private List files=new ArrayList();
 	private DefaultListModel values;
 	private Vector lines = new Vector();
 	private int count=0;
@@ -83,10 +82,6 @@ public class Server {
 		}
 	}
 
-	public void removeParticipant(String name) {
-		removeParticipant(new Participant(name));
-	}
-
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#removeSession(Server.ChatSession)
 	 */
@@ -103,7 +98,6 @@ public class Server {
 	public void addFile(String name, File f ){	
 		ListEntry entry = new ListEntry(f, name);
 		values.addElement(entry);
-	
 		Participant p;
 		for (int i = 0; i < participantList.size(); i++) 
 		{
@@ -150,6 +144,7 @@ public class Server {
 				i--;
 			}
 		}
+		setStatus("Die Datei '"+entry.getFile().getName()+"' wurde erfolgreich gelöscht.");
 	}
 
 	/* (non-Javadoc)
@@ -174,9 +169,6 @@ public class Server {
 				e.printStackTrace();
 				removeParticipant(p);
 				i--;
-//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
-
 			}
 		}
 	}
@@ -196,8 +188,6 @@ public class Server {
 				e.printStackTrace();
 				removeParticipant(p);
 				i--;
-//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			}
 		}
 		lines.setElementAt(new String("malen"),0);
