@@ -82,6 +82,10 @@ public class Server {
 		}
 	}
 
+	public void removeParticipant(String name) {
+		removeParticipant(new Participant(name));
+	}
+	
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#removeSession(Server.ChatSession)
 	 */
