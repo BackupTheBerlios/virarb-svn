@@ -34,4 +34,15 @@ public class ListEntry implements Serializable{
 	public String getOwner() {
 		return owner;
 	}
+	
+	public boolean equals(Object x){
+		if(x instanceof ListEntry){
+			ListEntry entry = (ListEntry)x;
+			if(entry.getFile().equals(this.file) && entry.getOwner().equals(this.owner)){
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
 }

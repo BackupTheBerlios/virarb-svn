@@ -69,7 +69,6 @@ public class Server {
 	public void postMessage(Chatmessage message) {
 		Participant p;
 		message.setTime(new Date());
-//		chat=chat+("\n"+message.getUser()+" ["+message.getTime()+"]: "+message.getMessage());
 		for (int i = 0; i < participantList.size(); i++) {
 			p = (Participant) participantList.get(i);
 			try {
@@ -93,10 +92,6 @@ public class Server {
 	 */
 	public void removeParticipant(Participant p) {
 		try {
-//			Class.forName("com.mysql.jdbc.Driver");			
-//			Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
-//			Statement statement = connection.createStatement();	
-//			statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+p.name+"';");
 			participantList.remove(p);
 			setStatus("User "+p.getName()+ " hat die Sitzung verlassen");
 			postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
@@ -105,13 +100,7 @@ public class Server {
 		}
 	}
 	
-	public void addFile(String name, File f ){
-//		Object[] data = {username, f};
-//		files.add(data);
-//		String value = f.getName()+" ["+username+"]";
-//		values.addElement(value);
-//		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(name)));	
-		
+	public void addFile(String name, File f ){	
 		ListEntry entry = new ListEntry(f, name);
 		values.addElement(entry);
 	
@@ -146,36 +135,22 @@ public class Server {
 		}	
 		return xf;
 	}
-
-//	/* (non-Javadoc)
-//	 * @see Server.ChatServer#addFile(byte[], java.lang.String)
-//	 */
-//	public void addFile(File f,String name,String lanIp, String wanIp){
-//		Object[] temp={lanIp, wanIp,f};
-//		files.add(temp);	
-//		values.addElement(name);
-//		Participant p;
-//		for (int i = 0; i < participantList.size(); i++) {
-//			p = (Participant) participantList.get(i);
-//			try {
-//				Remote.invoke(p.getCp(), "receiveNewFile", name);	
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				removeParticipant(p);
-//				i--;
-////				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-////				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
-//			}
-//		}
-//	}
 	
-//	/* (non-Javadoc)
-//	 * @see Server.ChatServer#getFile(int)
-//	 */
-//	public Object[] getFile(int[] index){
-//		return (Object[])files.get(index[0]);
-//	}
-	
+	public void removeFile(ListEntry entry ){	
+		values.removeElement(entry);
+		Participant p;
+		for (int i = 0; i < participantList.size(); i++) 
+		{
+			p = (Participant) participantList.get(i);
+			try {
+				Remote.invoke(p.getCp(), "removeFile", entry);	
+			} catch (Exception e) {
+				e.printStackTrace();
+				removeParticipant(p);
+				i--;
+			}
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#getValues()

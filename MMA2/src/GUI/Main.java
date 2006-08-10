@@ -26,6 +26,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
+import sun.security.krb5.internal.crypto.f;
 
 public class Main extends javax.swing.JFrame{
 
@@ -386,7 +387,10 @@ public class Main extends javax.swing.JFrame{
 	public void receiveNewFile(ListEntry entry) {
 		filetable.addElement(entry);
 	}
-		
+	
+	public void removeFile(ListEntry entry ){
+		filetable.removeElement(entry);
+	}
 	//Statusleiste
 	/**
 	 * Über diese Methode wird ein neuer Text in der Statusleiste angezeigt

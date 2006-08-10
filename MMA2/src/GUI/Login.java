@@ -11,6 +11,9 @@ import java.sql.Statement;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -69,6 +72,33 @@ public class Login extends JFrame {
 			this.getContentPane().setLayout(thisLayout);
 			Login_action al=new Login_action(this);
 			
+			
+			JMenuBar mbar = new JMenuBar();
+			
+			JMenu aktionen = new JMenu("Menu");
+			JMenuItem aktionen1 = new JMenuItem("Virtuellen Arbeitsraum konfigurieren");
+			aktionen1.setActionCommand("config");
+			aktionen1.addActionListener(al);
+			aktionen.add(aktionen1);
+			JMenuItem aktionen2 = new JMenuItem("Programm schließen");
+			aktionen2.setActionCommand("close");
+			aktionen2.addActionListener(al);
+			aktionen.add(aktionen2);	
+			
+			JMenu hilfe = new JMenu("Help");
+			JMenuItem hilfe1 = new JMenuItem("Hilfe");
+			hilfe1.addActionListener(al);
+			hilfe1.setActionCommand("help");
+			hilfe.add(hilfe1);	
+			JMenuItem hilfe2 = new JMenuItem("Info");
+			hilfe2.addActionListener(al);
+			hilfe2.setActionCommand("info");
+			hilfe.add(hilfe2);
+			
+			mbar.add(aktionen);
+			mbar.add(hilfe);		
+			this.setJMenuBar(mbar);	
+			
 			l_header = new JLabel();
 			this.getContentPane().add(l_header, new AnchorConstraint(24,714, 173, 346, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
 			l_header.setText("Bitte mit Kennung einloggen");
@@ -97,6 +127,7 @@ public class Login extends JFrame {
 			button_login = new JButton();
 			this.getContentPane().add(button_login, new AnchorConstraint(382,837, 487, 689, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
 			button_login.setText("Login");
+			button_login.setActionCommand("login");
 			button_login.setPreferredSize(new java.awt.Dimension(71, 25));
 			button_login.addActionListener(al);
 
@@ -134,7 +165,6 @@ public class Login extends JFrame {
 		 * Konstruktor
 		 * @param owner Der zu dem Listener gehörende JFrame
 		 */
-
 		public Login_action(JFrame owner){
 			this.owner=owner;
 		}
@@ -153,7 +183,7 @@ public class Login extends JFrame {
 				//System.out.println("Beenden");
 				System.exit(0);
 			}
-			else{	
+			else if(test.equals("login")){	
 				String name=tf_username.getText();
 				String pw=pf_password.getText();
 				try {
@@ -206,6 +236,25 @@ public class Login extends JFrame {
 					System.out.println("ERROR:" + e1.getMessage());
 				}
 				
+			}
+			else if(e.getActionCommand().equals("close")){			
+				System.exit(0);	
+			}
+			else if(e.getActionCommand().equals("help")){
+				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
+				help.setVisible(true);
+			}
+			else if(e.getActionCommand().equals("info")){
+				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);
+				info.setVisible(true);
+			}
+			else if(e.getActionCommand().equals("config")){
+				try {
+					Config c = new Config();
+					c.setVisible(true);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 		

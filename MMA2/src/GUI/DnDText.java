@@ -1,18 +1,14 @@
 package GUI;
 
 import gnu.cajo.invoke.Remote;
-import gnu.cajo.utils.extra.ClientProxy;
-import gnu.cajo.utils.extra.Xfile;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.*;
-import Server.FileServer;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.datatransfer.*;
 import java.awt.dnd.*;
-import java.awt.event.InputEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -32,7 +28,6 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	private String username;
 	private JProgressBar pbar;
 	Thread t;
-	
 	
 	/**
 	 * Konstruktor
@@ -74,6 +69,29 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		this.values.addElement(entry);
 	}
 
+	public void removeElement(ListEntry entry){
+		this.values.removeElement(entry);
+	}
+	
+	public void makeLocallyAvailable(int index){
+		ListEntry entry = (ListEntry)values.getElementAt(index);
+		int[] i = {index};
+		try {
+			Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
+			Object x = xf[0];			
+			File f = (File)xf[1];
+			File tempfile=new File(f.getName());
+			tempfile.createNewFile();
+			tempfile.deleteOnExit();								
+			t=new Thread(new FileDownload(this, entry, f, tempfile, x));
+			t.start();				
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}							
+	}
+	
 	public void dragEnter(DropTargetDragEvent dEvent) {
 	}
 
@@ -108,19 +126,13 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 					Iterator dateien = ((java.util.List) trans.getTransferData(selectedFlavor)).iterator();
 					while (dateien.hasNext()) {
 						File file =(File) dateien.next();	
-//						URI uri = file.toURI();
-//						URL url = file.toURL();
 						String name=file.getName();
 						Remote.invoke(server, "setStatus", "Neuer File "+name+" wird bereitgestellt.");
-//						session.setStatus("Neuer File "+name+" wird von User "+session.getNickname()+" bereitgestellt.");
 						try {
 							Remote.invoke(server, "setStatus", "Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");						
-//							session.setStatus("Ladevorgang abgeschlossen. File '"+name+ "' kann jetzt heruntergeladen werden");			
 							Object[] args = {username, file};
 							Remote.invoke(server, "addFile", args); 
-//							session.addFile(file,name,InetAddress.getLocalHost().getHostAddress());
 						} catch (Exception e1) {		
-//							session.setStatus("File "+name+" konnte leider nicht geladen werden.");
 							Remote.invoke(server, "setStatus", "File "+name+" konnte leider nicht geladen werden.");
 							e1.printStackTrace();
 						}
@@ -139,16 +151,9 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 			System.out.println("DropEvent ausgelöst");
 			if(entry.IsLocal){
 				try {
-	//				int[] i = {index};
-	//				Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
-	//				Object x = xf[0];
-	//				File f = (File)xf[1];
-					
-	
 					File f = entry.getFile();
 					Trans temp= new Trans(f);
 					dge.startDrag(null,null,null,temp,this);
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}				
@@ -156,8 +161,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 			else{
 				System.out.println("File noch nicht local!");
 			}
-		}
-		
+		}		
 	}
 
 	/* (non-Javadoc)
@@ -167,42 +171,21 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		int index=target.getSelectedIndex();
 		if(index>=0){
 			ListEntry entry = (ListEntry)values.getElementAt(index);
+	
 			if(!entry.IsLocal && me.getClickCount() == 2){				
-				int[] i = {index};
-				try {
-					Object[] xf=(Object[])Remote.invoke(server, "getFile", i);	
-					Object x = xf[0];			
-					File f = (File)xf[1];
-					File tempfile=new File(f.getName());
-					tempfile.createNewFile();
-					tempfile.deleteOnExit();				
-					
-					t=new Thread(new FileDownload(this, entry, f, tempfile, x));
-					t.start();				
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}							
+				makeLocallyAvailable(index);
 			}		
 			else if(entry.IsLocal && me.getClickCount()>=2){
-//				System.out.println("DoubleClick ausgelöst");
 				File tempfile = entry.getFile();
 				try {
-					
 					String osName = System.getProperty("os.name" );
-////			    String[] cmd = new String[3];
 		            if( osName.equals( "Windows XP" ) )
 		            {
 		                Runtime.getRuntime().exec("cmd.exe /C start "+tempfile.getPath());
 		            }
-////  		        if(OS=MAC/LINUX)?????
-//		            
-				
-				
-				} catch (Exception e) {
+	//  		        if(OS=MAC/LINUX)?????					
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -225,9 +208,33 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		
 	}
 
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased(MouseEvent e) {	
+		if(e.getButton() == MouseEvent.BUTTON3 && !values.isEmpty()){		
+			JPopupMenu TestPopup = new JPopupMenu();
+			JMenuItem aktionen0 = new JMenuItem("Datei verfügbar machen.");
+			aktionen0.setActionCommand("load");
+			aktionen0.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+					makeLocallyAvailable(target.getSelectedIndex());			
+				}				
+			});
+			TestPopup.add(aktionen0);
+			JMenuItem aktionen1 = new JMenuItem("Datei löschen");
+			aktionen1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						ListEntry entry = (ListEntry)values.getElementAt(target.getSelectedIndex());
+						Remote.invoke(server, "removeFile", entry);
+					} catch (Exception e) {
+							e.printStackTrace();
+					}
+//					removeElement((ListEntry)target.getSelectedValue());			
+				}				
+			});
+			aktionen1.setActionCommand("delete");
+			TestPopup.add(aktionen1);
+			TestPopup.show(e.getComponent(), e.getX(), e.getY());
+		}		
 	}
 
 	

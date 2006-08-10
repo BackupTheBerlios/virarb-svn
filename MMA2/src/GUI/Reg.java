@@ -8,6 +8,9 @@ import layout.AnchorLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
@@ -38,7 +41,6 @@ public class Reg extends JFrame{
 	private JPasswordField pw_passwort;
 	private JPasswordField pw_passwort2;
 
-
 	/**
 	 * Konstruktor
 	 */
@@ -55,78 +57,108 @@ public class Reg extends JFrame{
 			this.getContentPane().setLayout(null);
 			Reg_action al=new Reg_action(this);
 	
-
+			JMenuBar mbar = new JMenuBar();
+			
+			JMenu aktionen = new JMenu("Menu");
+			JMenuItem aktionen0 = new JMenuItem("Zurück zum Login");
+			aktionen0.setActionCommand("back");
+			aktionen0.addActionListener(al);
+			aktionen.add(aktionen0);
+			JMenuItem aktionen1 = new JMenuItem("Virtuellen Arbeitsraum konfigurieren");
+			aktionen1.setActionCommand("config");
+			aktionen1.addActionListener(al);
+			aktionen.add(aktionen1);
+			JMenuItem aktionen2 = new JMenuItem("Programm schließen");
+			aktionen2.setActionCommand("close");
+			aktionen2.addActionListener(al);
+			aktionen.add(aktionen2);	
+			
+			JMenu hilfe = new JMenu("Help");
+			JMenuItem hilfe1 = new JMenuItem("Hilfe");
+			hilfe1.addActionListener(al);
+			hilfe1.setActionCommand("help");
+			hilfe.add(hilfe1);	
+			JMenuItem hilfe2 = new JMenuItem("Info");
+			hilfe2.addActionListener(al);
+			hilfe2.setActionCommand("info");
+			hilfe.add(hilfe2);
+			
+			mbar.add(aktionen);
+			
+			mbar.add(hilfe);		
+			this.setJMenuBar(mbar);	
 			
 			label_header = new JLabel();
-			label_header.setBounds(10, 10, 300, 25);
+			label_header.setBounds(10, 0, 300, 25);
 			label_header.setText("Bitte folgende Felder zur Registrierung ausfüllen");
 			this.getContentPane().add(label_header);
 			
 			label_name = new JLabel();
-			label_name.setBounds(30, 40, 100, 25);
+			label_name.setBounds(170, 30, 100, 25);
 			label_name.setText("Vorname:");
 			this.getContentPane().add(label_name);
 			
 			tf_vorname = new JTextField();
-			tf_vorname.setBounds(200, 40, 150, 25);
+			tf_vorname.setBounds(340, 30, 150, 25);
 			tf_vorname.setPreferredSize(new java.awt.Dimension(134, 26));
 			this.getContentPane().add(tf_vorname);
 
 			label_nachname = new JLabel();
-			label_nachname.setBounds(30, 70, 100, 25);
+			label_nachname.setBounds(170, 60, 100, 25);
 			label_nachname.setText("Nachname:");
 			this.getContentPane().add(label_nachname);
 
 			tf_nachname = new JTextField();
-			tf_nachname.setBounds(200, 70, 150, 25);
+			tf_nachname.setBounds(340, 60, 150, 25);
 			tf_nachname.setText("");
 			this.getContentPane().add(tf_nachname);
 			
 			label_mail = new JLabel();
-			label_mail.setBounds(30, 100, 150, 25);
+			label_mail.setBounds(170, 90, 150, 25);
 			label_mail.setText("Email:");
 			this.getContentPane().add(label_mail);
 
 			tf_email = new JTextField();
-			tf_email.setBounds(200, 100, 150, 25);
+			tf_email.setBounds(340, 90, 150, 25);
 			this.getContentPane().add(tf_email);
 
 			label_nick = new JLabel();
-			label_nick.setBounds(30, 130, 100, 25);
+			label_nick.setBounds(170, 120, 100, 25);
 			label_nick.setText("Nickname:");
 			this.getContentPane().add(label_nick);
 
 			tf_nick = new JTextField();
-			tf_nick.setBounds(200, 130, 150, 25);
+			tf_nick.setBounds(340, 120, 150, 25);
 			this.getContentPane().add(tf_nick);
 
 			label_passwort = new JLabel();
-			label_passwort.setBounds(30, 160, 100, 25);
+			label_passwort.setBounds(170, 150, 100, 25);
 			label_passwort.setText("Passwort:");
 			this.getContentPane().add(label_passwort);
 			
 			pw_passwort = new JPasswordField();
-			pw_passwort.setBounds(200, 160, 150, 25);
+			pw_passwort.setBounds(340, 150, 150, 25);
 			this.getContentPane().add(pw_passwort);
 		
 			label_passwort2 = new JLabel();
-			label_passwort2.setBounds(30, 190, 150, 25);
+			label_passwort2.setBounds(170, 180, 150, 25);
 			label_passwort2.setText("Passwort wiederholen:");
 			this.getContentPane().add(label_passwort2);
 			
 			pw_passwort2 = new JPasswordField();
-			pw_passwort2.setBounds(200, 190, 150, 25);
+			pw_passwort2.setBounds(340, 180, 150, 25);
 			this.getContentPane().add(pw_passwort2);
 
 			button_abbrechen = new JButton();
-			button_abbrechen.setBounds(280, 230, 100, 30);
+			button_abbrechen.setBounds(280, 210, 100, 30);
 			button_abbrechen.setText("Abbrechen");
 			button_abbrechen.addActionListener(al);
 			this.getContentPane().add(button_abbrechen);
 			
 			button_absenden = new JButton();
-			button_absenden.setBounds(390, 230, 100, 30);
+			button_absenden.setBounds(390, 210, 100, 30);
 			button_absenden.setText("Absenden");
+			button_absenden.setActionCommand("send");
 			button_absenden.setToolTipText("Daten Abschicken und zum Login zurückkehren.");
 			button_absenden.addActionListener(al);
 			this.getContentPane().add(button_absenden);
@@ -158,12 +190,12 @@ public class Reg extends JFrame{
 			String test = e.getActionCommand();
 			if (test.equals("Beenden"))
 				System.exit(0);
-			else if(test.equals("Abbrechen")){
+			else if(test.equals("Abbrechen") || test.equals("back")){
 				Login inst = new Login();
 				inst.setVisible(true);
 				dispose();
 			}
-			else{
+			else if(test.equals("send")){
 				String Vorn = tf_vorname.getText();
 				String Lastname = tf_nachname.getText();
 				String Mail = tf_email.getText();
@@ -203,6 +235,25 @@ public class Reg extends JFrame{
 					} catch (Exception e1) {
 						System.out.println("ERROR:" + e1.getMessage());
 					}
+				}
+			}
+			else if(e.getActionCommand().equals("close")){			
+				System.exit(0);	
+			}
+			else if(e.getActionCommand().equals("help")){
+				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
+				help.setVisible(true);
+			}
+			else if(e.getActionCommand().equals("info")){
+				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);
+				info.setVisible(true);
+			}
+			else if(e.getActionCommand().equals("config")){
+				try {
+					Config c = new Config();
+					c.setVisible(true);
+				} catch (Exception e1) {
+					e1.printStackTrace();
 				}
 			}
 		}
