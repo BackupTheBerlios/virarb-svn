@@ -99,8 +99,14 @@ public class Auswahl extends JFrame {
 			joinpanel.add(label_ip);
 
 			tf_ip = new JTextField();
-			tf_ip.setText("Name");		
-				
+			String x;
+			if(	!((x = Fileausgabe.getProperty("lastServerName")).equals("") || x == null)){
+				tf_ip.setText(x);		
+			}
+			else{
+				tf_ip.setText("Name");		
+					
+			}
 			joinpanel.add(tf_ip);
 			tf_ip.setBounds(100, 60, 200, 30);
 
@@ -192,6 +198,7 @@ public class Auswahl extends JFrame {
 				try {
 					Main main=new Main(ip,username);
 					main.setVisible(true);
+					Fileausgabe.setProperty("lastServerName", ip);
 					owner.dispose();
 				} catch (Exception e1) {
 					e1.printStackTrace();

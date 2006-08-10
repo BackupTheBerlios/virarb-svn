@@ -1,9 +1,5 @@
 package GUI;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
@@ -43,33 +39,25 @@ public  class Ip {
 	}
 	
 	public static int getMyPort(){
-		int port = 1234;
-		File f = new File("VirArb.cfg");
-		try {
-			FileReader fr = new FileReader(f);
-			BufferedReader reader = new BufferedReader(fr);
-			port = Integer.parseInt(reader.readLine());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}       
-        return port;
+		String x = Fileausgabe.getProperty("Port");
+        if(x.equals("") || x == null ){
+        	return 1234;
+        }
+        else{
+        	return Integer.parseInt(x);
+        }
 	}
 
 	public static int getServerPort(){
-		int port = 1234;
-		File f = new File("VirArb.cfg");
-		try {
-			FileReader fr = new FileReader(f);
-			BufferedReader reader = new BufferedReader(fr);
-			reader.readLine();
-			port = Integer.parseInt(reader.readLine());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}       
-        return port;
+		String x = Fileausgabe.getProperty("ServerPort");
+        if(x.equals("") || x == null ){
+        	return 1234;
+        }
+        else{
+        	return Integer.parseInt(x);
+        }
 	}
+
 }
+	
+

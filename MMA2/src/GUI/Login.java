@@ -68,61 +68,48 @@ public class Login extends JFrame {
 			AnchorLayout thisLayout = new AnchorLayout();
 			this.getContentPane().setLayout(thisLayout);
 			Login_action al=new Login_action(this);
-			{
-						
-						{
-							l_header = new JLabel();
-							this.getContentPane().add(l_header, new AnchorConstraint(24,714, 173, 346, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
-							l_header.setText("Bitte mit Kennung einloggen");
-							l_header.setPreferredSize(new java.awt.Dimension(176, 39));
-						}
-						{
-							l_username = new JLabel();
-							this.getContentPane().add(l_username,new AnchorConstraint(254,382,324,155,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
-							l_username.setText("Benutzername:");
-							l_username.setPreferredSize(new java.awt.Dimension(103,14));
-						}
-						{
-							l_password = new JLabel();
-							this.getContentPane().add(l_password,new AnchorConstraint(344,287,492,155,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
-							l_password.setText("Passwort:");
-							l_password.setPreferredSize(new java.awt.Dimension (60,30));
-						}
-						{
-							tf_username = new JTextField();
-							this.getContentPane().add(tf_username,new AnchorConstraint(245,648,349,386,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
-							tf_username.setPreferredSize(new java.awt.Dimension(119,21));
-//							tf_username.addActionListener(this);
-						}
-						{
-							pf_password = new JPasswordField();
-							this.getContentPane().add(pf_password,new AnchorConstraint(383,648,487,386,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
-							pf_password.setPreferredSize(new java.awt.Dimension(119,21));
-//							pf_password.addActionListener(this);
-						}
-						{
-							button_login = new JButton();
-							this.getContentPane().add(button_login, new AnchorConstraint(382,837, 487, 689, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
-							button_login.setText("Login");
-							button_login.setPreferredSize(new java.awt.Dimension(71, 25));
-							button_login.addActionListener(al);
-						}
-						{
-							l_reg = new JLabel();
-							this.getContentPane().add(l_reg,new AnchorConstraint(641,794,789,223,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
-							l_reg.setText("Noch keine Kennung? Dann bitte registrieren");
-							l_reg.setPreferredSize(new java.awt.Dimension(259,30));
-						}
-						{
-							button_reg = new JButton();
-							this.getContentPane().add(button_reg, new AnchorConstraint(817,641, 922, 377, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
-							button_reg.setText("Registrieren");
-							button_reg.setPreferredSize(new java.awt.Dimension(126, 25));
-							button_reg.addActionListener(al);
-						}
+			
+			l_header = new JLabel();
+			this.getContentPane().add(l_header, new AnchorConstraint(24,714, 173, 346, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
+			l_header.setText("Bitte mit Kennung einloggen");
+			l_header.setPreferredSize(new java.awt.Dimension(176, 39));
 
-					}
+			l_username = new JLabel();
+			this.getContentPane().add(l_username,new AnchorConstraint(254,382,324,155,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
+			l_username.setText("Benutzername:");
+			l_username.setPreferredSize(new java.awt.Dimension(103,14));
 
+			l_password = new JLabel();
+			this.getContentPane().add(l_password,new AnchorConstraint(344,287,492,155,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
+			l_password.setText("Passwort:");
+			l_password.setPreferredSize(new java.awt.Dimension (60,30));
+
+			tf_username = new JTextField();
+			tf_username.setText(Fileausgabe.getProperty("DefaultNick"));
+			this.getContentPane().add(tf_username,new AnchorConstraint(245,648,349,386,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
+			tf_username.setPreferredSize(new java.awt.Dimension(119,21));
+
+			pf_password = new JPasswordField();
+			pf_password.setText(Fileausgabe.getProperty("DefaultPw"));
+			this.getContentPane().add(pf_password,new AnchorConstraint(383,648,487,386,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
+			pf_password.setPreferredSize(new java.awt.Dimension(119,21));
+
+			button_login = new JButton();
+			this.getContentPane().add(button_login, new AnchorConstraint(382,837, 487, 689, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
+			button_login.setText("Login");
+			button_login.setPreferredSize(new java.awt.Dimension(71, 25));
+			button_login.addActionListener(al);
+
+			l_reg = new JLabel();
+			this.getContentPane().add(l_reg,new AnchorConstraint(641,794,789,223,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
+			l_reg.setText("Noch keine Kennung? Dann bitte registrieren");
+			l_reg.setPreferredSize(new java.awt.Dimension(259,30));
+
+			button_reg = new JButton();
+			this.getContentPane().add(button_reg, new AnchorConstraint(817,641, 922, 377, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
+			button_reg.setText("Registrieren");
+			button_reg.setPreferredSize(new java.awt.Dimension(126, 25));
+			button_reg.addActionListener(al);
 
 			this.getRootPane().setDefaultButton(button_login);
 			this.setResizable(false);
@@ -154,8 +141,7 @@ public class Login extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 	
-			String test= e.getActionCommand();
-	//		System.out.println(test);
+			String test = e.getActionCommand();
 			if(test.equals("Registrieren"))	{
 	
 				Reg inst = new Reg();
@@ -198,6 +184,8 @@ public class Login extends JFrame {
 									err.setVisible(true);
 									return;
 							}
+							Fileausgabe.setProperty("DefaultNick", name);
+							Fileausgabe.setProperty("DefaultPw", pw);
 							Error err=new Error("Glückwunsch","Sie haben sich erfolgreich eingeloggt.",owner);					
 							err.setVisible(true);
 							Auswahl aw=new Auswahl(name);

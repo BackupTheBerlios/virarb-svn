@@ -28,16 +28,11 @@ public class Config extends JDialog {
 	public Config() throws Exception{
 		super();
 		if(!f.exists()){
-			f.createNewFile();		
-			FileOutputStream ausgabe = new FileOutputStream(f);
-            DataOutputStream write = new DataOutputStream(ausgabe);
-            write.writeBytes("1234\n");
-            write.writeBytes("1234\n");
+			Fileausgabe.setProperty("Port","1234");
+			Fileausgabe.setProperty("ServerPort","1234");
 		}
-		FileReader fr = new FileReader(f);
-        BufferedReader reader = new BufferedReader(fr);
-        port = reader.readLine();
-        serverport = reader.readLine();
+		port = Fileausgabe.getProperty("Port");
+        serverport =Fileausgabe.getProperty("ServerPort");
  		initGUI();
 	}
 	
@@ -106,6 +101,7 @@ public class Config extends JDialog {
 
 			this.setTitle("Virtueller Arbeitsraum - Konfiguration");
 			this.setResizable(false);
+			this.getRootPane().setDefaultButton(button_save);
 			this.setLocationRelativeTo(null);
 			this.setSize(500, 300);
 		} catch (Exception e) {
@@ -139,16 +135,8 @@ class Config_action implements ActionListener{
 
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("save")){
-			try {
-				FileOutputStream ausgabe = new FileOutputStream(owner.getFile());
-				DataOutputStream write = new DataOutputStream(ausgabe);
-				write.writeBytes(owner.getPort()+"\n");
-				write.writeBytes(owner.getServerport()+"\n");
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			Fileausgabe.setProperty("Port",owner.getPort());
+			Fileausgabe.setProperty("ServerPort",owner.getServerport());
 			owner.dispose();
 		}
 		else if(e.getActionCommand().equals("cancel")){
