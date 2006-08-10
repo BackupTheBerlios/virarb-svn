@@ -26,7 +26,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
-import sun.security.krb5.internal.crypto.f;
 
 public class Main extends javax.swing.JFrame{
 
