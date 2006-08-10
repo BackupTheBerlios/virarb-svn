@@ -38,7 +38,7 @@ public class ListEntry implements Serializable{
 	public boolean equals(Object x){
 		if(x instanceof ListEntry){
 			ListEntry entry = (ListEntry)x;
-			if(entry.getFile().equals(this.file) && entry.getOwner().equals(this.owner)){
+			if(entry.getFile().getName().equals(this.file.getName()) && entry.getOwner().equals(this.owner)){
 				return true;
 			}
 			return false;

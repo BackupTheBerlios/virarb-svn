@@ -209,16 +209,15 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	}
 
 	public void mouseReleased(MouseEvent e) {	
-		if(e.getButton() == MouseEvent.BUTTON3 && !values.isEmpty()){		
-			JPopupMenu TestPopup = new JPopupMenu();
+		if(e.getButton() == MouseEvent.BUTTON3 && !values.isEmpty() && target.getSelectedIndex()>=0){		
+			JPopupMenu popup = new JPopupMenu();
 			JMenuItem aktionen0 = new JMenuItem("Datei verfügbar machen.");
-			aktionen0.setActionCommand("load");
 			aktionen0.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent arg0) {
 					makeLocallyAvailable(target.getSelectedIndex());			
 				}				
 			});
-			TestPopup.add(aktionen0);
+			popup.add(aktionen0);
 			JMenuItem aktionen1 = new JMenuItem("Datei löschen");
 			aktionen1.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent arg0) {
@@ -227,13 +226,11 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 						Remote.invoke(server, "removeFile", entry);
 					} catch (Exception e) {
 							e.printStackTrace();
-					}
-//					removeElement((ListEntry)target.getSelectedValue());			
+					}	
 				}				
 			});
-			aktionen1.setActionCommand("delete");
-			TestPopup.add(aktionen1);
-			TestPopup.show(e.getComponent(), e.getX(), e.getY());
+			popup.add(aktionen1);
+			popup.show(e.getComponent(), e.getX(), e.getY());
 		}		
 	}
 
