@@ -65,6 +65,11 @@ public class Server {
 		return colortable[count++ % colortable.length];
 	}
 	
+	public Color[] getColortable(){
+		System.out.print(colortable.toString());
+		return colortable;
+	}
+	
 	public void postMessage(Chatmessage message) {
 		Participant p;
 		message.setTime(new Date());
@@ -196,6 +201,7 @@ public class Server {
 		}
 		lines.setElementAt(new String("malen"),0);
 	}
+	
 	
 	 /* (non-Javadoc)
 	 * @see Server.ChatServer#setStatus(java.lang.String)
