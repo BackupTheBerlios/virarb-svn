@@ -6,20 +6,16 @@ import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ItemProxy;
 import gnu.cajo.utils.extra.Xfile;
 import java.awt.BorderLayout;
-import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.sql.Connection;
@@ -28,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.Vector;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -38,25 +33,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
 import javax.swing.filechooser.*;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
 
-import Server.Server;
-
-
-/**
-* This code was generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* *************************************
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
-* for this machine, so Jigloo or this code cannot be used legally
-* for any corporate or commercial purpose.
-* *************************************
-*/
 public class Main extends javax.swing.JFrame {
 
 	private JTextPane ta_chat;
@@ -94,8 +71,7 @@ public class Main extends javax.swing.JFrame {
 	/**
 	 * Konsruktor
 	 * 
-	 * @param username
-	 *            Der Name des Users
+	 * @param username Der Name des Users
 	 */
 	public Main(String username) throws Exception {
 		super();
@@ -118,8 +94,7 @@ public class Main extends javax.swing.JFrame {
 		initGUI();
 		try {
 			Remote.invoke(server, "setStatus", "Server gestartet.");
-			sendMessage(new Chatmessage(Color.BLACK, "Server gestartet von '"
-					+ username + "' unter der IP: " + Ip.getLanIp(),
+			sendMessage(new Chatmessage(Color.BLACK, "Server gestartet von '"+ username,
 					new Date(), "System"));
 			sendMessage(new Chatmessage(Color.BLACK, "User '" + username
 					+ "' ist der Sitzung beigetreten.", new Date(), "System"));
