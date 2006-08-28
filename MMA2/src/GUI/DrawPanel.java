@@ -111,6 +111,16 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 			}
 		}
 	}
+
+
+	public Color getMyColor() {
+		return myColor;
+	}
+
+
+	public void setMyColor(Color myColor) {
+		this.myColor = myColor;
+	}
 	
 }
 

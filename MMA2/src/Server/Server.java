@@ -13,8 +13,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.text.Document;
 import GUI.Chatmessage;
 import GUI.ColorLine;
+import GUI.ColorVector;
 import GUI.Ip;
 import GUI.ListEntry;
+import GUI.NamedColor;
 
 public class Server {
 
@@ -22,7 +24,8 @@ public class Server {
 	private DefaultListModel values;
 	private Vector lines = new Vector();
 	private int count=0;
-	private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
+	//private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
+	private static ColorVector colortable = new ColorVector();
 	private String starter;
 	private Remote remoteRef;
 	private final int port = Ip.getMyPort();
@@ -62,10 +65,11 @@ public class Server {
 	 * @see Server.ChatServer#getMyColor()
 	 */
 	public Color getMyColor() {
-		return colortable[count++ % colortable.length];
+//		return colortable[count++ % colortable.length];
+		return ((NamedColor)colortable.get(count++ % colortable.size())).getColor();
 	}
 	
-	public Color[] getColortable(){
+	public ColorVector getColortable(){
 		System.out.print(colortable.toString());
 		return colortable;
 	}

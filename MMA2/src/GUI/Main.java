@@ -8,6 +8,7 @@ import gnu.cajo.utils.extra.Xfile;
 import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -41,6 +42,21 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 
 import Server.Server;
 
+
+/**
+* This code was generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* *************************************
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED
+* for this machine, so Jigloo or this code cannot be used legally
+* for any corporate or commercial purpose.
+* *************************************
+*/
 public class Main extends javax.swing.JFrame {
 
 	private JTextPane ta_chat;
@@ -55,7 +71,7 @@ public class Main extends javax.swing.JFrame {
 
 	private Color myColor = Color.BLACK;
 	
-	private Color[] colortable;
+	private ColorVector colortable;
 
 	private SimpleAttributeSet set;
 
@@ -68,6 +84,8 @@ public class Main extends javax.swing.JFrame {
 	private Xfile xfile = new Xfile(64 * 1024);
 
 	private Vector lines;
+	
+	private JComboBox color_choice;
 
 	private boolean serverAvailable = true;
 
@@ -169,10 +187,10 @@ public class Main extends javax.swing.JFrame {
 					ItemServer.bind(xfile, "xfile");
 					myColor = (Color) Remote.invoke(server, "getMyColor", null);
 				} catch (Exception e1) {
-					throw new Exception("Kein Server gefunden!");
+					throw new Exception(e1);
 				}
 			} else {
-				throw new Exception("Kein Server gefunden!");
+				throw new Exception(e);
 
 			}
 		}
@@ -323,16 +341,13 @@ public class Main extends javax.swing.JFrame {
 					JButton button_speichern = new JButton("speichern");
 					button_speichern.addActionListener(al);
 					pa_paint_button.add(button_speichern, BorderLayout.EAST);
-//					
-//					JCheckBoxMenuItem color_choice = new JCheckBoxMenuItem("colors");
-//					color_choice.addActionListener(al);
-					Choice color_choice = new Choice();
-					colortable = (Color[]) Remote.invoke(server, "getColortable", null);
-					int i=0;
-					System.out.print(colortable);
-				
-					color_choice.addItem("rot");
-					color_choice.addItem("blau");
+					
+					colortable = (ColorVector) Remote.invoke(server, "getColortable", null);
+					color_choice = new JComboBox(colortable);
+					color_choice.setRenderer(new CellColorRenderer());
+					color_choice.setActionCommand("colorchanged");
+					color_choice.addActionListener(al);
+					
 					pa_paint_button.add(color_choice);
 
 					JPanel pa_malfenster = new JPanel();
@@ -555,11 +570,11 @@ public class Main extends javax.swing.JFrame {
 
 			else if (e.getActionCommand().equals("speichern")) {
 				try {
-					BufferedImage img = new BufferedImage(400, 400,
+					BufferedImage img = new BufferedImage(300, 300,
 							BufferedImage.TYPE_INT_RGB);
 					Graphics2D g = img.createGraphics();
 					g.setBackground(Color.WHITE);
-					g.clearRect(0, 0, 399, 399);
+					g.clearRect(0, 0, 299, 299);
 					try {
 						lines = (Vector) Remote
 								.invoke(server, "getLines", null);
@@ -644,6 +659,12 @@ public class Main extends javax.swing.JFrame {
 						owner);
 				info.setVisible(true);
 			}
+			else if (e.getActionCommand().equals("colorchanged")) {
+
+				
+				malfenster.setMyColor(((NamedColor)color_choice.getSelectedItem()).getColor());
+			}
+			
 
 		}
 
@@ -707,6 +728,34 @@ public class Main extends javax.swing.JFrame {
 			}
 			leaveByServer();
 		}
+	}
+	
+	private class CellColorRenderer extends JLabel implements ListCellRenderer {
+			
+		public CellColorRenderer() {
+			setOpaque(true);
+		}
+
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+		{
+			NamedColor n = (NamedColor)value;
+			setText(n.toString());
+			if(isSelected){
+				trueSetBackground(new Color(240,240,240));
+				trueSetForeground(n.getColor());
+			}
+			else{
+				trueSetBackground(Color.WHITE);
+				trueSetForeground(n.getColor());
+			}
+			return this;
+		}
+		
+		public void setForeground(Color fg){}
+		public void setBackground(Color bg){}
+		public void trueSetForeground(Color fg){ super.setForeground(fg); }
+		public void trueSetBackground(Color bg){ super.setBackground(bg); }
+
 	}
 
 }
