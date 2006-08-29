@@ -1,12 +1,11 @@
 package GUI;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
-
-
 
 /**
  *  Chatmessage.
@@ -17,7 +16,6 @@ import java.util.Date;
  * @author Klassen,Kokoschka,Langer,Meurer
  *  
  */
-
 public class Chatmessage implements Serializable
  {
 	private Color color;
@@ -46,17 +44,12 @@ public class Chatmessage implements Serializable
 	 *   @exception IOException
 	 */
 	private void writeObject(ObjectOutputStream out)throws IOException{
-//		System.out.println("WriteColor: "+color);
 		out.writeInt(color.getRed());
 		out.writeInt(color.getGreen());
 		out.writeInt(color.getBlue());
-//		System.out.println("WriteMessage: "+message);
 		out.writeUTF(message);
-//		System.out.println("WriteTimer: "+time);
 		out.writeUTF(time);
-//		System.out.println("WriteUser: "+user);
 		out.writeUTF(user);
-//		System.out.println("ende");
 	}
 	
 	/**
@@ -67,14 +60,10 @@ public class Chatmessage implements Serializable
 	 */
     private void readObject(ObjectInputStream in)throws IOException, ClassNotFoundException{
 		color=new Color(in.readInt(),in.readInt(),in.readInt());
-//		System.out.println("ReadColor: "+color);
 		message=in.readUTF();
-//		System.out.println("ReadMessage: "+message);
 		time=in.readUTF();
-//		System.out.println("ReadTime: "+time);
 		user=in.readUTF();
     }
-	
 	
 	/**
 	 * @return Gibt die Textfarbe der Nachricht zurück.
@@ -132,7 +121,6 @@ public class Chatmessage implements Serializable
 	public String getUser() {
 		return user;
 	}
-
 	
 	/**
 	 * @param user Setzt den Namen des Senders der Nachricht fest.
@@ -140,7 +128,4 @@ public class Chatmessage implements Serializable
 	public void setUser(String user) {
 		this.user = user;
 	}
-	
-	
-	
 }

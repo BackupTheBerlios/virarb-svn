@@ -4,13 +4,26 @@ import java.awt.Color;
 import java.io.Serializable;
 import java.util.Vector;
 
+/**
+ * Die Klasse Colorvector stellt die verschieden
+ * Farben (NamedColor) für chat und malfenster zur Verfügung
+ * @author Daniel Meurer
+ **/
 public class ColorVector extends Vector implements Serializable {
 
+	
+	/**
+	 * Konstruktor
+	 * Füllt Vector automatisch
+	 */
 	public ColorVector() {
 		super();
 		generateContent();
 	}
 	
+	/**
+	 * Füllt den Vector
+	 */
 	private void generateContent(){
 		this.add(new NamedColor(new Color(180,0,0),"Rot"));
 		this.add(new NamedColor(new Color(0,180,0),"Grün"));

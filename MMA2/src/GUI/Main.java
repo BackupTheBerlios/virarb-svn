@@ -33,40 +33,28 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
 import javax.swing.filechooser.*;
 
-
+/**
+ * Der JFrame Main ist das Hauptfenster der Anwendung, in dem
+ * Chat, FileTable und Malfenster vereinigt werden.
+ * @author Daniel Meurer
+ */
 public class Main extends javax.swing.JFrame {
-
 	private JTextPane ta_chat;
-
 	private DrawPanel malfenster;
-
 	private DnDText filetable;
-
 	private JTextField tf_status, tf_chateingabe;
-
 	private String username = "User";
-
-	private Color myColor = Color.BLACK;
-	
+	private Color myColor = Color.BLACK;	
 	private ColorVector colortable;
-
 	private SimpleAttributeSet set;
-
 	private Object server;
-
 	private final int port = Ip.getMyPort();
-
 	private final int serverport = Ip.getServerPort();
-
 	private Xfile xfile = new Xfile(64 * 1024);
-
-	private Vector lines;
-	
+	private Vector lines;	
 	private JComboBox color_choice;
-
 	private boolean serverAvailable = true;
-
-	JFileChooser chooser = new JFileChooser();
+	private JFileChooser chooser = new JFileChooser();
 
 	/**
 	 * Konsruktor
@@ -105,11 +93,8 @@ public class Main extends javax.swing.JFrame {
 
 	/**
 	 * Konstruktor
-	 * 
-	 * @param ip
-	 *            Die IP-Adresse des Servers.
-	 * @param username
-	 *            Der Name des Users.
+	 * @param ip Die IP-Adresse des Servers.
+	 * @param username Der Name des Users.
 	 */
 	public Main(String ip, String username) throws Exception {
 		super();
@@ -138,7 +123,6 @@ public class Main extends javax.swing.JFrame {
 			throw new Exception("Keine Verbindung zur Datenbank");
 			// e2.printStackTrace();
 		}
-
 		try {
 			server = Remote.getItem("//" + lanIp + ":" + serverport
 					+ "/VirArbServer");
@@ -166,7 +150,6 @@ public class Main extends javax.swing.JFrame {
 				}
 			} else {
 				throw new Exception(e);
-
 			}
 		}
 		initGUI();
@@ -224,13 +207,10 @@ public class Main extends javax.swing.JFrame {
 
 		mbar.add(aktionen);
 		mbar.add(hilfe);
-
 		this.setJMenuBar(mbar);
-
 		try {
 			this.getContentPane().setLayout(new BorderLayout());
 			{
-
 				pa_left = new JPanel();
 				pa_left.setLayout(new BorderLayout());
 				pa_left.setPreferredSize(new Dimension(400, 300));
@@ -268,9 +248,7 @@ public class Main extends javax.swing.JFrame {
 				scroll_chat.getViewport().add(ta_chat);
 				// scroll_chat.setPreferredSize(new Dimension(300,150));
 				pa_left.add(scroll_chat);
-
 			}
-
 			{
 				pa_right = new JPanel();
 				pa_right.setPreferredSize(new java.awt.Dimension(320, 300));
@@ -342,9 +320,7 @@ public class Main extends javax.swing.JFrame {
 					title.setTitle("Skizzenblatt - Mit der Maus malen.");
 					pa_paint.setBorder(title);
 					pa_right.add(pa_paint, BorderLayout.SOUTH);
-
 				}
-
 				tf_status = new JTextField("status");
 				tf_status.setEditable(false);
 				tf_status.setBorder(lineborder);
@@ -353,12 +329,9 @@ public class Main extends javax.swing.JFrame {
 				this.add(tf_status, BorderLayout.SOUTH);
 				pa_left.setBorder(lowerededge);
 				this.getContentPane().add(pa_left);
-				// pa_right.setBorder(loweredbevel);
 				this.getContentPane().add(pa_right, BorderLayout.EAST);
 			}
-
 			pack();
-			// setDefaultLookAndFeelDecorated(true);
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.getRootPane().setDefaultButton(button_chat);
 			this.setSize(800, 600);
@@ -382,9 +355,7 @@ public class Main extends javax.swing.JFrame {
 	/**
 	 * Die Methode empfängt Nachrichten vom Server und stellt diese im
 	 * Chatfenster dar.
-	 * 
-	 * @param rein
-	 *            Die empfangene Chatmessage.
+	 * @param rein Die empfangene Chatmessage.
 	 */
 	public void receiveMessage(Chatmessage rein) {
 		StyleConstants.setForeground(set, rein.getColor());
@@ -397,21 +368,16 @@ public class Main extends javax.swing.JFrame {
 	/**
 	 * Die Methode sendMessage() schickt eine Chatmessage an den Server, wo sie
 	 * dann verteilt wird.
-	 * 
-	 * @param raus
-	 *            Die Chatmessage, die gesendet werden soll.
+	 * @param raus Die Chatmessage, die gesendet werden soll.
 	 * @throws RemoteException
 	 */
 	public void sendMessage(Chatmessage raus) throws Exception {
 		Remote.invoke(server, "postMessage", raus);
 	}
 
-	// string in chatfeld ausgeben
 	/**
 	 * Über diese Methode wird ein String im Chatfenster ausgegeben.
-	 * 
-	 * @param x
-	 *            Der auszugebende Text.
+	 * @param x Der auszugebende Text.
 	 */
 	public void write(String x) {
 		Document temp = ta_chat.getDocument();
@@ -425,19 +391,21 @@ public class Main extends javax.swing.JFrame {
 
 	/**
 	 * Gibt das Malfenster des Mainfensters zurück
-	 * 
 	 * @return das Malfenster
 	 */
 	public DrawPanel getMalfenster() {
 		return malfenster;
 	}
 
+	/**
+	 * Malt die Linien im Malfenster.
+	 * @param lines Die Linien
+	 */
 	public void draw(Vector lines) {
 		malfenster.draw(lines);
 	}
 
 	// FILETRANSFER--------------------->
-
 	/**
 	 * Über diese Methode wird ein neuer File(name) im Filetable eingetragen.
 	 * 
@@ -448,6 +416,10 @@ public class Main extends javax.swing.JFrame {
 		filetable.addElement(entry);
 	}
 
+	/**
+	 * Entfernt einen Listeneintrag
+	 * @param entry Der Eintrag
+	 */
 	public void removeFile(ListEntry entry) {
 		filetable.removeElement(entry);
 	}
@@ -455,9 +427,7 @@ public class Main extends javax.swing.JFrame {
 	// Statusleiste
 	/**
 	 * Über diese Methode wird ein neuer Text in der Statusleiste angezeigt
-	 * 
-	 * @param status
-	 *            Die auszugebende Nachricht
+	 * @param status Die auszugebende Nachricht
 	 */
 	public void setStatus(String status) {
 		this.tf_status.setText(status);
@@ -466,17 +436,22 @@ public class Main extends javax.swing.JFrame {
 	/**
 	 * Gibt das Chatdocument zurück, um einem neuen User, den Zugriff auf vorher
 	 * geschriebenes zu ermöglichen
-	 * 
 	 * @return das Chatdocument
 	 */
 	public Document getChat() {
 		return ta_chat.getDocument();
 	}
 
+	/**
+	 * Setzt Flag, dass der Server nicht mehr erreichbar ist.
+	 */
 	public void setServerUnavailable() {
 		this.serverAvailable = false;
 	}
 
+	/**
+	 * Wird aufgerufen, wenn der Client den Chatraum verlässt
+	 */
 	public void leaveOnYourOwn() {
 		try {
 			Remote.invoke(server, "removeParticipant", username);
@@ -491,6 +466,9 @@ public class Main extends javax.swing.JFrame {
 		this.dispose();
 	}
 
+	/**
+	 * Der Server wurde geschlossen.
+	 */
 	public void leaveByServer() {
 		Error err = new Error("Info", "Der Arbeitsraum wurde geschlossen.",
 				this);
@@ -501,27 +479,24 @@ public class Main extends javax.swing.JFrame {
 	}
 
 	/**
-	 * DIe Klasse stellt den ActionListener für die Klasse Main zur Verfügung.
-	 * 
+	 * Die Klasse stellt den ActionListener für die Klasse Main zur Verfügung.
 	 * @author Klassen,Kokoschka,Langer,Meurer
-	 * 
 	 */
 	public class Main_action implements ActionListener, WindowListener {
-
 		private Main owner;
 
 		/**
 		 * Konstruktor
-		 * 
-		 * @param owner
-		 *            Der zu dem Listener gehörende JFrame
+		 * @param owner Der zu dem Listener gehörende JFrame
 		 */
 		public Main_action(Main owner) {
 			this.owner = owner;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		public void actionPerformed(ActionEvent e) {
-
 			if (e.getActionCommand().equals("Senden")) {
 				String inp = tf_chateingabe.getText();
 				if (inp.length() > 0) {
@@ -542,7 +517,6 @@ public class Main extends javax.swing.JFrame {
 					e1.printStackTrace();
 				}
 			}
-
 			else if (e.getActionCommand().equals("speichern")) {
 				try {
 					BufferedImage img = new BufferedImage(300, 300,
@@ -635,23 +609,23 @@ public class Main extends javax.swing.JFrame {
 				info.setVisible(true);
 			}
 			else if (e.getActionCommand().equals("colorchanged")) {
-
-				
 				malfenster.setMyColor(((NamedColor)color_choice.getSelectedItem()).getColor());
 			}
-			
-
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
+		 */
 		public void windowActivated(WindowEvent arg0) {
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
+		 */
 		public void windowClosed(WindowEvent arg0) {
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
+		/* (non-Javadoc)
 		 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
 		 */
 		public void windowClosing(WindowEvent arg0) {
@@ -663,8 +637,6 @@ public class Main extends javax.swing.JFrame {
 				Statement statement = connection.createStatement();
 				statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"
 						+ username + "';");
-				// session.setStatus("User "+session.getNickname()+ " hat die
-				// Sitzung verlassen");
 				sendMessage(new Chatmessage(Color.BLACK, "User '" + username
 						+ "' hat die Sitzung verlassen", new Date(), "System"));
 				if (((String) Remote.invoke(server, "getStarter", null))
@@ -677,24 +649,41 @@ public class Main extends javax.swing.JFrame {
 			System.exit(0);
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
+		 */
 		public void windowDeactivated(WindowEvent arg0) {
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
+		 */
 		public void windowDeiconified(WindowEvent arg0) {
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
+		 */
 		public void windowIconified(WindowEvent arg0) {
 		}
 
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
+		 */
 		public void windowOpened(WindowEvent arg0) {
 		}
 
 	}
 
+	/**
+	 * Der Thread ServerChecker checkt alle zwei Sekunden, ob
+	 * der Server noch erreichbar ist. Ist dies nicht der Fall, wird der Server verlassen.
+	 * @author Daniel Meurer
+	 *
+	 */
 	public class ServerChecker implements Runnable {
 		public void run() {
 			while (serverAvailable == true) {
-				// System.out.println("Check server");
 				try {
 					Thread.sleep(1000 * 2);
 				} catch (InterruptedException e) {
@@ -705,12 +694,23 @@ public class Main extends javax.swing.JFrame {
 		}
 	}
 	
+	/**
+	 * CellColorRender erweitert ein ListCellRenderer um die Auswahl der Farben im DropDown farblich
+	 * ansprechnender darzustellen.
+	 * @author Daniel Meurer
+	 */
 	private class CellColorRenderer extends JLabel implements ListCellRenderer {
 			
+		/**
+		 * Konstruktor
+		 */
 		public CellColorRenderer() {
 			setOpaque(true);
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+		 */
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
 		{
 			NamedColor n = (NamedColor)value;
@@ -726,11 +726,21 @@ public class Main extends javax.swing.JFrame {
 			return this;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.awt.Component#setForeground(java.awt.Color)
+		 */
 		public void setForeground(Color fg){}
+		/* (non-Javadoc)
+		 * @see java.awt.Component#setBackground(java.awt.Color)
+		 */
 		public void setBackground(Color bg){}
+		/**
+		 * @param fg Color
+		 */
 		public void trueSetForeground(Color fg){ super.setForeground(fg); }
+		/**
+		 * @param bg Color
+		 */
 		public void trueSetBackground(Color bg){ super.setBackground(bg); }
-
 	}
-
 }

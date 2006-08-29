@@ -1,4 +1,5 @@
 package GUI;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -6,9 +7,17 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 
-
+/**
+ * Die Klasse Ip stellt statische Methoden zur Findung
+ * von Ip-Adressen zur Verfügung
+ * @author Daniel Meurer
+ */
 public  class Ip {
 
+	/**
+	 * Die WanIp ist die im Internet sichtbare Ip des Rechners
+	 * @return WanIp
+	 */
 	public static String getWanIp() {
 	       	BufferedReader reader = null;
 	       	String ip = new String();
@@ -28,6 +37,10 @@ public  class Ip {
 		  return ip;
 	 }
 	
+	/**
+	 * Die LanIp ist die Ip des Rechners im lokalen Netz.
+	 * @return LanIp
+	 */
 	public static String getLanIp() {
 		String ip = new String();
 		try {
@@ -38,6 +51,11 @@ public  class Ip {
 		return ip;
 	}
 	
+	/**
+	 * der Clientport ist der Port des Clients.
+	 * Die Callbacks des Servers laufen hierüber.d
+	 * @return den ClientPort
+	 */
 	public static int getMyPort(){
 		String x = Fileausgabe.getProperty("Port");
         if(x.equals("") || x == null ){
@@ -48,6 +66,10 @@ public  class Ip {
         }
 	}
 
+	/**
+	 * der Serverport ist der Port zu dem verbunden wird.
+	 * @return den ServerPort
+	 */
 	public static int getServerPort(){
 		String x = Fileausgabe.getProperty("ServerPort");
         if(x.equals("") || x == null ){
@@ -57,7 +79,6 @@ public  class Ip {
         	return Integer.parseInt(x);
         }
 	}
-
 }
 	
 

@@ -1,12 +1,25 @@
 package GUI;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+/**
+ * Die Klasse Fileausgabe erledigt statisch
+ * die Ausgaben in die Konfigurationsdatei.
+ * Es können beliebige Properties mit zugehörigen Werten gespeichert und
+ * wieder geladen werden.
+ * @author Daniel Meurer
+ */
 public class Fileausgabe {
 	private static File f = new File("VirArb.cfg");
 	
+	/**
+	 * Läd ein Property aus der Datei
+	 * @param propertyName der Name des Properties
+	 * @return den Wert des Properties
+	 */
 	public static String getProperty(String propertyName){
 		String value = new String();		
 		if(!f.exists()){
@@ -34,6 +47,11 @@ public class Fileausgabe {
 		return value;
 	}
 	
+	/**
+	 * Ein Property speichern.
+	 * @param propertyName der Name des Properties
+	 * @param value den Wert des Properties
+	 */
 	public static void setProperty(String propertyName, String value){	
 		if(!f.exists()){
 			try {
@@ -62,8 +80,6 @@ public class Fileausgabe {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-	}
-	
+		}		
+	}	
 }

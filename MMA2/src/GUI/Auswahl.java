@@ -12,17 +12,15 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+/**
+ * Der JFrame Auswahl stellt ein Fenster dar, in dem der User
+ * wählen kann ob er einen eigenen Server erstellt oder
+ * zu einem offenen Server verbinden möchte.
+ * @author Daniel Meurer
+ */
 public class Auswahl extends JFrame {
-
 	private JTextField tf_ip;
 	private String username="user";
-	
-//	Mainmethode nicht mehr notwendig
-	
-	public static void main(String[] args) {
-		Auswahl inst = new Auswahl();
-		inst.setVisible(true);
-	}
 	
 	/**
 	 * Konstruktor
@@ -145,14 +143,11 @@ public class Auswahl extends JFrame {
 			
 			this.getContentPane().add(new JLabel(""), BorderLayout.NORTH);
 			this.getContentPane().add(joinpanel, BorderLayout.CENTER);
-//			joinpanel.setPreferredSize(new java.awt.Dimension(492, 89));
 			this.getContentPane().add(hostpanel, BorderLayout.SOUTH);
-//			hostpanel.setPreferredSize(new java.awt.Dimension(492, 83));
 			hostpanel.setLayout(null);
 
 			this.getRootPane().setDefaultButton(button_join);
-			this.setTitle("Virtueller Arbeitsraum 0.8   [" + username + "]");
-//			pack();
+			this.setTitle("Virtueller Arbeitsraum 1.0   [" + username + "]");
 			setSize(500, 300);
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
@@ -244,19 +239,16 @@ public class Auswahl extends JFrame {
 					Config c = new Config();
 					c.setVisible(true);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		}
-		public void windowClosed(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		public void windowClosed(WindowEvent arg0) {			
 		}
-		public void windowActivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		
+		public void windowActivated(WindowEvent arg0) {		
 		}
+		
 		public void windowClosing(WindowEvent arg0) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");			
@@ -268,22 +260,16 @@ public class Auswahl extends JFrame {
 			}
 			System.exit(0);
 		}
-		public void windowDeactivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		public void windowDeactivated(WindowEvent arg0) {	
 		}
+		
 		public void windowDeiconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
+		
 		public void windowIconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
+		
 		public void windowOpened(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
-	
 }

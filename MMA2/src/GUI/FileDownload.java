@@ -1,20 +1,29 @@
 package GUI;
 
-import gnu.cajo.invoke.Remote;
 import gnu.cajo.utils.extra.Xfile;
 import java.io.File;
-import java.io.IOException;
 import javax.swing.JProgressBar;
 
-
+/**
+ * Die Klasse FileDownload erledigt den Download von RemoteFiles
+ * in das lokale File System 
+ * @author Daniel Meurer
+ */
 public class FileDownload implements Runnable {
-	DnDText dnd;
-	File sourceFile, destFile;
-	Object x;
-	ListEntry entry;
-	JProgressBar pbar;
+	private DnDText dnd;
+	private File sourceFile, destFile;
+	private Object x;
+	private ListEntry entry;
+	private JProgressBar pbar;	
 	
-	
+	/**
+	 * Konstruktor
+	 * @param dnd der FileTable
+	 * @param entry der Listeneintrag
+	 * @param sourceFile SourceFile
+	 * @param destFile ZielFile
+	 * @param x der FileServer
+	 */
 	public FileDownload(DnDText dnd, ListEntry entry, File sourceFile, File destFile, Object x) {
 		super();
 		this.dnd = dnd;
@@ -25,8 +34,9 @@ public class FileDownload implements Runnable {
 		pbar = dnd.getPbar();
 	}
 
-
-
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		pbar.setIndeterminate(true);
 		try {
@@ -35,7 +45,6 @@ public class FileDownload implements Runnable {
 			entry.setFile(destFile);
 			dnd.getTarget().nextFocus();			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		pbar.setIndeterminate(false);

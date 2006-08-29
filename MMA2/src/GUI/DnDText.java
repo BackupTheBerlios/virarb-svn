@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-
-
 /**
  * Die Klasse DndText erstellt einen JScrollpane, in dem sich eine Liste befinden,
  * in die Dateien per Drag&Drop geladen und genauso wieder herausgenommen werden
@@ -40,14 +38,11 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		try {
 			this.values = (DefaultListModel)Remote.invoke(server, "getValues", null);
 			target = new JList(values);
-//			FileServer starten
-//			fserver=new FileServer();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		dragSource = DragSource.getDefaultDragSource();
-		dragSource.createDefaultDragGestureRecognizer(target,DnDConstants.ACTION_COPY,this);
-					
+		dragSource.createDefaultDragGestureRecognizer(target,DnDConstants.ACTION_COPY,this);				
 		getViewport().add(target);
 		DropTarget dt = new DropTarget();
 		dt.setComponent(target);
@@ -57,22 +52,29 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 			System.out.println("Es kann nur EIN Listener bei " + "der Komponente registriert werden");
 		}
 		target.addMouseListener(this);
-//		this.setTransferHandler(new FileTransferHandler());
-//		target.setTransferHandler(new FileTransferHandler());
 	}
 	
 	/**
-	 * Ein Element (nur den Namen!!!)  in die Liste einfügen
-	 * @param filename der Name des Files
+	 * Ein Element des Typs ListEntry in die Liste einfügen
+	 * @param entry der Listeneintrag
 	 */
 	public void addElement(ListEntry entry){
 		this.values.addElement(entry);
 	}
 
+	/**
+	 * Ein Element aus der Liste entfernen
+	 * @param entry der Eintrag
+	 */
 	public void removeElement(ListEntry entry){
 		this.values.removeElement(entry);
 	}
 	
+	/**
+	 * Ein remote-Objekt wird auf die lokale Festplatte kopiert
+	 * und somit local verfügbar gemacht.
+	 * @param index der Index der Datei in der Liste
+	 */
 	public void makeLocallyAvailable(int index){
 		ListEntry entry = (ListEntry)values.getElementAt(index);
 		int[] i = {index};
@@ -92,15 +94,27 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		}							
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
+	 */
 	public void dragEnter(DropTargetDragEvent dEvent) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
+	 */
 	public void dragOver(DropTargetDragEvent dEvent) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
+	 */
 	public void dragExit(DropTargetEvent dEvent) {
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
+	 */
 	public void dropActionChanged(DropTargetDragEvent dEvent) {
 	}
 
@@ -144,6 +158,9 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DragGestureListener#dragGestureRecognized(java.awt.dnd.DragGestureEvent)
+	 */
 	public void dragGestureRecognized(DragGestureEvent dge) {
 		if(target.getSelectedIndex()>=0){
 			int index=target.getSelectedIndex();
@@ -193,21 +210,27 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 		
 	}
 
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
+	public void mouseEntered(MouseEvent arg0) {		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	public void mouseReleased(MouseEvent e) {	
 		if(e.getButton() == MouseEvent.BUTTON3 && !values.isEmpty() && target.getSelectedIndex()>=0){		
 			JPopupMenu popup = new JPopupMenu();
@@ -236,38 +259,54 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 
 	
 	
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DragSourceListener#dragDropEnd(java.awt.dnd.DragSourceDropEvent)
+	 */
 	public void dragDropEnd(DragSourceDropEvent arg0) {
-		//t.start(); // starte download
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DragSourceListener#dragEnter(java.awt.dnd.DragSourceDragEvent)
+	 */
 	public void dragEnter(DragSourceDragEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DragSourceListener#dragExit(java.awt.dnd.DragSourceEvent)
+	 */
 	public void dragExit(DragSourceEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DragSourceListener#dragOver(java.awt.dnd.DragSourceDragEvent)
+	 */
 	public void dragOver(DragSourceDragEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.dnd.DragSourceListener#dropActionChanged(java.awt.dnd.DragSourceDragEvent)
+	 */
 	public void dropActionChanged(DragSourceDragEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
+	/**
+	 * @return JList
+	 */
 	public JList getTarget() {
 		return target;
 	}
 
+	/**
+	 * @return DefaultListModel mit den Dateien
+	 */
 	public DefaultListModel getValues() {
 		return values;
 	}
 
+	/**
+	 * @return die Progressbar
+	 */
 	public JProgressBar getPbar() {
 		return pbar;
 	}
@@ -289,7 +328,6 @@ class Trans implements Transferable {
 	private static final DataFlavor javaFileListFlavor = DataFlavor.javaFileListFlavor;
 	private static final DataFlavor[] flavors = {javaFileListFlavor};
 	private static final List flavorList = Arrays.asList( flavors );
-	
 	
 	/**
 	 * Konstruktor
@@ -319,6 +357,9 @@ class Trans implements Transferable {
 		return flavors;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.datatransfer.Transferable#isDataFlavorSupported(java.awt.datatransfer.DataFlavor)
+	 */
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		  return (flavorList.contains(flavor));
 	} 

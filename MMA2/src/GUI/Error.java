@@ -1,4 +1,5 @@
 package GUI;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -17,14 +18,11 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
  * um Fehlermeldungen auszugeben.
  * @author Klassen,Kokoschka,Langer,Meurer
  */
-
-
 public class Error extends JDialog{
 	private JFrame owner;
 	private String messagetext,headertext;
 	private JTextArea ta_message;
 	private JButton button_ok;
-
 
 	/**
 	 * @param headertext Überschrift
@@ -66,7 +64,6 @@ public class Error extends JDialog{
 				button_ok.setPreferredSize(new java.awt.Dimension(50, 25));
 				button_ok.addActionListener(al);	
 			}
-
 			pack();
 			this.getRootPane().setDefaultButton(button_ok);
 			this.setTitle(headertext);
@@ -81,24 +78,32 @@ public class Error extends JDialog{
 		}
 	}
 	
+	/**
+	 * @param e KeyEvent
+	 */
 	public void keyTyped(KeyEvent e){}	
+	
+	/**
+	 * @param e KeyEvent
+	 */
 	public void keyReleased(KeyEvent e){}
+	
+	/**
+	 * Enter getippt?
+	 * @param e KeyEvent
+	 */
 	public void keyPressed(KeyEvent e){
 		System.out.println("KeyEvent!"); 
 		if(e.getKeyCode()==10){
 			this.dispose();
 		}
 	}
-
-
-
 	
 	/**
 	* Die Klasse stellt den ActionListener für die Kalsse Auswahl zur Verfügung
 	* @author Daniel Meuer
 	*/
 	public class Error_action implements ActionListener{
-		
 		private JDialog owner;
 		/**
 		 * Konstruktor
@@ -108,8 +113,10 @@ public class Error extends JDialog{
 			this.owner=owner;
 		}
 
-		public void actionPerformed(ActionEvent e){
-			
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		public void actionPerformed(ActionEvent e){			
 			if(e.getActionCommand().equals("OK")){
 				owner.dispose();
 			}

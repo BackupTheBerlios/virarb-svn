@@ -3,8 +3,6 @@ package GUI;
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import layout.AnchorConstraint;
-import layout.AnchorLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JFrame;
@@ -24,7 +22,6 @@ import java.net.*;
  * @author Klassen,Kokoschka,Langer,Meurer
  */
 public class Reg extends JFrame{
-
 	private JLabel label_mail;
 	private JLabel label_nachname;
 	private JLabel label_name;
@@ -186,6 +183,9 @@ public class Reg extends JFrame{
 			this.owner=owner;
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		public void actionPerformed(ActionEvent e) {
 			String test = e.getActionCommand();
 			if (test.equals("Beenden"))
@@ -201,8 +201,7 @@ public class Reg extends JFrame{
 				String Mail = tf_email.getText();
 				String Nickname = tf_nick.getText();
 				String pw = pw_passwort.getText();
-				String pw2 = pw_passwort2.getText();
-				
+				String pw2 = pw_passwort2.getText();			
 				if(Vorn.equals("") || Lastname.equals("") || Mail.equals("") || Nickname.equals("")|| pw.equals("")){
 					Error err=new Error("Fehler","Eingaben nicht vollständig",owner);
 					err.setVisible(true);

@@ -18,13 +18,16 @@ import GUI.Ip;
 import GUI.ListEntry;
 import GUI.NamedColor;
 
+/**
+ * Die Klasse Server gibt im Programm Virtueller Arbeitsraum
+ * den Server, bzw stellt einen offenen Arbeitsraum dar.
+ * @author Daniel Meurer
+ */
 public class Server {
-
 	private List participantList = new ArrayList();
 	private DefaultListModel values;
 	private Vector lines = new Vector();
 	private int count=0;
-	//private static Color[] colortable = { Color.RED, Color.CYAN,Color.MAGENTA, Color.ORANGE, Color.PINK, Color.GREEN };
 	private static ColorVector colortable = new ColorVector();
 	private String starter;
 	private Remote remoteRef;
@@ -53,7 +56,16 @@ public class Server {
 		System.out.println("Server gestartet unter öffentlicher Ip " + wanIp+":"+port );
 		}
 	  
-	   public Remote getCp(String username, String lanIp, String wanIp, String port) throws Exception {
+	 /**
+	 * Erstellt eine Session, einen Teilnehmer
+	 * @param username der Name des Teilnehmers
+	 * @param lanIp die lokale Ip des Teilnehmers
+	 * @param wanIp die externe Ip des Teilnehmers
+	 * @param port der Port des Teilnehmers
+	 * @return RemoteObject des Servers
+	 * @throws Exception
+	 */
+	public Remote getCp(String username, String lanIp, String wanIp, String port) throws Exception {
 	      ClientProxy cp = new ClientProxy();
 	      Participant p = new Participant(username, lanIp, wanIp, Integer.parseInt(port), cp);
 	      participantList.add(p);
@@ -65,15 +77,22 @@ public class Server {
 	 * @see Server.ChatServer#getMyColor()
 	 */
 	public Color getMyColor() {
-//		return colortable[count++ % colortable.length];
 		return ((NamedColor)colortable.get(count++ % colortable.size())).getColor();
 	}
 	
+	/**
+	 * Gibt die möglichen Farben als ColorVector zurück
+	 * @return Colorvector Farben
+	 */
 	public ColorVector getColortable(){
 		System.out.print(colortable.toString());
 		return colortable;
 	}
 	
+	/**
+	 * Eine Message verteilen
+	 * @param message Die Nachricht
+	 */
 	public void postMessage(Chatmessage message) {
 		Participant p;
 		message.setTime(new Date());
@@ -91,6 +110,10 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Einen Teilnehmer löschen (zB wenn er die Sitzung verlässt)
+	 * @param name der Name des Teilnehmers
+	 */
 	public void removeParticipant(String name) {
 		removeParticipant(new Participant(name));
 	}
@@ -108,6 +131,11 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Eine Datei dem FileTable hinzufügen
+	 * @param name der Name des Files
+	 * @param f die Datei
+	 */
 	public void addFile(String name, File f ){	
 		ListEntry entry = new ListEntry(f, name);
 		values.addElement(entry);
@@ -125,6 +153,11 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Gibt den File an der Stelle des index zurück
+	 * @param index
+	 * @return ein Obejctarray mit RemoteItem und Dateipfad
+	 */
 	public Object[] getFile(int[] index){	
 		ListEntry e = (ListEntry)values.get(index[0]);
 		Participant p1 = (Participant)participantList.get(participantList.indexOf(new Participant(e.getOwner())));
@@ -143,6 +176,10 @@ public class Server {
 		return xf;
 	}
 	
+	/**
+	 * Löscht eine Dateieintrag aus dem FileTable
+	 * @param entry der Eintrag
+	 */
 	public void removeFile(ListEntry entry ){	
 		values.removeElement(entry);
 		Participant p;
@@ -166,7 +203,6 @@ public class Server {
 	public DefaultListModel getValues(){
 		return values;
 	}
-	
 	
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#addElement(GUI.ColorLine)
@@ -206,7 +242,6 @@ public class Server {
 		lines.setElementAt(new String("malen"),0);
 	}
 	
-	
 	 /* (non-Javadoc)
 	 * @see Server.ChatServer#setStatus(java.lang.String)
 	 */
@@ -221,7 +256,6 @@ public class Server {
 					i--; 
 					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
-
 				}
 			}
 	 }
@@ -246,11 +280,20 @@ public class Server {
 		return null;
 	}
 	
+	/**
+	 * Methode macht nichts. SIe ist nur dafür da die Verbindung aufrecht
+	 * zu halten.
+	 * @throws Exception
+	 */
 	public void sendDummy() throws Exception {
 		// wir machen gar nix
 //		System.out.println("Dummy");
 	}
 
+	/**
+	 * Fährt der Server herunter und sendet diese Nachricht zuvor noch jedem Client,
+	 * damit diese nicht einfrieren.
+	 */
 	public void shutDown(){
 		Participant p;
 		while (participantList.size() > 0) {
@@ -269,6 +312,10 @@ public class Server {
 		} 
 	}
 
+	/**
+	 * Gibt den Namen des Clients zurück, der den Server gestartet hat
+	 * @return den Namen des Starters
+	 */
 	public String getStarter() {
 		return starter;
 	}

@@ -1,13 +1,8 @@
 package GUI;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,11 +15,21 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 
+/**
+ * Die Klasse Config ist ein JDialog, der
+ * dem Nutzer die Möglichkeit gibt den Virtuellen
+ * Arbeitsraum zu konfigurieren
+ * @author Daniel Meurer
+ */
 public class Config extends JDialog {
 	private String port, serverport;
 	private File f = new File("VirArb.cfg");
 	private JTextField tf_port, tf_serverport;
 	
+	/**
+	 * Konstruktor
+	 * @throws Exception
+	 */
 	public Config() throws Exception{
 		super();
 		if(!f.exists()){
@@ -36,6 +41,9 @@ public class Config extends JDialog {
  		initGUI();
 	}
 	
+	/**
+	 * Initialiert das UserInterface
+	 */
 	private void initGUI() {
 		try {
 			JButton button_save, button_cancel;
@@ -98,7 +106,6 @@ public class Config extends JDialog {
 			label_serverport.setBounds(250, 60, 100, 25);
 			panel_network.add(label_serverport);		
 
-
 			this.setTitle("Virtueller Arbeitsraum - Konfiguration");
 			this.setResizable(false);
 			this.getRootPane().setDefaultButton(button_save);
@@ -109,30 +116,51 @@ public class Config extends JDialog {
 		}
 	}
 	
+	/**
+	 * @return den eingestellten Port des Clients
+	 */
 	public String getPort(){
 		port = tf_port.getText();
 		return port;
 	}
 	
+	/**
+	 * @return den ConfigFile VirArb.cfg auf dem lokalen Rechner
+	 */
 	public File getFile() {
 		return f;
 	}
 
+	/**
+	 * @return den Port des Servers
+	 */
 	public String getServerport() {
 		serverport = tf_serverport.getText();
 		return serverport;
 	}
 }
 
+/**
+ * Die Klasse Config_Action beinhaltet alle zu Klasse
+ * Config gehörigen Aktionen
+ * @author Dani1
+ */
 class Config_action implements ActionListener{
 	private Config owner;
 	
+	/**
+	 * Konstruktor
+	 * @param owner der aufrufende Dialog
+	 */
 	public Config_action(Config owner) {
 		super();
 		this.owner = owner;
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("save")){
 			Fileausgabe.setProperty("Port",owner.getPort());

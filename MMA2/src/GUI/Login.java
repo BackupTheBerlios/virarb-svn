@@ -1,7 +1,5 @@
 package GUI;
 
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -21,10 +19,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import layout.AnchorConstraint;
 import layout.AnchorLayout;
 
-
-
 /**
- * 
  * Die Klasse Login zeigt ein Fenster, in welchem man sich mit Username
  * und Passwort über eine Datenbank im System einloggen kann. * 
  * @author Klassen,Kokoschka,Langer,Meurer
@@ -34,33 +29,19 @@ public class Login extends JFrame {
 	private JLabel l_reg;
 	private JButton button_reg;
 	private JButton button_login;
-	/**
-	 *hier wird das passwort eingetragen 
-	 */
 	private JPasswordField pf_password;
-	
-	/**
-	 *hier wird der name eingetragen 
-	 */
 	private JTextField tf_username;
 	private JLabel l_password;
 	private JLabel l_username;
 	private JLabel l_header;
 
 	
-//	public static void main(String[] args) {
-//		
-//		Login inst = new Login();
-//		inst.setVisible(true);
-//	}
-	
 	/**
 	 * Konstruktor
 	 */
 	public Login() {
 		super();
-		initGUI();
-		
+		initGUI();	
 	}
 	
 	/**
@@ -70,8 +51,7 @@ public class Login extends JFrame {
 		try {
 			AnchorLayout thisLayout = new AnchorLayout();
 			this.getContentPane().setLayout(thisLayout);
-			Login_action al=new Login_action(this);
-			
+			Login_action al=new Login_action(this);			
 			
 			JMenuBar mbar = new JMenuBar();
 			
@@ -153,7 +133,6 @@ public class Login extends JFrame {
 		}
 	}
 
-
 	/**
 	 * Diese Klasse definiert den zur Klasse Login gehörigen ActionListener
 	 * @author Daniel Meurer
@@ -169,18 +148,18 @@ public class Login extends JFrame {
 			this.owner=owner;
 		}
 
-		public void actionPerformed(ActionEvent e) {
-	
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		public void actionPerformed(ActionEvent e) {	
 			String test = e.getActionCommand();
 			if(test.equals("Registrieren"))	{
 	
 				Reg inst = new Reg();
 				inst.setVisible(true);
 				dispose();
-			}
-			
+			}			
 			else if(test.equals("Beenden")){	
-				//System.out.println("Beenden");
 				System.exit(0);
 			}
 			else if(test.equals("login")){	
@@ -198,18 +177,15 @@ public class Login extends JFrame {
 						Error err=new Error("Fehler","Bitte Username und Passwort eingeben \noder registrieren wenn noch kein gültiger \nAccount vorliegt!",owner);					
 						err.setVisible(true);
 					}
-					else{				
-				
+					else{								
 						if(pw.equals(x.getString(1))){
 							String nickname = x.getString(2);
 							String lanIp = Ip.getLanIp();
-							String wanIp = Ip.getWanIp();
-							
+							String wanIp = Ip.getWanIp();							
 							try {
 								statement = connection.createStatement();	
 								statement.executeUpdate("INSERT INTO UserOnline(Nickname,LanIp,WanIp) VALUES ('"+nickname+"','"+lanIp+"','"+wanIp+"');");
 							} catch (Exception e1) {
-//									e1.printStackTrace();
 									Error err=new Error("Warnung","Sorry, User "+nickname+" ist schon eingeloggt",owner);									
 									err.setVisible(true);
 									return;
@@ -235,7 +211,6 @@ public class Login extends JFrame {
 					err.setVisible(true);
 					System.out.println("ERROR:" + e1.getMessage());
 				}
-				
 			}
 			else if(e.getActionCommand().equals("close")){			
 				System.exit(0);	
@@ -258,8 +233,7 @@ public class Login extends JFrame {
 			}
 		}
 		
-	}
-	
+	}	
 }
 
 	
