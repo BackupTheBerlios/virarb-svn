@@ -198,7 +198,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 					String osName = System.getProperty("os.name" );
 		            if( osName.equals( "Windows XP" ) )
 		            {
-		                Runtime.getRuntime().exec("cmd.exe /C start "+tempfile.getPath());
+		                Runtime.getRuntime().exec("cmd.exe /C \""+tempfile.getPath()+"\"");
 		            }
 	//  		        if(OS=MAC/LINUX)?????					
 				}

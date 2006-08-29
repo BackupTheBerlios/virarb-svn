@@ -336,7 +336,7 @@ public class Main extends javax.swing.JFrame {
 			this.getRootPane().setDefaultButton(button_chat);
 			this.setSize(800, 600);
 			this.setLocationRelativeTo(null);
-			this.setTitle("Virtueller Arbeitsraum 0.8   [" + username + "]");
+			this.setTitle("Virtueller Arbeitsraum 1.0   [" + username + "]");
 			this.addWindowListener(al);
 			malfenster.draw((Vector) Remote.invoke(server, "getLines", null));
 
