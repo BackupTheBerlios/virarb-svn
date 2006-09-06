@@ -49,7 +49,7 @@ public class Main extends javax.swing.JFrame {
 	private SimpleAttributeSet set;
 	private Object server;
 	private final int port = Ip.getMyPort();
-	private final int serverport = Ip.getServerPort();
+	private int serverport ; //= Ip.getServerPort();
 	private Xfile xfile = new Xfile(64 * 1024);
 	private Vector lines;	
 	private JComboBox color_choice;
@@ -110,7 +110,7 @@ public class Main extends javax.swing.JFrame {
 					"medienin_daniWeb", "web");
 			Statement statement = connection.createStatement();
 
-			String abfrage = "SELECT LanIp,WanIp FROM UserOnline WHERE Nickname='"
+			String abfrage = "SELECT LanIp,WanIp,Port FROM UserOnline WHERE Nickname='"
 					+ ip + "';";
 			ResultSet x = statement.executeQuery(abfrage);
 			if (!x.next()) {
@@ -118,6 +118,7 @@ public class Main extends javax.swing.JFrame {
 			} else {
 				lanIp = x.getString(1);
 				wanIp = x.getString(2);
+				serverport = x.getInt(3);
 			}
 		} catch (Exception e2) {
 			throw new Exception("Keine Verbindung zur Datenbank");

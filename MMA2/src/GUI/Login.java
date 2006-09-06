@@ -184,11 +184,13 @@ public class Login extends JFrame {
 							String wanIp = Ip.getWanIp();							
 							try {
 								statement = connection.createStatement();	
-								statement.executeUpdate("INSERT INTO UserOnline(Nickname,LanIp,WanIp) VALUES ('"+nickname+"','"+lanIp+"','"+wanIp+"');");
+								statement.executeUpdate("INSERT INTO UserOnline(Nickname,LanIp,WanIp,Port) VALUES ('"+nickname+"','"+lanIp+"','"+wanIp+"','"+Ip.getMyPort()+"');");
 							} catch (Exception e1) {
-									Error err=new Error("Warnung","Sorry, User "+nickname+" ist schon eingeloggt",owner);									
-									err.setVisible(true);
-									return;
+									//Error err=new Error("Warnung","Sorry, User "+nickname+" ist schon eingeloggt",owner);									
+									//err.setVisible(true);
+									//return;
+									//System.out.println("UPDATE UserOnline SET LanIp='"+lanIp+"',WanIp='"+wanIp+"',ServerPort='"+Ip.getServerPort()+"' WHERE Nickname='"+nickname+"');");
+								statement.executeUpdate("UPDATE UserOnline SET LanIp='"+lanIp+"',WanIp='"+wanIp+"',Port='"+Ip.getMyPort()+"' WHERE Nickname='"+nickname+"';");
 							}
 							Fileausgabe.setProperty("DefaultNick", name);
 							Fileausgabe.setProperty("DefaultPw", pw);

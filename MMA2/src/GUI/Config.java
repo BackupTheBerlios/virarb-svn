@@ -3,6 +3,9 @@ package GUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,9 +25,9 @@ import javax.swing.border.TitledBorder;
  * @author Daniel Meurer
  */
 public class Config extends JDialog {
-	private String port, serverport;
+	private String port;// serverport;
 	private File f = new File("VirArb.cfg");
-	private JTextField tf_port, tf_serverport;
+	private JTextField tf_port;// tf_serverport;
 	
 	/**
 	 * Konstruktor
@@ -37,7 +40,7 @@ public class Config extends JDialog {
 			Fileausgabe.setProperty("ServerPort","1234");
 		}
 		port = Fileausgabe.getProperty("Port");
-        serverport =Fileausgabe.getProperty("ServerPort");
+//        serverport =Fileausgabe.getProperty("ServerPort");
  		initGUI();
 	}
 	
@@ -94,17 +97,17 @@ public class Config extends JDialog {
 			label_port.setBounds(250, 30, 100, 25);
 			panel_network.add(label_port);		
 			
-			tf_serverport = new JTextField(5);
-			tf_serverport.setDocument(new IntegerDocument());			
-			tf_serverport.setBounds(370, 60, 80, 25);		
-
-			tf_serverport.setText(serverport);
-			panel_network.add(tf_serverport);
-			
-			label_serverport = new JLabel();
-			label_serverport.setText("Server Port");
-			label_serverport.setBounds(250, 60, 100, 25);
-			panel_network.add(label_serverport);		
+//			tf_serverport = new JTextField(5);
+//			tf_serverport.setDocument(new IntegerDocument());			
+//			tf_serverport.setBounds(370, 60, 80, 25);		
+//
+//			tf_serverport.setText(serverport);
+//			panel_network.add(tf_serverport);
+//			
+//			label_serverport = new JLabel();
+//			label_serverport.setText("Server Port");
+//			label_serverport.setBounds(250, 60, 100, 25);
+//			panel_network.add(label_serverport);		
 
 			this.setTitle("Virtueller Arbeitsraum - Konfiguration");
 			this.setResizable(false);
@@ -131,13 +134,13 @@ public class Config extends JDialog {
 		return f;
 	}
 
-	/**
-	 * @return den Port des Servers
-	 */
-	public String getServerport() {
-		serverport = tf_serverport.getText();
-		return serverport;
-	}
+//	/**
+//	 * @return den Port des Servers
+//	 */
+//	public String getServerport() {
+//		serverport = tf_serverport.getText();
+//		return serverport;
+//	}
 }
 
 /**
@@ -164,7 +167,16 @@ class Config_action implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("save")){
 			Fileausgabe.setProperty("Port",owner.getPort());
-			Fileausgabe.setProperty("ServerPort",owner.getServerport());
+//			Fileausgabe.setProperty("ServerPort",owner.getServerport());
+			try {
+				Class.forName("com.mysql.jdbc.Driver");			
+				Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
+				Statement statement = connection.createStatement();	
+				statement.executeUpdate("UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+"';");
+			}
+			catch(Exception e1){
+				e1.printStackTrace();
+			}			
 			owner.dispose();
 		}
 		else if(e.getActionCommand().equals("cancel")){
