@@ -172,7 +172,9 @@ class Config_action implements ActionListener{
 				Class.forName("com.mysql.jdbc.Driver");			
 				Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
 				Statement statement = connection.createStatement();	
-				statement.executeUpdate("UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+"';");
+				System.out.print("UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+" AND LanIp='"+Ip.getLanIp()+"';");
+
+				statement.executeUpdate("UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+"' AND LanIp='"+Ip.getLanIp()+"';");
 			}
 			catch(Exception e1){
 				e1.printStackTrace();

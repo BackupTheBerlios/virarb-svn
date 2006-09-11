@@ -207,7 +207,7 @@ public class Server {
 	/* (non-Javadoc)
 	 * @see Server.ChatServer#addElement(GUI.ColorLine)
 	 */
-	public void addElement(ColorLine x) throws Exception{
+	public void addElement(ColorLine x){
 		lines.add(x);
 		Participant p;
 		for (int i = 0; i < participantList.size(); i++) {
