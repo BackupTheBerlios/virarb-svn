@@ -101,6 +101,7 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				removeParticipant(p);
 				i--; 
 				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
@@ -122,6 +123,7 @@ public class Server {
 	 * @see Server.ChatServer#removeSession(Server.ChatSession)
 	 */
 	public void removeParticipant(Participant p) {
+		System.out.println("Lösche User "+p.getName());
 		try {
 			participantList.remove(p);
 			setStatus("User "+p.getName()+ " hat die Sitzung verlassen");
@@ -215,9 +217,9 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);	
 			} catch (Exception e) {
-				e.printStackTrace();
-				removeParticipant(p);
-				i--;
+				//e.printStackTrace();
+				//removeParticipant(p);
+				//i--;
 			}
 		}
 	}
@@ -287,7 +289,19 @@ public class Server {
 	 */
 	public void sendDummy() throws Exception {
 		// wir machen gar nix
-//		System.out.println("Dummy");
+		System.out.println("Dummy");
+		Participant p;
+		for (int i = 0; i < participantList.size(); i++) {
+				p = (Participant) participantList.get(i);
+				try {
+					Remote.invoke(p.getCp(), "sendDummy", null);
+				} catch (Exception ex) {					
+					removeParticipant(p);
+					i--; 
+					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+				}
+			}
 	}
 
 	/**

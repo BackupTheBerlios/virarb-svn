@@ -478,7 +478,14 @@ public class Main extends javax.swing.JFrame {
 		a.setVisible(true);
 		this.dispose();
 	}
-
+	
+	/**
+	 * Methode macht nichts. SIe ist nur dafür da die Verbindung aufrecht
+	 * zu halten.
+	 */
+	public void sendDummy(){
+		System.out.println("Dummy");
+	}
 	/**
 	 * Die Klasse stellt den ActionListener für die Klasse Main zur Verfügung.
 	 * @author Klassen,Kokoschka,Langer,Meurer
