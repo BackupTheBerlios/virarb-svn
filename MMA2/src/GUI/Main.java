@@ -599,9 +599,10 @@ public class Main extends javax.swing.JFrame {
 				}
 				System.exit(0);
 			} else if (e.getActionCommand().equals("help")) {
-				Error help = new Error("Hilfe",
-						"Hier gibts irgendwann mal Hilfe", owner);
-				help.setVisible(true);
+//				Error help = new Error("Hilfe",
+//						"Hier gibts irgendwann mal Hilfe", owner);
+//				help.setVisible(true);
+				BrowserControl.displayURL("http://virarb.berlios.de");
 			} else if (e.getActionCommand().equals("info")) {
 				Error info = new Error(
 						"Info",

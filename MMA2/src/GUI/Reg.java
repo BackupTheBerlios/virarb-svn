@@ -98,6 +98,7 @@ public class Reg extends JFrame{
 			tf_vorname = new JTextField();
 			tf_vorname.setBounds(340, 30, 150, 25);
 			tf_vorname.setPreferredSize(new java.awt.Dimension(134, 26));
+			tf_vorname.addKeyListener(new CustomKeyAdapter("send",al));
 			this.getContentPane().add(tf_vorname);
 
 			label_nachname = new JLabel();
@@ -108,6 +109,7 @@ public class Reg extends JFrame{
 			tf_nachname = new JTextField();
 			tf_nachname.setBounds(340, 60, 150, 25);
 			tf_nachname.setText("");
+			tf_nachname.addKeyListener(new CustomKeyAdapter("send",al));
 			this.getContentPane().add(tf_nachname);
 			
 			label_mail = new JLabel();
@@ -117,6 +119,7 @@ public class Reg extends JFrame{
 
 			tf_email = new JTextField();
 			tf_email.setBounds(340, 90, 150, 25);
+			tf_email.addKeyListener(new CustomKeyAdapter("send",al));
 			this.getContentPane().add(tf_email);
 
 			label_nick = new JLabel();
@@ -126,6 +129,7 @@ public class Reg extends JFrame{
 
 			tf_nick = new JTextField();
 			tf_nick.setBounds(340, 120, 150, 25);
+			tf_nick.addKeyListener(new CustomKeyAdapter("send",al));
 			this.getContentPane().add(tf_nick);
 
 			label_passwort = new JLabel();
@@ -135,6 +139,7 @@ public class Reg extends JFrame{
 			
 			pw_passwort = new JPasswordField();
 			pw_passwort.setBounds(340, 150, 150, 25);
+			pw_passwort.addKeyListener(new CustomKeyAdapter("send",al));
 			this.getContentPane().add(pw_passwort);
 		
 			label_passwort2 = new JLabel();
@@ -144,23 +149,27 @@ public class Reg extends JFrame{
 			
 			pw_passwort2 = new JPasswordField();
 			pw_passwort2.setBounds(340, 180, 150, 25);
+			pw_passwort2.addKeyListener(new CustomKeyAdapter("send",al));
 			this.getContentPane().add(pw_passwort2);
 
 			button_abbrechen = new JButton();
 			button_abbrechen.setBounds(280, 210, 100, 30);
 			button_abbrechen.setText("Abbrechen");
+			button_abbrechen.setActionCommand("back");
 			button_abbrechen.addActionListener(al);
+			button_abbrechen.addKeyListener(new CustomKeyAdapter("back",al));
 			this.getContentPane().add(button_abbrechen);
 			
 			button_absenden = new JButton();
 			button_absenden.setBounds(390, 210, 100, 30);
 			button_absenden.setText("Absenden");
 			button_absenden.setActionCommand("send");
+			button_absenden.addKeyListener(new CustomKeyAdapter("send",al));
 			button_absenden.setToolTipText("Daten Abschicken und zum Login zurückkehren.");
 			button_absenden.addActionListener(al);
 			this.getContentPane().add(button_absenden);
 
-			this.getRootPane().setDefaultButton(button_absenden);
+//			this.getRootPane().setDefaultButton(button_absenden);
 			this.setSize(500, 300);
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.setLocationRelativeTo(null);
@@ -240,8 +249,9 @@ public class Reg extends JFrame{
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
-				help.setVisible(true);
+//				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
+//				help.setVisible(true);
+				BrowserControl.displayURL("http://virarb.berlios.de");
 			}
 			else if(e.getActionCommand().equals("info")){
 				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);

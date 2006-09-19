@@ -98,19 +98,23 @@ public class Login extends JFrame {
 			tf_username.setText(Fileausgabe.getProperty("DefaultNick"));
 			this.getContentPane().add(tf_username,new AnchorConstraint(245,648,349,386,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
 			tf_username.setPreferredSize(new java.awt.Dimension(119,21));
-
+			tf_username.addKeyListener(new CustomKeyAdapter("login", al));
+			
 			pf_password = new JPasswordField();
 			pf_password.setText(Fileausgabe.getProperty("DefaultPw"));
 			this.getContentPane().add(pf_password,new AnchorConstraint(383,648,487,386,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
 			pf_password.setPreferredSize(new java.awt.Dimension(119,21));
-
+			pf_password.addKeyListener(new CustomKeyAdapter("login", al));
+			
 			button_login = new JButton();
 			this.getContentPane().add(button_login, new AnchorConstraint(382,837, 487, 689, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
 			button_login.setText("Login");
 			button_login.setActionCommand("login");
 			button_login.setPreferredSize(new java.awt.Dimension(71, 25));
 			button_login.addActionListener(al);
+			button_login.addKeyListener(new CustomKeyAdapter("login", al));
 
+			
 			l_reg = new JLabel();
 			this.getContentPane().add(l_reg,new AnchorConstraint(641,794,789,223,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
 			l_reg.setText("Noch keine Kennung? Dann bitte registrieren");
@@ -119,8 +123,10 @@ public class Login extends JFrame {
 			button_reg = new JButton();
 			this.getContentPane().add(button_reg, new AnchorConstraint(817,641, 922, 377, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
 			button_reg.setText("Registrieren");
+			button_reg.setActionCommand("reg");
 			button_reg.setPreferredSize(new java.awt.Dimension(126, 25));
 			button_reg.addActionListener(al);
+			button_reg.addKeyListener(new CustomKeyAdapter("reg", al));
 
 			this.getRootPane().setDefaultButton(button_login);
 			this.setResizable(false);
@@ -153,7 +159,7 @@ public class Login extends JFrame {
 		 */
 		public void actionPerformed(ActionEvent e) {	
 			String test = e.getActionCommand();
-			if(test.equals("Registrieren"))	{
+			if(test.equals("reg"))	{
 	
 				Reg inst = new Reg();
 				inst.setVisible(true);
@@ -218,8 +224,9 @@ public class Login extends JFrame {
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
-				help.setVisible(true);
+//				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
+//				help.setVisible(true);
+				BrowserControl.displayURL("http://virarb.berlios.de");
 			}
 			else if(e.getActionCommand().equals("info")){
 				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);

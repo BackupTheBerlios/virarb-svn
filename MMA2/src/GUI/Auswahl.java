@@ -1,8 +1,12 @@
 package GUI;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.*;
@@ -51,6 +55,7 @@ public class Auswahl extends JFrame {
 		JPanel hostpanel, joinpanel;
 		Auswahl_action al=new Auswahl_action(this);
 		this.addWindowListener(al);
+//		this.addKeyListener(al);
 		try {
 			
 			JMenuBar mbar = new JMenuBar();
@@ -97,6 +102,7 @@ public class Auswahl extends JFrame {
 			joinpanel.add(label_ip);
 
 			tf_ip = new JTextField();
+			tf_ip.addKeyListener(new CustomKeyAdapter("join",al));
 			String x;
 			if(	!((x = Fileausgabe.getProperty("lastServerName")).equals("") || x == null)){
 				tf_ip.setText(x);		
@@ -112,6 +118,7 @@ public class Auswahl extends JFrame {
 			button_join.setText("Raum betreten!");
 			button_join.setActionCommand("join");
 			button_join.addActionListener(al);
+			button_join.addKeyListener(new CustomKeyAdapter("join",al));
 			
 			joinpanel.add(button_join);
 			button_join.setBounds(330, 60, 150, 30);
@@ -132,6 +139,8 @@ public class Auswahl extends JFrame {
 			button_startserver.setText("Raum erstellen.");
 			button_startserver.setActionCommand("host");
 			button_startserver.addActionListener(al);
+			button_startserver.addKeyListener(new CustomKeyAdapter("host",al));
+			
 			button_startserver.setBounds(330, 60, 150, 30);
 			
 			hostpanel.add(button_startserver);
@@ -146,7 +155,7 @@ public class Auswahl extends JFrame {
 			this.getContentPane().add(hostpanel, BorderLayout.SOUTH);
 			hostpanel.setLayout(null);
 
-			this.getRootPane().setDefaultButton(button_join);
+//			this.getRootPane().setDefaultButton(button_join);
 			this.setTitle("Virtueller Arbeitsraum 1.0   [" + username + "]");
 			setSize(500, 300);
 			this.setResizable(false);
@@ -227,8 +236,9 @@ public class Auswahl extends JFrame {
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
-				help.setVisible(true);
+//				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
+//				help.setVisible(true);
+				BrowserControl.displayURL("http://virarb.berlios.de");
 			}
 			else if(e.getActionCommand().equals("info")){
 				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);
@@ -271,5 +281,5 @@ public class Auswahl extends JFrame {
 		
 		public void windowOpened(WindowEvent arg0) {
 		}
-	}
+	}	
 }
