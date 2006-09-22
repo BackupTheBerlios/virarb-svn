@@ -541,7 +541,7 @@ public class Main extends javax.swing.JFrame {
 						elines.printStackTrace();
 					}
 					int np = lines.size();
-					System.out.print(np);
+//					System.out.print(np);
 					if (np > 0) {
 						for (int i = 1; i < np; i++) {
 							ColorLine p = (ColorLine) lines.elementAt(i);

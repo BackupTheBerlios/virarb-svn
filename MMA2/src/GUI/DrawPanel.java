@@ -38,14 +38,16 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 */
 	public void mouseDragged(MouseEvent e) {
 		e.consume();
+		ColorLine line = new ColorLine(x1,y1,e.getX(), e.getY(),myColor);
+		lines.add(line);
+		repaint();	
 		try {
-			Remote.invoke(server, "addElement", new ColorLine(x1,y1,e.getX(), e.getY(),myColor));
+			Remote.invoke(server, "addElement", line);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		x1 = e.getX();
 		y1 = e.getY();
-		repaint();	
 	}
 
 	/* (non-Javadoc)
@@ -61,9 +63,11 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 		e.consume();
 		x1 = e.getX();
 		y1 = e.getY();
+		ColorLine line = new ColorLine(x1,y1,e.getX(), e.getY(),myColor);
+		lines.add(line);
+		repaint();	
 		try {
-			Remote.invoke(server, "addElement", new ColorLine(e.getX(), e.getY(), -1, -1,myColor));
-
+			Remote.invoke(server, "addElement", line);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -85,7 +85,7 @@ public class Server {
 	 * @return Colorvector Farben
 	 */
 	public ColorVector getColortable(){
-		System.out.print(colortable.toString());
+//		System.out.print(colortable.toString());
 		return colortable;
 	}
 	
@@ -101,11 +101,11 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
 			} catch (Exception ex) {
-				ex.printStackTrace();
-				removeParticipant(p);
-				i--; 
-				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//				ex.printStackTrace();
+//				removeParticipant(p);
+//				i--; 
+//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 
 			}
 		}
@@ -148,9 +148,9 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "receiveNewFile", entry);	
 			} catch (Exception e) {
-				e.printStackTrace();
-				removeParticipant(p);
-				i--;
+//				e.printStackTrace();
+//				removeParticipant(p);
+//				i--;
 			}
 		}
 	}
@@ -191,9 +191,9 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "removeFile", entry);	
 			} catch (Exception e) {
-				e.printStackTrace();
-				removeParticipant(p);
-				i--;
+//				e.printStackTrace();
+//				removeParticipant(p);
+//				i--;
 			}
 		}
 		setStatus("Die Datei '"+entry.getFile().getName()+"' wurde erfolgreich gelöscht.");
@@ -236,9 +236,9 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);
 			} catch (Exception e) {
-				e.printStackTrace();
-				removeParticipant(p);
-				i--;
+//				e.printStackTrace();
+//				removeParticipant(p);
+//				i--;
 			}
 		}
 		lines.setElementAt(new String("malen"),0);
@@ -254,10 +254,10 @@ public class Server {
 				try {
 					Remote.invoke(p.getCp(), "setStatus", status);
 				} catch (Exception ex) {					
-					removeParticipant(p);
-					i--; 
-					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//					removeParticipant(p);
+//					i--; 
+//					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+//					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 				}
 			}
 	 }
@@ -296,10 +296,10 @@ public class Server {
 				try {
 					Remote.invoke(p.getCp(), "sendDummy", null);
 				} catch (Exception ex) {					
-					removeParticipant(p);
-					i--; 
-					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+//					removeParticipant(p);
+//					i--; 
+//					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+//					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 				}
 			}
 	}
