@@ -66,6 +66,7 @@ public class Config extends JDialog {
 			button_save.setPreferredSize(new java.awt.Dimension(158, 31));
 			button_save.setBounds(330, 230, 150, 30);
 			button_save.addActionListener(al);
+			button_save.addKeyListener(new CustomKeyAdapter("save",al));
 			button_save.setActionCommand("save");
 			
 			button_cancel = new JButton();
@@ -73,6 +74,7 @@ public class Config extends JDialog {
 			button_cancel.setText("Abbrechen");
 			button_cancel.setBounds(170, 230, 150, 30);
 			button_cancel.addActionListener(al);
+			button_cancel.addKeyListener(new CustomKeyAdapter("cancel",al));
 			button_cancel.setActionCommand("cancel");
 			
 			panel_network = new JPanel();
@@ -111,7 +113,7 @@ public class Config extends JDialog {
 
 			this.setTitle("Virtueller Arbeitsraum - Konfiguration");
 			this.setResizable(false);
-			this.getRootPane().setDefaultButton(button_save);
+//			this.getRootPane().setDefaultButton(button_save);
 			this.setLocationRelativeTo(null);
 			this.setSize(500, 300);
 		} catch (Exception e) {
