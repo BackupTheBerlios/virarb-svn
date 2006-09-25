@@ -14,6 +14,7 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	private Object server;
 	private Color myColor;
 	private Vector lines;
+	private Vector newlines = new Vector();
 	private int x1, y1;
 	
 	/**
@@ -37,17 +38,17 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
 	 */
 	public void mouseDragged(MouseEvent e) {
-		e.consume();
 		ColorLine line = new ColorLine(x1,y1,e.getX(), e.getY(),myColor);
-		lines.add(line);
-		repaint();	
-		try {
-			Remote.invoke(server, "addElement", line);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
+		System.out.println("mousedragged paint");
+//		try {
+//			Remote.invoke(server, "addElement", line);
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
+		newlines.add(line);
 		x1 = e.getX();
 		y1 = e.getY();
+		repaint();	
 	}
 
 	/* (non-Javadoc)
@@ -60,26 +61,31 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 	 */
 	public void mousePressed(MouseEvent e) {
-		e.consume();
 		x1 = e.getX();
 		y1 = e.getY();
 		ColorLine line = new ColorLine(x1,y1,e.getX(), e.getY(),myColor);
 		lines.add(line);
-		repaint();	
-		try {
-			Remote.invoke(server, "addElement", line);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		x1 = e.getX();
 		y1 = e.getY();
+		repaint();	
+		System.out.println("mousePressed paint");
+//		try {
+//			Remote.invoke(server, "addElement", line);
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	public void mouseReleased(MouseEvent e) {
+		try {
+			Remote.invoke(server, "addElements", newlines);
+		} catch (Exception e1) {
+			e1.printStackTrace();		
+		}
+		newlines.clear();
 	}
 
 	/* (non-Javadoc)
@@ -105,14 +111,16 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 */
 	public void draw(Vector x){
 		lines=x;
-		repaint();
+		this.repaint();
+		System.out.println("DRAW");
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.Component#paint(java.awt.Graphics)
 	 */
 	public void paint(Graphics g) {
-		int np = lines.size();
+		System.out.println("repaint");
+		int np = lines.size();	
 		if(np>0 && ((String)lines.get(0)).equals("loeschen")){
 			g.setColor(Color.WHITE);
 			g.fillRect(0,0,300,300);			
@@ -120,6 +128,18 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 		else if(np>0){
 			for (int i = 1; i < np; i++) {
 				ColorLine p = (ColorLine) lines.elementAt(i);
+				g.setColor(p.getColor());
+				if (p.width != -1) {
+					g.drawLine(p.x, p.y, p.width, p.height);
+				} else {
+					g.drawLine(p.x, p.y, p.x, p.y);
+				}
+			}
+		}
+		np = newlines.size();	
+		if(np > 0){
+			for (int i = 1; i < np; i++) {
+				ColorLine p = (ColorLine) newlines.elementAt(i);
 				g.setColor(p.getColor());
 				if (p.width != -1) {
 					g.drawLine(p.x, p.y, p.width, p.height);

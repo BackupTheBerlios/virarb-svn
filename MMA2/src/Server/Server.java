@@ -225,6 +225,27 @@ public class Server {
 	}
 	
 	/* (non-Javadoc)
+	 * @see Server.ChatServer#addElement(GUI.ColorLine)
+	 */
+	public void addElements(Vector x){
+		for(int i = 0;i<x.size();i++){
+			lines.add(x.get(i));
+		}
+		Participant p;
+		for (int i = 0; i < participantList.size(); i++) {
+			p = (Participant) participantList.get(i);
+			try {
+				Remote.invoke(p.getCp(), "draw", lines);	
+			} catch (Exception e) {
+				//e.printStackTrace();
+				//removeParticipant(p);
+				//i--;
+			}
+		}
+	}
+	
+	
+	/* (non-Javadoc)
 	 * @see Server.ChatServer#skizze_loeschen()
 	 */
 	public void skizze_loeschen(){
