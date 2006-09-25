@@ -344,7 +344,7 @@ public class Main extends javax.swing.JFrame {
 			malfenster.draw((Vector) Remote.invoke(server, "getLines", null));
 
 			// Dummys senden damit verbindung nicht gekappt wird
-			Thread t1 = new Thread(new DummyPakete(server));
+			Thread t1 = new Thread(new DummyPakete(server,username));
 			t1.start();
 
 			Thread t2 = new Thread(new ServerChecker());

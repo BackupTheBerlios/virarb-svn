@@ -4,20 +4,22 @@ import gnu.cajo.invoke.Remote;
 
 /**
  * Klasse DummyPakete bietet einen Thread,
- * der alle 90 sekunden ein Dummypaket an den Server
+ * der alle 30 sekunden ein Dummypaket an den Server
  * schickt, damit die Verbindung bei Inaktivität
  * nicht gekappt wird.
  * @author Daniel Meurer
  */
 public class DummyPakete implements Runnable {
 	Object server;
+	String name;
 
 	/**
 	 * Konstruktor
 	 * @param server
 	 */
-	public DummyPakete(Object server){
-		this.server=server;
+	public DummyPakete(Object server, String name){
+		this.server = server;
+		this.name = name;
 	}
 	
 	/* (non-Javadoc)
@@ -27,8 +29,8 @@ public class DummyPakete implements Runnable {
 		boolean x = true;
 		while(x){
 			try {
-				Thread.sleep(1000*90);
-				Remote.invoke(server, "sendDummy", null);				
+				Thread.sleep(1000*30);
+				Remote.invoke(server, "sendDummy", name);				
 			} catch (Exception e) {
 				x = false;
 			}			

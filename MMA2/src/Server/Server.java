@@ -5,6 +5,7 @@ import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ClientProxy;
 import java.awt.Color;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,13 +101,15 @@ public class Server {
 			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
-			} catch (Exception ex) {
+			} catch (InvocationTargetException ex) {
 //				ex.printStackTrace();
-//				removeParticipant(p);
-//				i--; 
-//				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-//				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
-
+//				if((new Date().compareTo(p.getLastDummy())) > (30*1000)){
+				removeParticipant(p);
+				i--; 
+				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
+				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+			} catch(Exception e){
+				
 			}
 		}
 	}
@@ -308,8 +311,9 @@ public class Server {
 	 * zu halten.
 	 * @throws Exception
 	 */
-	public void sendDummy() throws Exception {
+	public void sendDummy(String name) throws Exception {
 		// wir machen gar nix
+		((Participant)participantList.get(participantList.indexOf(new Participant(name)))).setLastDummy(new Date());
 		System.out.println("Dummy");
 		Participant p;
 		for (int i = 0; i < participantList.size(); i++) {

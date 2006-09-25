@@ -1,5 +1,6 @@
 package Server;
 
+import java.util.Date;
 import gnu.cajo.utils.extra.ClientProxy;
 
 /**
@@ -12,6 +13,7 @@ public class Participant {
 	private String lanIp;
 	private String wanIp;
 	private int port;
+	private Date lastDummy;
 	
 	/**
 	 * Konstruktor
@@ -22,6 +24,7 @@ public class Participant {
 		this.cp = null;
 		this.lanIp = null;
 		this.wanIp = null;
+		lastDummy = new Date();
 	}
 	
 	/**
@@ -116,5 +119,15 @@ public class Participant {
 	public int getPort() {
 		return port;
 	}
+
+	public Date getLastDummy() {
+		return lastDummy;
+	}
+
+	public void setLastDummy(Date lastDummy) {
+		this.lastDummy = lastDummy;
+	}
+	
+	
 	
 }
