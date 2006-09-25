@@ -101,15 +101,13 @@ public class Server {
 			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
-			} catch (InvocationTargetException ex) {
-//				ex.printStackTrace();
-//				if((new Date().compareTo(p.getLastDummy())) > (30*1000)){
-				removeParticipant(p);
-				i--; 
-				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			} catch(Exception e){
-				e.printStackTrace();
+//				ex.printStackTrace();
+//				System.out.println((new Date().getTime() - p.getLastDummy().getTime()));
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+					removeParticipant(p);
+					i--; 
+				}
 			}
 		}
 	}
@@ -219,7 +217,11 @@ public class Server {
 			p = (Participant) participantList.get(i);
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);	
-			} catch (Exception e) {
+			} catch (Exception e) {			
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+					removeParticipant(p);
+					i--; 
+				}
 				//e.printStackTrace();
 				//removeParticipant(p);
 				//i--;
@@ -240,6 +242,10 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);	
 			} catch (Exception e) {
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+					removeParticipant(p);
+					i--; 
+				}
 				//e.printStackTrace();
 				//removeParticipant(p);
 				//i--;
@@ -260,6 +266,10 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);
 			} catch (Exception e) {
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+					removeParticipant(p);
+					i--; 
+				}
 //				e.printStackTrace();
 //				removeParticipant(p);
 //				i--;
@@ -277,7 +287,11 @@ public class Server {
 				p = (Participant) participantList.get(i);
 				try {
 					Remote.invoke(p.getCp(), "setStatus", status);
-				} catch (Exception ex) {					
+				} catch (Exception ex) {		
+					if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+						removeParticipant(p);
+						i--; 
+					}
 //					removeParticipant(p);
 //					i--; 
 //					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
@@ -320,7 +334,11 @@ public class Server {
 				p = (Participant) participantList.get(i);
 				try {
 					Remote.invoke(p.getCp(), "sendDummy", null);
-				} catch (Exception ex) {					
+				} catch (Exception ex) {	
+					if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+						removeParticipant(p);
+						i--; 
+					}
 //					removeParticipant(p);
 //					i--; 
 //					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
