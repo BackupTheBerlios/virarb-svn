@@ -109,7 +109,7 @@ public class Server {
 				setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
 				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 			} catch(Exception e){
-				
+				e.printStackTrace();
 			}
 		}
 	}

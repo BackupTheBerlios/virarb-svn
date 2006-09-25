@@ -13,7 +13,7 @@ public class Participant {
 	private String lanIp;
 	private String wanIp;
 	private int port;
-	private Date lastDummy;
+	private Date lastDummy = new Date();
 	
 	/**
 	 * Konstruktor
@@ -24,7 +24,6 @@ public class Participant {
 		this.cp = null;
 		this.lanIp = null;
 		this.wanIp = null;
-		lastDummy = new Date();
 	}
 	
 	/**
