@@ -296,7 +296,8 @@ public class Main extends javax.swing.JFrame {
 					
 					colortable = (ColorVector) Remote.invoke(server, "getColortable", null);
 					color_choice = new JComboBox(colortable);
-					color_choice.setSelectedItem(myColor);
+					color_choice.setSelectedItem(myColor.toString())
+					;
 					color_choice.setRenderer(new CellColorRenderer());
 					color_choice.setActionCommand("colorchanged");
 //					color_choice.setComponentOrientation()

@@ -107,7 +107,7 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 * @see java.awt.Component#paint(java.awt.Graphics)
 	 */
 	public void paint(Graphics g) {
-		System.out.println("repaint");
+//		System.out.println("repaint");
 		int np = lines.size();	
 		if(np>0 && ((String)lines.get(0)).equals("loeschen")){
 			g.setColor(Color.WHITE);
