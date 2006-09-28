@@ -111,8 +111,6 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
 			} catch(Exception e){
-//				ex.printStackTrace();
-//				System.out.println((new Date().getTime() - p.getLastDummy().getTime()));
 				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
 					removeParticipant(p);
 					i--; 
@@ -133,11 +131,13 @@ public class Server {
 	 * @see Server.ChatServer#removeSession(Server.ChatSession)
 	 */
 	public void removeParticipant(Participant p) {
-		System.out.println("Lösche User "+p.getName());
 		try {
-			participantList.remove(p);
-			setStatus("User "+p.getName()+ " hat die Sitzung verlassen");
-			postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+			if(participantList.contains(p)){
+				System.out.println("Lösche User "+p.getName());
+				participantList.remove(p);
+				setStatus("User "+p.getName()+ " hat die Sitzung verlassen");
+				postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -158,9 +158,6 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "receiveNewFile", entry);	
 			} catch (Exception e) {
-//				e.printStackTrace();
-//				removeParticipant(p);
-//				i--;
 			}
 		}
 	}
