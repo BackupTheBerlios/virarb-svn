@@ -608,7 +608,7 @@ public class Main extends javax.swing.JFrame {
 			} else if (e.getActionCommand().equals("info")) {
 				Error info = new Error(
 						"Info",
-						"'Virtueller Arbeitsraum'\n2006\nKlassen,Kokoschka,Meurer",
+						"'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",
 						owner);
 				info.setVisible(true);
 			}
