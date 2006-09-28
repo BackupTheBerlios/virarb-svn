@@ -339,7 +339,7 @@ public class Server {
 	 */
 	public void sendDummy(String name){
 		((Participant)participantList.get(participantList.indexOf(new Participant(name)))).setLastDummy(new Date());
-		System.out.println("Dummy");
+//		System.out.println("Dummy");
 		Participant p;
 		for (int i = 0; i < participantList.size(); i++) {
 				p = (Participant) participantList.get(i);

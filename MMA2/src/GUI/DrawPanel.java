@@ -100,7 +100,7 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	public void draw(Vector x){
 		lines=x;
 		this.repaint();
-		System.out.println("DRAW");
+//		System.out.println("DRAW");
 	}
 
 	/* (non-Javadoc)
