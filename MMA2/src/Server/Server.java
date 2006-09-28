@@ -12,7 +12,7 @@ import java.util.Vector;
 import javax.swing.DefaultListModel;
 import javax.swing.text.Document;
 import GUI.Chatmessage;
-import GUI.ColorLine;
+//import GUI.ColorLine;
 import GUI.ColorVector;
 import GUI.Ip;
 import GUI.ListEntry;
@@ -111,7 +111,7 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "receiveMessage", message);
 			} catch(Exception e){
-				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (12*1000)){
 					removeParticipant(p);
 					i--; 
 				}
@@ -229,7 +229,7 @@ public class Server {
 //			try {
 //				Remote.invoke(p.getCp(), "draw", lines);	
 //			} catch (Exception e) {			
-//				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+//				if((new Date().getTime() - p.getLastDummy().getTime()) > (12*1000)){
 //					removeParticipant(p);
 //					i--; 
 //				}
@@ -255,7 +255,7 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);	
 			} catch (Exception e) {
-				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (12*1000)){
 					removeParticipant(p);
 					i--; 
 				}
@@ -275,7 +275,7 @@ public class Server {
 			try {
 				Remote.invoke(p.getCp(), "draw", lines);
 			} catch (Exception e) {
-				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+				if((new Date().getTime() - p.getLastDummy().getTime()) > (12*1000)){
 					removeParticipant(p);
 					i--; 
 				}
@@ -297,7 +297,7 @@ public class Server {
 				try {
 					Remote.invoke(p.getCp(), "setStatus", status);
 				} catch (Exception ex) {		
-					if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+					if((new Date().getTime() - p.getLastDummy().getTime()) > (12*1000)){
 						removeParticipant(p);
 						i--; 
 					}
@@ -343,7 +343,7 @@ public class Server {
 				try {
 					Remote.invoke(p.getCp(), "sendDummy", null);
 				} catch (Exception ex) {	
-					if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+					if((new Date().getTime() - p.getLastDummy().getTime()) > (12*1000)){
 						removeParticipant(p);
 						i--; 
 					}

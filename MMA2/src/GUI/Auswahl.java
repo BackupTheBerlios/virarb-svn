@@ -222,7 +222,7 @@ public class Auswahl extends JFrame {
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-				BrowserControl.displayURL("http://virarb.berlios.de");
+				BrowserControl.displayURL("http://virarb.berlios.de/IndexFaq.html");
 			}
 			else if(e.getActionCommand().equals("info")){
 				Error info = new Error("Info","'Virtueller Arbeitsraum'\n2006\nLanger,Klassen,Kokoschka,Meurer",owner);

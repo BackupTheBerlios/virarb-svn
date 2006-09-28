@@ -604,7 +604,7 @@ public class Main extends javax.swing.JFrame {
 				}
 				System.exit(0);
 			} else if (e.getActionCommand().equals("help")) {
-				BrowserControl.displayURL("http://virarb.berlios.de");
+				BrowserControl.displayURL("http://virarb.berlios.de/IndexFaq.html");
 			} else if (e.getActionCommand().equals("info")) {
 				Error info = new Error(
 						"Info",
