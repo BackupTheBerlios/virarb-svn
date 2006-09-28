@@ -45,7 +45,7 @@ public class Main extends javax.swing.JFrame {
 	private DnDText filetable;
 	private JTextField tf_status, tf_chateingabe;
 	private String username = "User";
-	private Color myColor = Color.BLACK;	
+	private NamedColor myColor = new NamedColor(Color.BLACK, "schwarz");	
 	private ColorVector colortable;
 	private SimpleAttributeSet set;
 	private Object server;
@@ -76,7 +76,7 @@ public class Main extends javax.swing.JFrame {
 			Remote.config(args[1], port, args[2], port);
 			Xfile.remoteInvoke = true;
 			ItemServer.bind(xfile, "xfile");
-			myColor = (Color) Remote.invoke(server, "getMyColor", null);
+			myColor = (NamedColor) Remote.invoke(server, "getMyColor", null);
 		} catch (Exception e) {
 			throw new Exception("Server nicht gefunden");
 		}
@@ -133,7 +133,7 @@ public class Main extends javax.swing.JFrame {
 			new ItemProxy(cp, this);
 			Remote.config(args[1], port, args[2], port);
 			ItemServer.bind(xfile, "xfile");
-			myColor = (Color) Remote.invoke(server, "getMyColor", null);
+			myColor = (NamedColor) Remote.invoke(server, "getMyColor", null);
 		} catch (Exception e) {
 			// System.out.println("Server im lokalen Netz nicht gefunden.
 			// Versuch über WanIp");
@@ -146,7 +146,7 @@ public class Main extends javax.swing.JFrame {
 					new ItemProxy(cp, this);
 					Remote.config(args[1], port, args[2], port);
 					ItemServer.bind(xfile, "xfile");
-					myColor = (Color) Remote.invoke(server, "getMyColor", null);
+					myColor = (NamedColor) Remote.invoke(server, "getMyColor", null);
 				} catch (Exception e1) {
 					throw new Exception(e1);
 				}
@@ -222,7 +222,7 @@ public class Main extends javax.swing.JFrame {
 				pa_eingaben.setPreferredSize(new Dimension(300, 30));
 
 				tf_chateingabe = new JTextField();
-				tf_chateingabe.setForeground(myColor);
+				tf_chateingabe.setForeground(myColor.getColor());
 				tf_chateingabe.setText("hier text einfügen");
 				tf_chateingabe.setPreferredSize(new Dimension(250, 25));
 				tf_chateingabe.setMinimumSize(new Dimension(280, 25));
@@ -256,12 +256,9 @@ public class Main extends javax.swing.JFrame {
 				pa_right.setPreferredSize(new java.awt.Dimension(320, 300));
 				pa_right.setBackground(Color.LIGHT_GRAY);
 				pa_right.setLayout(new BorderLayout());
-
 				{
-
 					pa_file = new JPanel();
 					pa_file.setLayout(new BorderLayout());
-
 					JProgressBar pbar = new JProgressBar(
 							JProgressBar.HORIZONTAL, 0, 20);
 
@@ -299,6 +296,7 @@ public class Main extends javax.swing.JFrame {
 					
 					colortable = (ColorVector) Remote.invoke(server, "getColortable", null);
 					color_choice = new JComboBox(colortable);
+					color_choice.setSelectedItem(myColor);
 					color_choice.setRenderer(new CellColorRenderer());
 					color_choice.setActionCommand("colorchanged");
 //					color_choice.setComponentOrientation()
@@ -308,7 +306,7 @@ public class Main extends javax.swing.JFrame {
 
 					JPanel pa_malfenster = new JPanel();
 
-					malfenster = new DrawPanel(server, myColor);
+					malfenster = new DrawPanel(server, myColor.getColor());
 					malfenster.setPreferredSize(new Dimension(300, 300));
 					malfenster.setBackground(new Color(255, 255, 255));
 
@@ -484,7 +482,7 @@ public class Main extends javax.swing.JFrame {
 	 * zu halten.
 	 */
 	public void sendDummy(){
-		System.out.println("Dummy");
+//		System.out.println("Dummy");
 	}
 	/**
 	 * Die Klasse stellt den ActionListener für die Klasse Main zur Verfügung.
@@ -508,7 +506,7 @@ public class Main extends javax.swing.JFrame {
 			if (e.getActionCommand().equals("Senden")) {
 				String inp = tf_chateingabe.getText();
 				if (inp.length() > 0) {
-					Chatmessage raus = new Chatmessage(myColor, inp,
+					Chatmessage raus = new Chatmessage(myColor.getColor(), inp,
 							new Date(), username);
 					try {
 						sendMessage(raus);

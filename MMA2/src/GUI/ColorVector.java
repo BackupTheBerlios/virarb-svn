@@ -11,7 +11,6 @@ import java.util.Vector;
  **/
 public class ColorVector extends Vector implements Serializable {
 
-	
 	/**
 	 * Konstruktor
 	 * Füllt Vector automatisch
@@ -34,5 +33,4 @@ public class ColorVector extends Vector implements Serializable {
 		this.add(new NamedColor(new Color(0,120,120),"Dunkelgrün"));
 		this.add(new NamedColor(new Color(120,120,0),"Dschungelgrün"));
 	}
-
 }

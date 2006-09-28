@@ -86,8 +86,8 @@ public class Server {
 	 * Gibt eine, soweit möglich, eindeutige Farbe aus der Farbentabelle zurück.
 	 * @return Color Die zugewiesene Farbe
 	 */
-	public Color getMyColor() {
-		return ((NamedColor)colortable.get(count++ % colortable.size())).getColor();
+	public NamedColor getMyColor() {
+		return ((NamedColor)colortable.get(count++ % colortable.size()));
 	}
 	
 	/**
