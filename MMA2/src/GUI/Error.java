@@ -72,7 +72,6 @@ public class Error extends JDialog{
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.setLocation(owner.getLocation().x+owner.getSize().width/2-this.getSize().width/2,owner.getLocation().y+owner.getSize().height/2-this.getSize().height/2);
 			this.setResizable(false);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

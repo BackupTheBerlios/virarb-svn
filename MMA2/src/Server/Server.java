@@ -5,7 +5,6 @@ import gnu.cajo.utils.ItemServer;
 import gnu.cajo.utils.extra.ClientProxy;
 import java.awt.Color;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +22,14 @@ import GUI.NamedColor;
  * Die Klasse Server gibt im Programm Virtueller Arbeitsraum
  * den Server, bzw stellt einen offenen Arbeitsraum dar.
  * @author Daniel Meurer
+ */
+/**
+ * @author Dani1
+ *
+ */
+/**
+ * @author Dani1
+ *
  */
 public class Server {
 	private List participantList = new ArrayList();
@@ -74,8 +81,10 @@ public class Server {
 	      return cp.remoteThis;
 	   }
 
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#getMyColor()
+
+	/**
+	 * Gibt eine, soweit möglich, eindeutige Farbe aus der Farbentabelle zurück.
+	 * @return Color Die zugewiesene Farbe
 	 */
 	public Color getMyColor() {
 		return ((NamedColor)colortable.get(count++ % colortable.size())).getColor();
@@ -200,37 +209,44 @@ public class Server {
 		setStatus("Die Datei '"+entry.getFile().getName()+"' wurde erfolgreich gelöscht.");
 	}
 
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#getValues()
+	
+	/**
+	 * Gibt die Liste aller bis hierher hochgeladenen Dateien zurück.
+	 * @return DefaultListModel Die Dateienliste
 	 */
 	public DefaultListModel getValues(){
 		return values;
 	}
 	
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#addElement(GUI.ColorLine)
-	 */
-	public void addElement(ColorLine x){
-		lines.add(x);
-		Participant p;
-		for (int i = 0; i < participantList.size(); i++) {
-			p = (Participant) participantList.get(i);
-			try {
-				Remote.invoke(p.getCp(), "draw", lines);	
-			} catch (Exception e) {			
-				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
-					removeParticipant(p);
-					i--; 
-				}
-				//e.printStackTrace();
-				//removeParticipant(p);
-				//i--;
-			}
-		}
-	}
 	
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#addElement(GUI.ColorLine)
+//	/**
+//	 * Fügt dem Bild (DrawPanel) ein Element bzw eine Linie hinzu
+//	 * (wird nicht mehr benötigt, da ersettz durch addElements(Vector))
+//	 * @param x Colorline
+//	 */
+//	public void addElement(ColorLine x){
+//		lines.add(x);
+//		Participant p;
+//		for (int i = 0; i < participantList.size(); i++) {
+//			p = (Participant) participantList.get(i);
+//			try {
+//				Remote.invoke(p.getCp(), "draw", lines);	
+//			} catch (Exception e) {			
+//				if((new Date().getTime() - p.getLastDummy().getTime()) > (5*1000)){
+//					removeParticipant(p);
+//					i--; 
+//				}
+//				//e.printStackTrace();
+//				//removeParticipant(p);
+//				//i--;
+//			}
+//		}
+//	}
+	
+
+	/**
+	 * Fügt dem DrawPanel einen Vector von Linien hinzu
+	 * @param x Vector mit den Linien
 	 */
 	public void addElements(Vector x){
 		for(int i = 0;i<x.size();i++){
@@ -246,16 +262,12 @@ public class Server {
 					removeParticipant(p);
 					i--; 
 				}
-				//e.printStackTrace();
-				//removeParticipant(p);
-				//i--;
 			}
 		}
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#skizze_loeschen()
+	/**
+	 * Löscht das Bild im DrawPanel
 	 */
 	public void skizze_loeschen(){
 		Participant p;
@@ -270,16 +282,16 @@ public class Server {
 					removeParticipant(p);
 					i--; 
 				}
-//				e.printStackTrace();
-//				removeParticipant(p);
-//				i--;
 			}
 		}
 		lines.setElementAt(new String("malen"),0);
 	}
 	
-	 /* (non-Javadoc)
-	 * @see Server.ChatServer#setStatus(java.lang.String)
+	
+	/**
+	 * Setzt den Status der Anwendung.
+	 * Der Status wird in der Zeile unten in der ClientGui angezeigt.
+	 * @param status Der auszugebende Status als String
 	 */
 	public void setStatus(String status){
 		 Participant p;
@@ -292,23 +304,23 @@ public class Server {
 						removeParticipant(p);
 						i--; 
 					}
-//					removeParticipant(p);
-//					i--; 
-//					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-//					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 				}
 			}
 	 }
 
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#getLines()
+	/**
+	 * Gibt den Inhalt des DrawPanels wieder.
+	 * Wird genutzt wenn neue User dazu stoßen.
+	 * @return Vector mit den Linien
 	 */
 	public Vector getLines() {
 		return lines;
 	}
 
-	/* (non-Javadoc)
-	 * @see Server.ChatServer#getChat()
+	/**
+	 * Gibt den kompletten Chatinhalt zurück.
+	 * Wird genutzt wenn neue User dazu stoßen.
+	 * @return Document
 	 */
 	public Document getChat() {		
 		Participant p=(Participant)participantList.get(0);
@@ -321,12 +333,11 @@ public class Server {
 	}
 	
 	/**
-	 * Methode macht nichts. SIe ist nur dafür da die Verbindung aufrecht
-	 * zu halten.
-	 * @throws Exception
+	 * Methode ist nur dafür da die Verbindung aufrecht
+	 * zu halten. Um auch die Verbindung vom Server zu den Clients aufrecht zu halten
+	 * wird auch ein Dummy an jeden Client geschickt.
 	 */
-	public void sendDummy(String name) throws Exception {
-		// wir machen gar nix
+	public void sendDummy(String name){
 		((Participant)participantList.get(participantList.indexOf(new Participant(name)))).setLastDummy(new Date());
 		System.out.println("Dummy");
 		Participant p;
@@ -339,10 +350,6 @@ public class Server {
 						removeParticipant(p);
 						i--; 
 					}
-//					removeParticipant(p);
-//					i--; 
-//					setStatus("Die Verbindung zu User '"+p.getName()+"' ist leider abgerissen. Session wurde gelöscht");
-//					postMessage(new Chatmessage(Color.BLACK,"User '"+p.getName()+"' hat die Sitzung verlassen",new Date(),"System"));
 				}
 			}
 	}

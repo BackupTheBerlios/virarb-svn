@@ -169,7 +169,6 @@ public class Reg extends JFrame{
 			button_absenden.addActionListener(al);
 			this.getContentPane().add(button_absenden);
 
-//			this.getRootPane().setDefaultButton(button_absenden);
 			this.setSize(500, 300);
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.setLocationRelativeTo(null);
@@ -249,8 +248,6 @@ public class Reg extends JFrame{
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-//				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
-//				help.setVisible(true);
 				BrowserControl.displayURL("http://virarb.berlios.de");
 			}
 			else if(e.getActionCommand().equals("info")){

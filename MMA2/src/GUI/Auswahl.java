@@ -1,12 +1,9 @@
 package GUI;
+
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.*;
@@ -31,7 +28,6 @@ public class Auswahl extends JFrame {
 	 */
 	public Auswahl() {
 		super();
-		//System.setProperty("java.rmi.server.hostname",myWanIP);
 		initGUI();
 	}
 	
@@ -42,7 +38,6 @@ public class Auswahl extends JFrame {
 	public Auswahl(String name) {
 		super();
 		this.username=name;
-		//System.setProperty("java.rmi.server.hostname",myWanIP);
 		initGUI();
 	}
 	
@@ -55,11 +50,8 @@ public class Auswahl extends JFrame {
 		JPanel hostpanel, joinpanel;
 		Auswahl_action al=new Auswahl_action(this);
 		this.addWindowListener(al);
-//		this.addKeyListener(al);
-		try {
-			
-			JMenuBar mbar = new JMenuBar();
-			
+		try {	
+			JMenuBar mbar = new JMenuBar();			
 			JMenu aktionen = new JMenu("Menu");
 			JMenuItem aktionen0 = new JMenuItem("Virtuellen Arbeitsraum konfigurieren");
 			aktionen0.setActionCommand("config");
@@ -104,12 +96,11 @@ public class Auswahl extends JFrame {
 			tf_ip = new JTextField();
 			tf_ip.addKeyListener(new CustomKeyAdapter("join",al));
 			String x;
-			if(	!((x = Fileausgabe.getProperty("lastServerName")).equals("") || x == null)){
+			if(!((x = Fileausgabe.getProperty("lastServerName")).equals("") || x == null)){
 				tf_ip.setText(x);		
 			}
 			else{
-				tf_ip.setText("Name");		
-					
+				tf_ip.setText("Name");						
 			}
 			joinpanel.add(tf_ip);
 			tf_ip.setBounds(100, 60, 200, 30);
@@ -155,7 +146,6 @@ public class Auswahl extends JFrame {
 			this.getContentPane().add(hostpanel, BorderLayout.SOUTH);
 			hostpanel.setLayout(null);
 
-//			this.getRootPane().setDefaultButton(button_join);
 			this.setTitle("Virtueller Arbeitsraum 1.0   [" + username + "]");
 			setSize(500, 300);
 			this.setResizable(false);
@@ -164,7 +154,6 @@ public class Auswahl extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * Die Klasse stellt den ActionListener für die Kalsse Auswahl zur Verfügung
@@ -193,12 +182,10 @@ public class Auswahl extends JFrame {
 					e1.printStackTrace();
 					Error err=new Error("Fehler","\n\nEs konnte kein Arbeitsraum erstellt werden.",owner);					
 					err.setVisible(true);
-	
 				}	
 			}
 			else if(e.getActionCommand().equals("join")){ //JOIN IP
 				String ip=tf_ip.getText();
-
 				try {
 					Main main=new Main(ip,username);
 					main.setVisible(true);
@@ -208,7 +195,6 @@ public class Auswahl extends JFrame {
 					e1.printStackTrace();
 					Error err=new Error("Fehler","\n\nUnter dem Namen '"+ip+"' \nist kein Arbeitsraum geöffnet.",owner);					
 					err.setVisible(true);
-
 				}
 			}
 			else if(e.getActionCommand().equals("logout")){
@@ -236,8 +222,6 @@ public class Auswahl extends JFrame {
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-//				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
-//				help.setVisible(true);
 				BrowserControl.displayURL("http://virarb.berlios.de");
 			}
 			else if(e.getActionCommand().equals("info")){
@@ -259,6 +243,9 @@ public class Auswahl extends JFrame {
 		public void windowActivated(WindowEvent arg0) {		
 		}
 		
+		/* (non-Javadoc)
+		 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+		 */
 		public void windowClosing(WindowEvent arg0) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");			

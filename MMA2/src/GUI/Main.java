@@ -365,7 +365,6 @@ public class Main extends javax.swing.JFrame {
 		write("\n" + rein.getUser() + " [" + rein.getTime() + "]: "
 				+ rein.getMessage());
 		ta_chat.setCaretPosition(ta_chat.getDocument().getLength());
-
 	}
 
 	/**
@@ -389,7 +388,6 @@ public class Main extends javax.swing.JFrame {
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -412,8 +410,8 @@ public class Main extends javax.swing.JFrame {
 	/**
 	 * Über diese Methode wird ein neuer File(name) im Filetable eingetragen.
 	 * 
-	 * @param filename
-	 *            Der Name der Datei.
+	 * @param entry
+	 *          Die Datei als ListEntry
 	 */
 	public void receiveNewFile(ListEntry entry) {
 		filetable.addElement(entry);
@@ -608,9 +606,6 @@ public class Main extends javax.swing.JFrame {
 				}
 				System.exit(0);
 			} else if (e.getActionCommand().equals("help")) {
-//				Error help = new Error("Hilfe",
-//						"Hier gibts irgendwann mal Hilfe", owner);
-//				help.setVisible(true);
 				BrowserControl.displayURL("http://virarb.berlios.de");
 			} else if (e.getActionCommand().equals("info")) {
 				Error info = new Error(
@@ -683,7 +678,6 @@ public class Main extends javax.swing.JFrame {
 		 */
 		public void windowOpened(WindowEvent arg0) {
 		}
-
 	}
 
 	/**
@@ -741,14 +735,17 @@ public class Main extends javax.swing.JFrame {
 		 * @see java.awt.Component#setForeground(java.awt.Color)
 		 */
 		public void setForeground(Color fg){}
+		
 		/* (non-Javadoc)
 		 * @see java.awt.Component#setBackground(java.awt.Color)
 		 */
 		public void setBackground(Color bg){}
+		
 		/**
 		 * @param fg Color
 		 */
 		public void trueSetForeground(Color fg){ super.setForeground(fg); }
+		
 		/**
 		 * @param bg Color
 		 */

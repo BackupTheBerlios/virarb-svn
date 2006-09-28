@@ -18,7 +18,7 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	private int x1, y1;
 	
 	/**
-	 * @param session Die ChatSession, über die die Daten transferiert werden.
+	 * @param server Der Server, über die die Daten transferiert werden.
 	 * @param myColor Die Farbe der Zeichnung
 	 */
 	public DrawPanel(Object server,Color myColor) {
@@ -39,12 +39,6 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 	 */
 	public void mouseDragged(MouseEvent e) {
 		ColorLine line = new ColorLine(x1,y1,e.getX(), e.getY(),myColor);
-		System.out.println("mousedragged paint");
-//		try {
-//			Remote.invoke(server, "addElement", line);
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
 		newlines.add(line);
 		x1 = e.getX();
 		y1 = e.getY();
@@ -68,12 +62,6 @@ public class DrawPanel extends Panel implements MouseListener, MouseMotionListen
 		x1 = e.getX();
 		y1 = e.getY();
 		repaint();	
-		System.out.println("mousePressed paint");
-//		try {
-//			Remote.invoke(server, "addElement", line);
-//		} catch (Exception e1) {
-//			e1.printStackTrace();
-//		}
 	}
 
 	/* (non-Javadoc)

@@ -17,7 +17,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-
 /**
  * Die Klasse Config ist ein JDialog, der
  * dem Nutzer die Möglichkeit gibt den Virtuellen
@@ -113,7 +112,6 @@ public class Config extends JDialog {
 
 			this.setTitle("Virtueller Arbeitsraum - Konfiguration");
 			this.setResizable(false);
-//			this.getRootPane().setDefaultButton(button_save);
 			this.setLocationRelativeTo(null);
 			this.setSize(500, 300);
 		} catch (Exception e) {
@@ -162,7 +160,6 @@ class Config_action implements ActionListener{
 		this.owner = owner;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -188,4 +185,3 @@ class Config_action implements ActionListener{
 		}		
 	}	
 }
-

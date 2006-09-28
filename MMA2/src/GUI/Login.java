@@ -34,7 +34,6 @@ public class Login extends JFrame {
 	private JLabel l_password;
 	private JLabel l_username;
 	private JLabel l_header;
-
 	
 	/**
 	 * Konstruktor
@@ -45,7 +44,7 @@ public class Login extends JFrame {
 	}
 	
 	/**
-	 * initialisiert und lädt das graphische Userinterface
+	 * initialisiert und läd das graphische Userinterface
 	 */
 	private void initGUI() {
 		try {
@@ -113,7 +112,6 @@ public class Login extends JFrame {
 			button_login.setPreferredSize(new java.awt.Dimension(71, 25));
 			button_login.addActionListener(al);
 			button_login.addKeyListener(new CustomKeyAdapter("login", al));
-
 			
 			l_reg = new JLabel();
 			this.getContentPane().add(l_reg,new AnchorConstraint(641,794,789,223,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL,AnchorConstraint.ANCHOR_REL));
@@ -224,8 +222,6 @@ public class Login extends JFrame {
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
-//				Error help = new Error("Hilfe","Hier gibts irgendwann mal Hilfe",owner);
-//				help.setVisible(true);
 				BrowserControl.displayURL("http://virarb.berlios.de");
 			}
 			else if(e.getActionCommand().equals("info")){

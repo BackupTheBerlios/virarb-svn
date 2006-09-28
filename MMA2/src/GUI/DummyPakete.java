@@ -10,8 +10,8 @@ import gnu.cajo.invoke.Remote;
  * @author Daniel Meurer
  */
 public class DummyPakete implements Runnable {
-	Object server;
-	String name;
+	private Object server;
+	private String name;
 
 	/**
 	 * Konstruktor

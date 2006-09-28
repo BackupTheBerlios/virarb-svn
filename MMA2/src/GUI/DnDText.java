@@ -27,9 +27,12 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 	private JProgressBar pbar;
 	Thread t;
 	
+
 	/**
 	 * Konstruktor
-	 * @param session Die ChatSession, über die die Files transferiert werden.
+	 * @param server Der zugehörige Server
+	 * @param username Der Nickname des Clients
+	 * @param pbar Die Progressbar des Clients
 	 */
 	public DnDText(Object server, String username, JProgressBar pbar) {
 		this.server = server;			 
@@ -256,8 +259,6 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
 			popup.show(e.getComponent(), e.getX(), e.getY());
 		}		
 	}
-
-	
 	
 	/* (non-Javadoc)
 	 * @see java.awt.dnd.DragSourceListener#dragDropEnd(java.awt.dnd.DragSourceDropEvent)
@@ -319,9 +320,7 @@ public class DnDText extends JScrollPane implements DropTargetListener,DragGestu
  * @author Daniel Meurer
  **/
 class Trans implements Transferable { 
-	/**
-	 * Die Datei
-	 */
+	
 	private File f;
 	private boolean gotData = false;
 	private ArrayList list = new ArrayList( );
@@ -331,7 +330,7 @@ class Trans implements Transferable {
 	
 	/**
 	 * Konstruktor
-	 * @param temp Die Datei, die verschickt werden soll
+	 * @param f Die Datei, die verschickt werden soll
 	 * @throws IOException
 	 */
 	public Trans(File f) throws IOException {
