@@ -33,6 +33,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.*;
 import javax.swing.filechooser.*;
+import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 /**
  * Der JFrame Main ist das Hauptfenster der Anwendung, in dem
@@ -284,8 +285,7 @@ public class Main extends javax.swing.JFrame {
 
 					pa_paint_button = new JPanel();
 					pa_paint_button.setLayout(new BorderLayout());
-					pa_paint.add(pa_paint_button, BorderLayout.SOUTH);
-
+					
 					JButton button_loeschen = new JButton("Zeichnung loeschen");
 					button_loeschen.addActionListener(al);
 					pa_paint_button.add(button_loeschen, BorderLayout.WEST);
@@ -299,24 +299,24 @@ public class Main extends javax.swing.JFrame {
 					color_choice.setSelectedItem(myColor);
 					color_choice.setRenderer(new CellColorRenderer());
 					color_choice.setActionCommand("colorchanged");
-//					color_choice.setComponentOrientation()
-					color_choice.addActionListener(al);
-					
+					color_choice.addActionListener(al);		
+					color_choice.setLightWeightPopupEnabled(false);
 					pa_paint_button.add(color_choice);
-
+									
 					JPanel pa_malfenster = new JPanel();
 
 					malfenster = new DrawPanel(server, myColor.getColor());
 					malfenster.setPreferredSize(new Dimension(300, 300));
 					malfenster.setBackground(new Color(255, 255, 255));
-
-					pa_malfenster.add(malfenster);
+					
+					pa_malfenster.add(malfenster, 0);
 					pa_malfenster.setBorder(lineborder);
+					
+					pa_paint.add(pa_paint_button, BorderLayout.SOUTH);
 					pa_paint.add(pa_malfenster, BorderLayout.CENTER);
-
+					
 					TitledBorder title = BorderFactory.createTitledBorder(
 							lowerededge, null);
-					title.setTitlePosition(TitledBorder.ABOVE_TOP);
 					title.setTitlePosition(TitledBorder.BELOW_TOP);
 					title.setTitle("Skizzenblatt - Mit der Maus malen.");
 					pa_paint.setBorder(title);

@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import layout.AnchorConstraint;
@@ -126,7 +127,7 @@ public class Login extends JFrame {
 			button_reg.addActionListener(al);
 			button_reg.addKeyListener(new CustomKeyAdapter("reg", al));
 
-			this.getRootPane().setDefaultButton(button_login);
+//			this.getRootPane().setDefaultButton(button_login);
 			this.setResizable(false);
 			this.setSize(500, 300);
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
@@ -169,54 +170,53 @@ public class Login extends JFrame {
 			else if(test.equals("login")){	
 				String name=tf_username.getText();
 				String pw=pf_password.getText();
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-				
-					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");
-					
-					Statement statement = connection.createStatement();	
-					String abfrage="SELECT Passwort, Nickname FROM UserData WHERE Nickname='"+name+"';";
-					ResultSet x = statement.executeQuery(abfrage);
-					if(!x.next()){
-						Error err=new Error("Fehler","Bitte Username und Passwort eingeben \noder registrieren wenn noch kein gültiger \nAccount vorliegt!",owner);					
-						err.setVisible(true);
-					}
-					else{								
-						if(pw.equals(x.getString(1))){
-							String nickname = x.getString(2);
-							String lanIp = Ip.getLanIp();
-							String wanIp = Ip.getWanIp();							
-							try {
-								statement = connection.createStatement();	
-								statement.executeUpdate("INSERT INTO UserOnline(Nickname,LanIp,WanIp,Port) VALUES ('"+nickname+"','"+lanIp+"','"+wanIp+"','"+Ip.getMyPort()+"');");
-							} catch (Exception e1) {
-									//Error err=new Error("Warnung","Sorry, User "+nickname+" ist schon eingeloggt",owner);									
-									//err.setVisible(true);
-									//return;
-									//System.out.println("UPDATE UserOnline SET LanIp='"+lanIp+"',WanIp='"+wanIp+"',ServerPort='"+Ip.getServerPort()+"' WHERE Nickname='"+nickname+"');");
-								statement.executeUpdate("UPDATE UserOnline SET LanIp='"+lanIp+"',WanIp='"+wanIp+"',Port='"+Ip.getMyPort()+"' WHERE Nickname='"+nickname+"';");
-							}
-							Fileausgabe.setProperty("DefaultNick", name);
-							Fileausgabe.setProperty("DefaultPw", pw);
-							Error err=new Error("Glückwunsch","Sie haben sich erfolgreich eingeloggt.",owner);					
-							err.setVisible(true);
-							Auswahl aw=new Auswahl(name);
-							aw.setVisible(true);
-							owner.dispose();
-						}
-						else{
-							Error err=new Error("Warnung","Sorry, Username und Password passen nicht.",owner);									
-							err.setVisible(true);
-						}
-					}
-					statement.close();
-					connection.close();
-					
-				} catch (Exception e1) {
-					Error err=new Error("Fehler","\n\nBitte überprüfen Sie ihre Internetverbindung.",owner);					
-					err.setVisible(true);
-					System.out.println("ERROR:" + e1.getMessage());
-				}
+				Thread t = new Thread(new ThreadCheckLogin(owner, name, pw));
+				t.start();
+//				try {
+//					
+//					Class.forName("com.mysql.jdbc.Driver");
+//				
+//					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");
+//					
+//					Statement statement = connection.createStatement();	
+//					String abfrage="SELECT Passwort, Nickname FROM UserData WHERE Nickname='"+name+"';";
+//					ResultSet x = statement.executeQuery(abfrage);
+//					if(!x.next()){
+//						Error err=new Error("Fehler","Bitte Username und Passwort eingeben \noder registrieren wenn noch kein gültiger \nAccount vorliegt!",owner);					
+//						err.setVisible(true);
+//					}
+//					else{								
+//						if(pw.equals(x.getString(1))){
+//							String nickname = x.getString(2);
+//							String lanIp = Ip.getLanIp();
+//							String wanIp = Ip.getWanIp();							
+//							try {
+//								statement = connection.createStatement();	
+//								statement.executeUpdate("INSERT INTO UserOnline(Nickname,LanIp,WanIp,Port) VALUES ('"+nickname+"','"+lanIp+"','"+wanIp+"','"+Ip.getMyPort()+"');");
+//							} catch (Exception e1) {
+//									statement.executeUpdate("UPDATE UserOnline SET LanIp='"+lanIp+"',WanIp='"+wanIp+"',Port='"+Ip.getMyPort()+"' WHERE Nickname='"+nickname+"';");
+//							}
+//							Fileausgabe.setProperty("DefaultNick", name);
+//							Fileausgabe.setProperty("DefaultPw", pw);
+//							Error err=new Error("Glückwunsch","Sie haben sich erfolgreich eingeloggt.",owner);					
+//							err.setVisible(true);
+//							Auswahl aw=new Auswahl(name);
+//							aw.setVisible(true);
+//							owner.dispose();
+//						}
+//						else{
+//							Error err=new Error("Warnung","Sorry, Username und Password passen nicht.",owner);									
+//							err.setVisible(true);
+//						}
+//					}
+//					statement.close();
+//					connection.close();
+//					
+//				} catch (Exception e1) {
+//					Error err=new Error("Fehler","\n\nBitte überprüfen Sie ihre Internetverbindung.",owner);					
+//					err.setVisible(true);
+//					System.out.println("ERROR:" + e1.getMessage());
+//				}
 			}
 			else if(e.getActionCommand().equals("close")){			
 				System.exit(0);	

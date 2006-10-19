@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,10 +13,12 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 /**
  * Die Klasse Config ist ein JDialog, der
@@ -24,9 +27,9 @@ import javax.swing.border.TitledBorder;
  * @author Daniel Meurer
  */
 public class Config extends JDialog {
-	private String port;// serverport;
+	private String port;
 	private File f = new File("VirArb.cfg");
-	private JTextField tf_port;// tf_serverport;
+	private JTextField tf_port;
 	
 	/**
 	 * Konstruktor
@@ -39,7 +42,6 @@ public class Config extends JDialog {
 			Fileausgabe.setProperty("ServerPort","1234");
 		}
 		port = Fileausgabe.getProperty("Port");
-//        serverport =Fileausgabe.getProperty("ServerPort");
  		initGUI();
 	}
 	
@@ -50,7 +52,7 @@ public class Config extends JDialog {
 		try {
 			JButton button_save, button_cancel;
 			JPanel panel_network;
-			JLabel label_port, label_serverport;	
+			JLabel label_port;	
 			Border lowerededge = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 			Config_action al = new Config_action(this);
 			
@@ -96,23 +98,12 @@ public class Config extends JDialog {
 			label_port = new JLabel();
 			label_port.setText("Port");
 			label_port.setBounds(250, 30, 100, 25);
-			panel_network.add(label_port);		
-			
-//			tf_serverport = new JTextField(5);
-//			tf_serverport.setDocument(new IntegerDocument());			
-//			tf_serverport.setBounds(370, 60, 80, 25);		
-//
-//			tf_serverport.setText(serverport);
-//			panel_network.add(tf_serverport);
-//			
-//			label_serverport = new JLabel();
-//			label_serverport.setText("Server Port");
-//			label_serverport.setBounds(250, 60, 100, 25);
-//			panel_network.add(label_serverport);		
+			panel_network.add(label_port);			
 
 			this.setTitle("Virtueller Arbeitsraum - Konfiguration");
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
+			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.setSize(500, 300);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -133,14 +124,6 @@ public class Config extends JDialog {
 	public File getFile() {
 		return f;
 	}
-
-//	/**
-//	 * @return den Port des Servers
-//	 */
-//	public String getServerport() {
-//		serverport = tf_serverport.getText();
-//		return serverport;
-//	}
 }
 
 /**
@@ -164,21 +147,14 @@ class Config_action implements ActionListener{
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("save")){
-			Fileausgabe.setProperty("Port",owner.getPort());
-//			Fileausgabe.setProperty("ServerPort",owner.getServerport());
+		if(e.getActionCommand().equals("save")){	
 			try {
-				Class.forName("com.mysql.jdbc.Driver");			
-				Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
-				Statement statement = connection.createStatement();	
-				System.out.print("UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+" AND LanIp='"+Ip.getLanIp()+"';");
-
-				statement.executeUpdate("UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+"' AND LanIp='"+Ip.getLanIp()+"';");
+				Thread t = new Thread(new ThreadConfigSpeichern(owner, "UPDATE UserOnline SET Port='"+Ip.getMyPort()+"' WHERE WanIp='"+Ip.getWanIp()+"' AND LanIp='"+Ip.getLanIp()+"';", owner.getPort()));
+				t.start();				
 			}
 			catch(Exception e1){
 				e1.printStackTrace();
 			}			
-			owner.dispose();
 		}
 		else if(e.getActionCommand().equals("cancel")){
 			owner.dispose();

@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import sun.awt.windows.ThemeReader;
 
 /**
  * Der JFrame Auswahl stellt ein Fenster dar, in dem der User
@@ -56,7 +58,8 @@ public class Auswahl extends JFrame {
 			JMenuItem aktionen0 = new JMenuItem("Virtuellen Arbeitsraum konfigurieren");
 			aktionen0.setActionCommand("config");
 			aktionen0.addActionListener(al);
-			aktionen.add(aktionen0);JMenuItem aktionen1 = new JMenuItem("Ausloggen");
+			aktionen.add(aktionen0);
+			JMenuItem aktionen1 = new JMenuItem("Ausloggen");
 			aktionen1.addActionListener(al);
 			aktionen1.setActionCommand("logout");
 			aktionen.add(aktionen1);
@@ -148,6 +151,7 @@ public class Auswahl extends JFrame {
 
 			this.setTitle("Virtueller Arbeitsraum 1.0   [" + username + "]");
 			setSize(500, 300);
+			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 		} catch (Exception e) {
@@ -172,53 +176,24 @@ public class Auswahl extends JFrame {
 		public void actionPerformed(ActionEvent e){
 			System.out.println(e.getActionCommand());
 			if(e.getActionCommand().equals("host")){ //HOSTEN
-				try {
-					new Server(username);
-					System.out.println("Server gestartet");
-					Main main=new Main(username);
-					main.setVisible(true);
-					owner.dispose();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					Error err=new Error("Fehler","\n\nEs konnte kein Arbeitsraum erstellt werden.",owner);					
-					err.setVisible(true);
-				}	
+				Thread t = new Thread(new ThreadHosten(owner, username));
+				t.start();
 			}
 			else if(e.getActionCommand().equals("join")){ //JOIN IP
 				String ip=tf_ip.getText();
-				try {
-					Main main=new Main(ip,username);
-					main.setVisible(true);
-					Fileausgabe.setProperty("lastServerName", ip);
-					owner.dispose();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					Error err=new Error("Fehler","\n\nUnter dem Namen '"+ip+"' \nist kein Arbeitsraum geöffnet.",owner);					
-					err.setVisible(true);
-				}
+				Thread t = new Thread(new ThreadJoinen(owner, username, ip));
+				t.start();
 			}
 			else if(e.getActionCommand().equals("logout")){
-				try {
-					Class.forName("com.mysql.jdbc.Driver");			
-					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
-					Statement statement = connection.createStatement();	
-					statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");				
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+				Thread t = new Thread(new ThreadDBZugriff(owner, "DELETE FROM `UserOnline` WHERE Nickname='"+username+"';"));
+				t.start();
 				Login x = new Login();
 				x.setVisible(true);
 				owner.dispose();
 			}
 			else if(e.getActionCommand().equals("close")){
-				try {
-					Class.forName("com.mysql.jdbc.Driver");			
-					Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");				
-					Statement statement = connection.createStatement();	
-					statement.execute("DELETE FROM `UserOnline` WHERE Nickname='"+username+"';");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+				Thread t = new Thread(new ThreadDBZugriff(owner, "DELETE FROM `UserOnline` WHERE Nickname='"+username+"';"));
+				t.start();
 				System.exit(0);	
 			}
 			else if(e.getActionCommand().equals("help")){
