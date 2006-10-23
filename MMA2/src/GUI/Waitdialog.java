@@ -14,30 +14,39 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 public class Waitdialog extends JDialog{
 	private String text;
 	private Window owner;
-	private boolean close;
 	
+	/**
+	 * Konstrukter mit Jframe als aufrufende Klasse
+	 * @param owner Der aufrufende JFrame
+	 * @param text Text, der über dem Ladebalken gezeigt wird
+	 */
 	public Waitdialog(JFrame owner, String text){
 		super(owner,false);
-//		super();
 		this.owner = owner;
 		this.text = text;
 		initGUI();
 	}
 	
+	/**
+	 * Konstrukter mit JDialog als aufrufende Klasse
+	 * @param owner Der aufrufende JDialog
+	 * @param text Text, der über dem Ladebalken gezeigt wird
+	 */
 	public Waitdialog(JDialog owner, String text){
 		super(owner,false);
-//		super();
 		this.owner = owner;
 		this.text = text;
 		initGUI();
 	}
 	
+	/**
+	 * Initialisiert und läd die Gui
+	 */
 	private void initGUI(){
 		try {
 			this.getContentPane().setLayout(new BorderLayout());
 			JLabel textlabel = new JLabel(text);
-			this.add("North", textlabel);
-			
+			this.add("North", textlabel);	
 			JProgressBar pbar = new JProgressBar();
 	        pbar.setSize(280,10);
 	        pbar.setIndeterminate(true);

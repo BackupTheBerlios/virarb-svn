@@ -5,12 +5,25 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JFrame;
-
+/**
+ * Die Klasse ThreadCheckLogin erstellt einen eigenen Thread, der
+ * einen die eingegebenen Userdaten mti denen in der Online-User-Datenbank vergleicht.
+ * Nötig ist dies, damit die GUI nicht einfriert und ein Fortschrittsbalken
+ * gezeigt werden kann, der dem User zeigt, dass das Programm weiterhin
+ * läuft.
+ * @author Daniel Meurer
+ **/
 public class ThreadCheckLogin implements Runnable {
 	private String name;
 	private String pw;
 	private JFrame owner;
 	
+	/**
+	 * Konstruktor mit Name und PAsswort, die verglichen werden sollen.
+	 * @param owner Aufrufende Klasse
+	 * @param name Name
+	 * @param pw Passwort
+	 */
 	public ThreadCheckLogin(JFrame owner, String name, String pw) {
 		super();
 		this.name = name;
@@ -18,6 +31,9 @@ public class ThreadCheckLogin implements Runnable {
 		this.pw = pw;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		Waitdialog wait = new Waitdialog(owner, "Bitte Warten! Ihre Daten werden überprüft.");
 		wait.setVisible(true);

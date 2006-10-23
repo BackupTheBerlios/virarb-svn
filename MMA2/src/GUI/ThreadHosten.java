@@ -3,10 +3,23 @@ package GUI;
 import javax.swing.JFrame;
 import Server.Server;
 
+/**
+ * Die Klasse ThreadHosten erstellt einen eigenen Thread, der
+ * einen Arbeitsraum erstellt und dann mit diesem verbindet.
+ * Nötig ist dies, damit die GUI nicht einfriert und ein Fortschrittsbalken
+ * gezeigt werden kann, der dem User zeigt, dass das Programm weiterhin
+ * läuft.
+ * @author Daniel Meurer
+ **/
 public class ThreadHosten implements Runnable {
 	private String username;
 	private JFrame owner;
 	
+	/**
+	 * Konstruktor
+	 * @param owner aufrufendes Fenster
+	 * @param username Name des Users
+	 */
 	public ThreadHosten(JFrame owner, String username) {
 		super();
 		this.owner = owner;
