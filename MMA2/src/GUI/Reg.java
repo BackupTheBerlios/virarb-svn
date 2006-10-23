@@ -70,7 +70,7 @@ public class Reg extends JFrame{
 			aktionen2.addActionListener(al);
 			aktionen.add(aktionen2);	
 			
-			JMenu hilfe = new JMenu("Help");
+			JMenu hilfe = new JMenu("Hilfe");
 			JMenuItem hilfe1 = new JMenuItem("Hilfe");
 			hilfe1.addActionListener(al);
 			hilfe1.setActionCommand("help");
@@ -162,7 +162,7 @@ public class Reg extends JFrame{
 			
 			button_absenden = new JButton();
 			button_absenden.setBounds(390, 210, 100, 30);
-			button_absenden.setText("Absenden");
+			button_absenden.setText("Speichern");
 			button_absenden.setActionCommand("send");
 			button_absenden.addKeyListener(new CustomKeyAdapter("send",al));
 			button_absenden.setToolTipText("Daten Abschicken und zum Login zurückkehren.");

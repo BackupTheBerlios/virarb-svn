@@ -68,7 +68,7 @@ public class Auswahl extends JFrame {
 			aktionen2.addActionListener(al);
 			aktionen.add(aktionen2);	
 			
-			JMenu hilfe = new JMenu("Help");
+			JMenu hilfe = new JMenu("Hilfe");
 			JMenuItem hilfe1 = new JMenuItem("Hilfe");
 			hilfe1.addActionListener(al);
 			hilfe1.setActionCommand("help");

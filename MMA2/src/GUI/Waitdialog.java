@@ -58,6 +58,8 @@ public class Waitdialog extends JDialog{
 			this.setLocation(owner.getLocation().x+owner.getSize().width/2-this.getSize().width/2,owner.getLocation().y+owner.getSize().height/2-this.getSize().height/2);
 			this.setResizable(false);
 			this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			this.setAlwaysOnTop(true);
+			
 		} catch (UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}

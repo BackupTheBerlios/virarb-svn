@@ -38,6 +38,7 @@ public class ThreadCheckLogin implements Runnable {
 		Waitdialog wait = new Waitdialog(owner, "Bitte Warten! Ihre Daten werden überprüft.");
 		wait.setVisible(true);
 		try {			
+			
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection connection = DriverManager.getConnection("jdbc:mysql://server8.cyon.ch/medienin_danieldb", "medienin_daniWeb", "web");
 			Statement statement = connection.createStatement();	

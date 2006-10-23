@@ -65,7 +65,7 @@ public class Login extends JFrame {
 			aktionen2.addActionListener(al);
 			aktionen.add(aktionen2);	
 			
-			JMenu hilfe = new JMenu("Help");
+			JMenu hilfe = new JMenu("Hilfe");
 			JMenuItem hilfe1 = new JMenuItem("Hilfe");
 			hilfe1.addActionListener(al);
 			hilfe1.setActionCommand("help");
@@ -80,8 +80,8 @@ public class Login extends JFrame {
 			this.setJMenuBar(mbar);	
 			
 			l_header = new JLabel();
-			this.getContentPane().add(l_header, new AnchorConstraint(24,714, 173, 346, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
-			l_header.setText("Bitte mit Kennung einloggen");
+			this.getContentPane().add(l_header, new AnchorConstraint(24, 700, 173, 150, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL, AnchorConstraint.ANCHOR_REL));
+			l_header.setText("Bitte Kennung eingeben und bestätigen.");
 			l_header.setPreferredSize(new java.awt.Dimension(176, 39));
 
 			l_username = new JLabel();
@@ -127,7 +127,6 @@ public class Login extends JFrame {
 			button_reg.addActionListener(al);
 			button_reg.addKeyListener(new CustomKeyAdapter("reg", al));
 
-//			this.getRootPane().setDefaultButton(button_login);
 			this.setResizable(false);
 			this.setSize(500, 300);
 			UIManager.setLookAndFeel(new MetalLookAndFeel());

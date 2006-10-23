@@ -275,7 +275,7 @@ public class Main extends javax.swing.JFrame {
 							lowerededge, null);
 					title.setTitlePosition(TitledBorder.ABOVE_TOP);
 					title.setTitlePosition(TitledBorder.BELOW_TOP);
-					title.setTitle("FileTable - Files per Drag&Drop einfügen!");
+					title.setTitle("Dateiablage - Dateien per Drag&Drop einfügen!");
 					pa_file.setBorder(title);
 					pa_right.add(pa_file);
 				}
@@ -290,7 +290,7 @@ public class Main extends javax.swing.JFrame {
 					button_loeschen.addActionListener(al);
 					pa_paint_button.add(button_loeschen, BorderLayout.WEST);
 
-					JButton button_speichern = new JButton("speichern");
+					JButton button_speichern = new JButton("Speichern");
 					button_speichern.addActionListener(al);
 					pa_paint_button.add(button_speichern, BorderLayout.EAST);
 					
